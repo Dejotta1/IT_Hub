@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ServiceDesk Plus — Operational Playbook</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Local variables not in shared tokens */
+  --radius:  12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.6; min-height: 100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+.sidebar-logo { padding: 22px 18px; border-bottom: 1px solid var(--border); }
+.sidebar-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+}
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+  animation: pulse 2.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.status-text {
+  color: var(--text3);
+}
+.status-stale {
+  color: var(--amber) !important;
+}
+.brand { font-family: var(--display); font-size: 20px; font-weight: 800; color: var(--text); letter-spacing: -.5px; }
+.brand em { color: var(--green); font-style: normal; }
+
+.nav-section { padding: 10px 0; }
+.nav-label { padding: 5px 18px; font-family: var(--mono); font-size: 9px; font-weight: 600; text-transform: uppercase; color: var(--text3); letter-spacing: 1.8px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 18px; font-size: 13px; color: var(--text2); text-decoration: none; transition: 0.15s; }
+.nav-item:hover, .nav-item.active { color: var(--text); background: var(--bg3); }
+.nav-item.active { border-left: 3px solid var(--green); }
+
+.main { margin-left: var(--sidebar-w); }
+.hero { padding: 48px; border-bottom: 1px solid var(--border); background: linear-gradient(135deg, #07080b 0%, #0a1f14 100%); }
+.hero h1 { font-family: var(--display); font-size: 38px; font-weight: 800; color: var(--text); letter-spacing: -1.5px; }
+.hero h1 .accent { color: var(--green); }
+
+/* ── TOOLBAR ── */
+.toolbar { position: sticky; top: 0; z-index: 50; background: rgba(7, 8, 11, 0.9); backdrop-filter: blur(10px); padding: 15px 48px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+.filter-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border2); background: var(--bg2); color: var(--text2); cursor: pointer; font-size: 12px; font-weight: 600; transition: 0.2s; }
+.filter-btn:hover, .filter-btn.active { border-color: var(--green); color: var(--green); background: var(--green-dim); }
+
+/* ── BENTO CARDS ── */
+.content { padding: 30px 48px 80px; }
+.playbook-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 20px; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; gap: 16px; transition: 0.2s; }
+.card:hover { border-color: var(--border2); transform: translateY(-2px); }
+
+.card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+.card-badge { font-family: var(--mono); font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; border: 1px solid; }
+.badge-inc { color: var(--red); border-color: var(--red-dim); }
+.badge-req { color: var(--blue); border-color: var(--blue-dim); }
+.badge-asset { color: var(--green); border-color: var(--green-dim); }
+.badge-admin { color: var(--amber); border-color: var(--amber-dim); }
+
+.card-title { font-family: var(--display); font-size: 17px; font-weight: 700; color: var(--text); }
+.card-section-h { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text3); letter-spacing: 1px; margin-bottom: 4px; display: block; }
+.card-text { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+.action-box { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px; }
+.step-list { list-style: none; padding: 0; }
+.step-list li { position: relative; padding-left: 22px; margin-bottom: 8px; font-size: 12.5px; color: var(--text); }
+.step-list li::before { content: "→"; position: absolute; left: 0; color: var(--green); font-weight: 800; }
+
+.ref-link { font-size: 11px; color: var(--green); text-decoration: none; display: flex; align-items: center; gap: 5px; margin-top: auto; }
+.ref-link:hover { text-decoration: underline; }
+
+/* ── ESCALATE BUTTON STYLES ─────────────────────── */
+.escalate-bar {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.escalate-btn {
+  background: none;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all .15s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.escalate-btn:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+  background: var(--amber-dim);
+}
+.escalate-btn.copied {
+  border-color: var(--green);
+  color: var(--green);
+  background: var(--green-dim);
+}
+
+/* ── UTILS ── */
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--green); z-index: 1000; width: 0%; }
+.home-fab {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 200;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 999px;
+  color: var(--text2);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.home-fab.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
+.home-fab:hover {
+  background: var(--bg4);
+  border-color: var(--blue);
+  color: var(--blue);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+.home-fab-icon {
+  font-size: 14px;
+}
+
+/* IT Hub button styling */
+.it-hub-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--green-dim);
+  border: 1px solid var(--green);
+  border-radius: 20px;
+  color: var(--green);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  margin-right: 12px;
+}
+
+.it-hub-btn:hover {
+  background: var(--green);
+  color: var(--bg);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(90,240,160,0.3);
+}
+
+/* Permalink button styling */
+.permalink-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--text2);
+}
+.card:hover .permalink-btn {
+  opacity: 1;
+}
+.permalink-btn:hover {
+  color: var(--green);
+  background: var(--green-dim);
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav class="sidebar">
+  <div class="sidebar-logo"><div class="brand">IT<em>Hub</em> Playbook</div></div>
+
+  <div class="sidebar-status" id="sidebarStatus">
+    <span class="status-dot"></span>
+    <span class="status-text" id="statusText">carregando...</span>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">ServiceDesk Plus</div>
+    <a class="nav-item" href="./sdp-runbook-main.html">📖 Runbook (Erros)</a>
+    <a class="nav-item active" href="#">📋 Playbook (Casos)</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Cenários</div>
+    <a href="#incidents" class="nav-item">🚨 Incidentes</a>
+    <a href="#requests" class="nav-item">🎫 Requisições</a>
+    <a href="#assets" class="nav-item">🖥️ Ativos</a>
+    <a href="#admin" class="nav-item">⚙️ Administração</a>
+  </div>
+</nav>
+
+<main class="main">
+  <header class="hero">
+    <div class="hero-badge" style="color:var(--green); border:1px solid var(--green-dim); padding: 2px 10px; border-radius: 20px; font-size: 10px; font-weight: 800;">PLAYBOOK OPERACIONAL</div>
+    <h1>ServiceDesk Plus <span class="accent">Use Cases</span></h1>
+    <p class="hero-desc">Guia de execução para solicitações recorrentes e procedimentos de rotina. Do setup de templates ao troubleshooting de fluxos de aprovação.</p>
+  </header>
+
+  <div class="toolbar">
+    <a href="../index.html" class="it-hub-btn">🏠 IT Hub</a>
+    <button class="filter-btn active" data-filter="all">Todos</button>
+    <button class="filter-btn" data-filter="incident">Incidentes</button>
+    <button class="filter-btn" data-filter="service">Serviços</button>
+    <button class="filter-btn" data-filter="asset">Ativos</button>
+    <button class="filter-btn" data-filter="admin">Admin</button>
+  </div>
+
+  <section class="content">
+    <div class="playbook-grid" id="playbookContainer">
+      <!-- Os cards serão gerados pelo JS -->
+    </div>
+  </section>
+</main>
+
+<script>
+const PLAYBOOK_DATA = [
+  {
+    title: "Vincular Chamados em Massa (Loop de E-mail)",
+    cat: "incident",
+    badge: "INCIDENT",
+    context: "O sistema foi inundado por tickets duplicados devido a um loop de e-mail.",
+    action: [
+      "Identifique o 'Request ID' do primeiro chamado válido.",
+      "Na visualização de lista, selecione todos os tickets duplicados.",
+      "Clique em 'Actions' > 'Merge'.",
+      "Defina o ticket original como 'Parent' para consolidar as conversas.",
+      "Aplique o filtro de SPAM conforme o Runbook para cessar o envio."
+    ],
+    ref: "./sdp-runbook-main.html#SDP-MAIL-101"
+  },
+  {
+    title: "Criar Template de Serviço com Campos Dinâmicos",
+    cat: "service",
+    badge: "SERVICE",
+    context: "O cliente solicita que um campo 'Justificativa' apareça apenas se o custo for > 1000.",
+    action: [
+      "Vá em Admin > Service Catalog > crie o Template.",
+      "Adicione os campos 'Custo' (Decimal) e 'Justificativa' (Multi-line).",
+      "Acesse a aba 'Field & Form Rules'.",
+      "Crie uma regra 'On Field Change' aplicada ao campo 'Custo'.",
+      "Condição: if Cost > 1000, Ação: Show Field 'Justificativa'."
+    ],
+    ref: "./sdp-runbook-main.html#SDP-LOGIC-001"
+  },
+  {
+    title: "Scan de Ativos em Rede Remota (Filial)",
+    cat: "asset",
+    badge: "ASSET",
+    context: "Ativos de uma filial não estão sendo descobertos pelo servidor central.",
+    action: [
+      "Instale o 'Discovery Agent' em uma máquina permanente na filial.",
+      "No console SDP, vá em Admin > Discovery > Remote Agents.",
+      "Verifique se o agente reportou status 'Online'.",
+      "Configure um 'Network Scan' associando-o a este Remote Agent.",
+      "Certifique-se de que a porta 9000 está aberta para o agente."
+    ],
+    ref: "./sdp-runbook-main.html#ports"
+  },
+  {
+    title: "Troca de Secret do OAuth2 (M365)",
+    cat: "admin",
+    badge: "ADMIN",
+    context: "O Mail Fetching parou porque o Client Secret da Microsoft expirou.",
+    action: [
+      "Acesse portal.azure.com > App Registrations.",
+      "Gere um novo Secret e salve o 'Value' imediatamente.",
+      "No SDP: Admin > Mail Server Settings > Inbound.",
+      "Atualize o campo 'Client Secret' e clique em 'Authorize'.",
+      "Dê o consentimento na janela popup da Microsoft."
+    ],
+    ref: "./sdp-runbook-main.html#SDP-MAIL-102"
+  },
+  {
+    title: "Tuning de Performance (Lentidão)",
+    cat: "admin",
+    badge: "ADMIN",
+    context: "Técnicos reportam lentidão ao abrir a aba de chamados.",
+    action: [
+      "Verifique o uso de memória JVM no System Health Widget.",
+      "Acesse <SDP_Home>/conf/wrapper.conf.",
+      "Aumente 'wrapper.java.maxmemory' (mínimo 50% da RAM livre).",
+      "Reinicie o serviço do ServiceDesk Plus.",
+      "Se persistir, execute a reindexação do Lucene."
+    ],
+    ref: "./sdp-runbook-main.html#SDP-INFRA-202"
+  }
+];
+
+function renderPlaybook(filter = 'all') {
+  const container = document.getElementById('playbookContainer');
+  container.innerHTML = '';
+  
+  const filtered = filter === 'all' ? PLAYBOOK_DATA : PLAYBOOK_DATA.filter(d => d.cat === filter);
+  
+  filtered.forEach(d => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    
+    // Generate ID from anchor or title
+    if (d.ref && d.ref.includes('#')) {
+      card.id = d.ref.split('#')[1];
+    } else {
+      card.id = d.title.toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
+    }
+    
+    card.innerHTML = `
+      <div class="card-header">
+        <h3 class="card-title">${d.title}</h3>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="card-badge badge-${d.cat === 'incident' ? 'inc' : d.cat === 'service' ? 'req' : d.cat === 'asset' ? 'asset' : 'admin'}">${d.badge}</span>
+          <button class="permalink-btn" title="Copiar link direto">🔗</button>
+        </div>
+      </div>
+      <div>
+        <span class="card-section-h">Contexto</span>
+        <p class="card-text">${d.context}</p>
+      </div>
+      <div class="action-box">
+        <span class="card-section-h">Ações do Analista</span>
+        <ul class="step-list">
+          ${d.action.map(step => `<li>${step}</li>`).join('')}
+        </ul>
+      </div>
+      <a href="${d.ref}" class="ref-link">📖 Consultar Runbook Técnico →</a>
+      <div class="escalate-bar">
+        <button class="escalate-btn"
+          data-title="${d.title}"
+          data-code=""
+          data-module="ServiceDesk Plus"
+          data-severity="N/A">
+          ⬆ Escalar para N2
+        </button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+  
+  // Add permalink functionality
+  document.querySelectorAll('.permalink-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const card = btn.closest('[id]');
+      if (!card) return;
+      const url = window.location.href.split('#')[0] + '#' + card.id;
+      navigator.clipboard.writeText(url).then(() => {
+        btn.textContent = '✓';
+        btn.style.opacity = '1';
+        btn.style.color = 'var(--green)';
+        setTimeout(() => {
+          btn.textContent = '🔗';
+          btn.style.color = '';
+          btn.style.opacity = '';
+        }, 2000);
+      });
+    });
+  });
+}
+
+// Filtros
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderPlaybook(btn.dataset.filter);
+  };
+});
+
+window.onscroll = () => {
+  const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById("progressBar").style.width = scrolled + "%";
+  
+  // Home FAB button visibility
+  const homeFab = document.getElementById('homeFab');
+  if (homeFab) {
+    homeFab.classList.toggle('visible', window.scrollY > 200);
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderPlaybook();
+  
+  // Handle hash scroll and highlight
+  const hash = window.location.hash?.slice(1);
+  if (hash) {
+    setTimeout(() => {
+      const target = document.getElementById(hash);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target.style.borderColor = 'var(--green)';
+        target.style.transition = 'border-color 0.3s';
+        setTimeout(() => {
+          target.style.borderColor = '';
+        }, 2500);
+      }
+    }, 300);
+  }
+
+  // ── ESCALATE BUTTON FUNCTIONALITY ───────────────────────
+  document.querySelectorAll('.escalate-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+
+      const title    = btn.dataset.title    || 'Não identificado';
+      const code     = btn.dataset.code     || 'N/A';
+      const module   = btn.dataset.module   || 'Runbook';
+      const severity = btn.dataset.severity || 'N/A';
+      const pageUrl  = window.location.href;
+      const now      = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+
+      const template = `
+🔺 ESCALONAMENTO N1 → N2
+━━━━━━━━━━━━━━━━━━━━━━━
+📋 Chamado: [INSERIR ID DO CHAMADO]
+🕐 Horário: ${now}
+📦 Módulo: ${module}
+🔑 Código: ${code}
+⚠️  Severidade: ${severity}
+📌 Cenário: ${title}
+
+🔗 Referência: ${pageUrl}
+
+📝 O que foi feito no N1:
+- [ ] Verificado status do serviço
+- [ ] Consultado runbook (link acima)
+- [ ] [DESCREVER AÇÕES TOMADAS]
+
+❓ Motivo do escalonamento:
+[DESCREVER POR QUE NÃO FOI RESOLVIDO NO N1]
+
+👤 Analista N1: [SEU NOME]
+      `.trim();
+
+      navigator.clipboard.writeText(template).then(() => {
+        const original = btn.textContent;
+        btn.textContent = '✓ Template copiado!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('copied');
+        }, 3000);
+      });
+    });
+  });
+
+  // GitHub API — última atualização do repositório
+  fetch('https://api.github.com/repos/dejotta1/IT_Hub/commits?per_page=1')
+    .then(r => r.json())
+    .then(data => {
+      const statusText = document.getElementById('statusText');
+      if (!statusText || !data[0]) return;
+
+      const commitDate = new Date(data[0].commit.author.date);
+      const now = new Date();
+      const diffDays = Math.floor((now - commitDate) / (1000 * 60 * 60 * 24));
+
+      let label = '';
+      if (diffDays === 0) label = 'atualizado hoje';
+      else if (diffDays === 1) label = 'atualizado ontem';
+      else if (diffDays <= 7) label = `atualizado há ${diffDays} dias`;
+      else if (diffDays <= 30) label = `atualizado há ${Math.floor(diffDays/7)} sem.`;
+      else label = `atualizado há ${Math.floor(diffDays/30)} meses`;
+
+      statusText.textContent = label;
+
+      // Aviso visual se desatualizado (> 30 dias)
+      if (diffDays > 30) {
+        statusText.classList.add('status-stale');
+        document.querySelector('.status-dot').style.background = 'var(--amber)';
+      }
+    })
+    .catch(() => {
+      const statusText = document.getElementById('statusText');
+      if (statusText) statusText.textContent = 'GitHub Pages · online';
+    });
+});
+</script>
+
+<a id="homeFab" href="../index.html" class="home-fab">
+  <span class="home-fab-icon">←</span> IT Hub
+</a>
+
+</body>
+</html>

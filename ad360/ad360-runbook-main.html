@@ -1,0 +1,2088 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AD360 — Runbook Técnico (MSS N1/N2/N3)</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Local variables not in shared tokens */
+  --primary:       #bc8cff;
+  --primary-dim:   rgba(188,140,255,.1);
+  --primary-glow:  rgba(188,140,255,.2);
+  --blue-glow:  rgba(77,159,255,.2);
+  --teal:       #3ddba8;
+  --teal-dim:   rgba(61,219,168,.1);
+  --red-l:      rgba(255,92,110,.08);
+  --orange:     #ff8c40;
+  --orange-l:   rgba(255,140,64,.08);
+  --purple-l:   rgba(188,140,255,.08);
+  --cyan-l:     rgba(188,140,255,.08);
+  --cyan-glow:  rgba(188,140,255,.2);
+  --yellow:     #f0c040;
+  --yellow-dim: rgba(240,192,64,.1);
+  --yellow-l:   rgba(240,192,64,.08);
+  --indigo:     #7c83fd;
+  --indigo-l:   rgba(124,131,253,.08);
+  --r:       10px;
+  --r-lg:    14px;
+  --radius:  8px;
+  --radius-lg: 12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position: fixed; top: 0; left: 0;
+  width: var(--sidebar-w); height: 100vh;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  z-index: 200; overflow-y: auto;
+  transition: transform .3s ease;
+}
+.sidebar-logo {
+  padding: 22px 18px 18px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.sidebar-logo::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 18px; right: 18px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+.sidebar-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+}
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+  animation: pulse 2.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.status-text {
+  color: var(--text3);
+}
+.status-stale {
+  color: var(--amber) !important;
+}
+.escalate-bar {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.escalate-btn {
+  background: none;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  color: var(--text2);
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.escalate-btn:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+  background: var(--amber-dim);
+}
+.escalate-btn.copied {
+  border-color: var(--green);
+  color: var(--green);
+  background: var(--green-dim);
+}
+.logo-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--primary-dim);
+  border: 1px solid rgba(188,140,255,.25);
+  border-radius: 5px;
+  padding: 2px 9px 2px 7px;
+  margin-bottom: 10px;
+}
+.logo-badge-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 6px var(--primary);
+  animation: pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+.logo-badge span {
+  font-family: var(--mono); font-size: 9.5px;
+  color: var(--primary); letter-spacing: .8px; font-weight: 500;
+}
+.brand {
+  font-family: var(--display); font-size: 20px; font-weight: 800;
+  color: var(--text); letter-spacing: -.5px; line-height: 1.15;
+}
+.brand em { color: var(--primary); font-style: normal; }
+.brand-sub {
+  font-family: var(--mono); font-size: 10.5px; color: var(--text3);
+  margin-top: 5px; letter-spacing: .3px;
+}
+
+.nav-section { padding: 10px 0 2px; }
+.nav-label {
+  padding: 5px 18px;
+  font-family: var(--mono); font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 1.8px; color: var(--text3);
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 18px; font-size: 12.5px; font-weight: 500;
+  color: var(--text2); text-decoration: none;
+  transition: all .15s ease; position: relative;
+}
+.nav-item:hover { color: var(--text); background: var(--bg3); }
+.nav-item.active { color: var(--text); background: var(--bg3); }
+.nav-item-icon {
+  width: 26px; height: 26px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; flex-shrink: 0;
+}
+.nav-item-text { flex: 1; }
+.nav-item-arrow {
+  font-size: 11px; color: var(--text3);
+  opacity: 0; transform: translateX(-4px); transition: all .15s ease;
+}
+.nav-item:hover .nav-item-arrow { opacity: 1; transform: translateX(0); }
+.nav-sep { height: 1px; background: var(--border); margin: 6px 18px; }
+
+.sidebar-footer {
+  margin-top: auto; padding: 14px 18px;
+  border-top: 1px solid var(--border);
+}
+.status-row {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--text3);
+}
+.status-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--primary); box-shadow: 0 0 5px var(--primary); flex-shrink: 0;
+}
+
+/* Mobile hamburger */
+.hamburger {
+  display: none;
+  position: fixed; top: 14px; left: 14px;
+  z-index: 300; background: var(--bg3);
+  border: 1px solid var(--border2); border-radius: 8px;
+  padding: 8px 10px; cursor: pointer; color: var(--text2);
+  font-size: 16px;
+}
+.sidebar-overlay {
+  display: none;
+  position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  z-index: 150; backdrop-filter: blur(2px);
+}
+
+/* ── MAIN ── */
+.main { margin-left: var(--sidebar-w); min-height: 100vh; }
+
+/* ── HERO ── */
+.hero {
+  padding: 44px 48px 36px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.hero-top {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 24px;
+  flex-wrap: wrap;
+}
+.hero-left { flex: 1; min-width: 260px; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--primary-dim); border: 1px solid rgba(188,140,255,.25);
+  border-radius: 999px; padding: 3px 11px 3px 7px;
+  font-family: var(--mono); font-size: 10px;
+  color: var(--primary); font-weight: 500; letter-spacing: .4px;
+  margin-bottom: 16px;
+}
+.hero-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--primary); }
+.hero h1 {
+  font-family: var(--display); font-size: 38px; font-weight: 800;
+  color: var(--text); line-height: 1.08; letter-spacing: -1.5px;
+  margin-bottom: 12px;
+}
+.hero h1 .accent { color: var(--primary); }
+.hero-desc {
+  color: var(--text2); max-width: 560px;
+  font-size: 14px; line-height: 1.7;
+}
+.hero-meta {
+  display: flex; align-items: center; gap: 18px; margin-top: 24px; flex-wrap: wrap;
+}
+.hero-stat { display: flex; align-items: center; gap: 8px; }
+.hero-stat-num {
+  font-family: var(--display); font-size: 20px; font-weight: 800; color: var(--text);
+}
+.hero-stat-label { font-size: 11px; color: var(--text3); line-height: 1.3; }
+.hero-divider { width: 1px; height: 28px; background: var(--border2); }
+
+/* ── SEARCH ── */
+.search-unified {
+  display: flex; align-items: center;
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: var(--r); max-width: 560px;
+  overflow: visible; position: relative;
+  margin-top: 0;
+}
+.search-unified:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-dim);
+}
+.search-mode-toggle {
+  display: flex; flex-shrink: 0;
+  border-right: 1px solid var(--border2);
+}
+.search-mode-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 9px 12px;
+  font-family: var(--mono); font-size: 9px; font-weight: 600;
+  letter-spacing: .8px; text-transform: uppercase;
+  color: var(--text3); background: none; border: none; cursor: pointer;
+  transition: all .15s; white-space: nowrap;
+}
+.search-mode-btn.active { color: var(--primary); background: var(--primary-dim); }
+.search-mode-btn:first-child { border-radius: var(--r) 0 0 var(--r); }
+.search-icon-wrap {
+  padding: 0 10px 0 14px; color: var(--text3); font-size: 14px;
+  display: flex; align-items: center; flex-shrink: 0;
+}
+.search-input-unified {
+  flex: 1; background: none; border: none; outline: none;
+  color: var(--text); font-family: var(--sans); font-size: 13px;
+  padding: 10px 14px 10px 0;
+}
+.search-input-unified::placeholder { color: var(--text3); }
+.global-search-dropdown {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: var(--r); max-height: 360px; overflow-y: auto;
+  z-index: 1000; display: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,.4);
+}
+.global-search-dropdown.open { display: block; }
+
+/* ── PROGRESS BAR ── */
+.progress-bar {
+  position: fixed; top: 0; left: 0;
+  width: 0%; height: 3px;
+  background: var(--primary);
+  z-index: 1000;
+  transition: width 0.1s ease-out;
+}
+
+/* ── BACK TO TOP ── */
+.back-to-top {
+  position: fixed; bottom: 24px; right: 24px;
+  background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: 50%; width: 36px; height: 36px;
+  font-size: 14px; font-weight: 600; color: var(--text2);
+  cursor: pointer; opacity: 0; visibility: hidden;
+  transition: opacity .3s, visibility .3s, background .2s;
+  z-index: 100; display: flex; align-items: center; justify-content: center;
+}
+.back-to-top.visible { opacity: 1; visibility: visible; }
+.back-to-top:hover { background: var(--bg4); color: var(--text); }
+
+/* IT Hub button styling */
+.it-hub-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--primary-dim);
+  border: 1px solid var(--primary);
+  border-radius: 20px;
+  color: var(--primary);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  margin-top: 12px;
+  width: fit-content;
+}
+
+.it-hub-btn:hover {
+  background: var(--primary);
+  color: var(--bg);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(188,140,255,0.3);
+}
+
+/* ── CONTENT ── */
+.content { padding: 40px 48px 60px; }
+
+/* ── SECTION CARD ── */
+.section { margin-bottom: 48px; }
+.section-header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 20px; padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.section-title {
+  font-family: var(--display); font-size: 18px; font-weight: 800;
+  color: var(--primary); letter-spacing: -.4px;
+}
+.section-desc { font-size: 12px; color: var(--text3); margin-top: 3px; }
+
+/* ── BENTO GRID ── */
+.bento-section { margin-bottom: 48px; }
+.bento-section:last-child { margin-bottom: 0; }
+.bento-section-header {
+  background: var(--bg);
+  padding: 16px 20px;
+  display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+}
+.bento-section-eyebrow {
+  font-family: var(--mono); font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 2px; color: var(--text3); flex: 1;
+}
+.bento-section-title {
+  font-family: var(--display); font-size: 16px; font-weight: 800;
+  color: var(--text); line-height: 1.2;
+}
+.bento-section-count {
+  font-family: var(--mono); font-size: 8px; color: var(--text3);
+  background: var(--bg3); padding: 4px 8px; border-radius: 4px;
+}
+.bento-grid {
+  background: var(--border); border-radius: 12px;
+  overflow: hidden; display: grid; gap: 1px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+.bento-cell {
+  background: var(--bg2); padding: 22px 24px;
+  transition: background-color .15s ease;
+  border-radius: 0; display: flex; flex-direction: column;
+}
+.bento-cell:hover { background: var(--bg3); }
+.bento-cell-id {
+  font-family: var(--mono); font-size: 9px; font-weight: 600;
+  color: var(--primary); letter-spacing: 0.8px; margin-bottom: 6px;
+}
+.bento-cell-title {
+  font-family: var(--display); font-size: 14px; font-weight: 700;
+  color: var(--text); margin-bottom: 4px; line-height: 1.35;
+}
+.bento-cell-content {
+  font-family: var(--sans); font-size: 11px; color: var(--text2);
+  line-height: 1.5; margin-bottom: 4px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.bento-cell-steps { margin-top: 12px; }
+.bento-step {
+  display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px;
+}
+.bento-step:last-child { margin-bottom: 0; }
+.bento-step-number {
+  font-family: var(--mono); font-size: 9px; font-weight: 600;
+  color: var(--primary); flex-shrink: 0; margin-top: 2px;
+}
+.bento-step-text { font-family: var(--sans); font-size: 10px; color: var(--text3); line-height: 1.4; }
+.bento-cell-footer {
+  margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+}
+.bento-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+.bento-badge {
+  font-family: var(--mono); font-size: 8px; font-weight: 700;
+  padding: 3px 7px; border-radius: 4px;
+  text-transform: uppercase; letter-spacing: 0.8px;
+}
+.bento-badge.critical {
+  background: var(--red-dim); color: var(--red);
+  border: 1px solid rgba(255,92,110,.5); box-shadow: 0 0 6px rgba(255,92,110,.15);
+}
+.bento-badge.warning {
+  background: var(--amber-dim); color: var(--amber);
+  border: 1px solid rgba(255,179,64,.4);
+}
+.bento-badge.info {
+  background: var(--primary-dim); color: var(--primary);
+  border: 1px solid rgba(188,140,255,.3);
+}
+.bento-links { display: flex; gap: 8px; }
+.bento-link {
+  font-family: var(--mono); font-size: 8px; color: var(--primary);
+  text-decoration: none; border-bottom: 1px solid transparent;
+  transition: border-color .15s ease;
+}
+.bento-link:hover { border-bottom-color: var(--primary); }
+
+/* ── CHECKLIST ── */
+.checklist { list-style: none; padding: 0; margin: 14px 0 0 0; flex: 1; }
+.checklist li {
+  position: relative; padding: 7px 0 7px 16px; margin-bottom: 0;
+  font-family: var(--sans); font-size: 11px; color: var(--text2);
+  line-height: 1.5; border-bottom: 1px solid rgba(255,255,255,.04);
+}
+.checklist li:last-child { border-bottom: none; padding-bottom: 4px; }
+.checklist li::before {
+  content: ''; position: absolute; left: 0; top: 14px;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--primary);
+}
+.checklist li strong { color: var(--text); font-weight: 600; }
+
+/* ── TABLE ── */
+.bento-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 10px; }
+.bento-table th, .bento-table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+.bento-table th {
+  background: var(--bg3); font-family: var(--mono); font-weight: 600;
+  color: var(--text); font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.bento-table td { font-family: var(--sans); color: var(--text2); }
+.bento-table tr:last-child td { border-bottom: none; }
+
+/* ── PORT TABLE ── */
+.port-table { width: 100%; border-collapse: collapse; margin: 8px 0 16px; }
+.port-table th {
+  background: var(--bg3); padding: 7px 12px; font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px; color: var(--text3);
+  text-align: left; border-bottom: 1px solid var(--border);
+}
+.port-table td { padding: 8px 12px; font-size: 12px; border-bottom: 1px solid var(--border); }
+.port-table td:first-child { font-family: var(--mono); color: var(--primary); font-weight: 600; }
+.port-table td:nth-child(2) { color: var(--text2); }
+
+/* ── TOOLBAR / FILTERS ── */
+.toolbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(13,17,23,.95); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 40px;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.toolbar-label { font-size: 11px; color: var(--text3); margin-right: 4px; }
+.filter-btn {
+  padding: 5px 12px; border-radius: 20px; cursor: pointer;
+  font-size: 12px; font-weight: 600; border: 1px solid;
+  transition: all .15s; background: transparent; font-family: var(--sans);
+}
+.filter-btn.all     { border-color: var(--border2); color: var(--text2); }
+.filter-btn.ada     { border-color: rgba(77,159,255,.4);  color: var(--blue); }
+.filter-btn.ads     { border-color: rgba(188,140,255,.4); color: var(--purple); }
+.filter-btn.adm     { border-color: rgba(188,140,255,.4); color: var(--purple); }
+.filter-btn.ad360   { border-color: rgba(255,179,64,.4);  color: var(--amber); }
+.filter-btn.db      { border-color: rgba(188,140,255,.4); color: var(--purple); }
+.filter-btn.critico { border-color: rgba(255,92,110,.4);  color: var(--red); }
+.filter-btn.active  { opacity: 1; }
+.filter-btn.all.active     { background: var(--bg3); border-color: var(--text2); color: var(--text); }
+.filter-btn.ada.active     { background: var(--blue-dim);    border-color: var(--blue); }
+.filter-btn.ads.active     { background: var(--purple-l);    border-color: var(--purple); color: var(--purple); }
+.filter-btn.adm.active     { background: var(--purple-l);    border-color: var(--purple); color: var(--purple); }
+.filter-btn.ad360.active   { background: var(--amber-dim);   border-color: var(--amber);  color: var(--amber); }
+.filter-btn.db.active      { background: var(--primary-dim); border-color: var(--primary);color: var(--primary); }
+.filter-btn.critico.active { background: var(--red-l);       border-color: var(--red);    color: var(--red); }
+.filter-btn:not(.active)   { opacity: .6; }
+.filter-btn:hover          { opacity: 1; }
+
+/* ── CAT HEADER ── */
+.cat-header {
+  display: flex; align-items: center; gap: 10px;
+  margin: 24px 0 10px; cursor: pointer;
+  padding: 8px 12px; border-radius: var(--radius);
+  background: var(--bg2); border: 1px solid var(--border);
+  transition: background .15s;
+}
+.cat-header:hover { background: var(--bg3); }
+.cat-code { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--primary); }
+.cat-name { font-family: var(--display); letter-spacing: 1px; font-size: 13px; font-weight: 700; flex: 1; }
+.cat-count { font-size: 11px; color: var(--text3); font-family: var(--mono); }
+.cat-chevron { color: var(--text3); font-size: 12px; transition: transform .2s; }
+.cat-header.collapsed .cat-chevron { transform: rotate(-90deg); }
+
+/* ── ERROR TABLE ── */
+.err-table { width: 100%; border-collapse: collapse; margin-bottom: 6px; }
+.err-table thead th {
+  background: var(--bg3); padding: 8px 12px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--text3);
+  text-align: left; border-bottom: 1px solid var(--border);
+}
+.err-table thead th:first-child { border-radius: var(--radius) 0 0 0; }
+.err-table thead th:last-child  { border-radius: 0 var(--radius) 0 0; }
+.err-row {
+  border-bottom: 1px solid var(--border);
+  transition: background .1s; cursor: pointer;
+}
+.err-row:hover { background: var(--bg3); }
+.err-row.expanded { background: var(--bg2); }
+.err-row td { padding: 10px 12px; vertical-align: top; }
+.err-row.hidden { display: none; }
+.td-code { font-family: var(--mono); font-size: 12px; font-weight: 700; white-space: nowrap; width: 130px; }
+.td-desc  { font-size: 13px; font-weight: 500; }
+.td-err   { font-family: var(--mono); font-size: 11px; color: var(--text3); width: 170px; }
+.td-sev   { width: 90px; }
+.td-fix   { font-size: 12px; color: var(--text2); }
+
+/* ── SEVERITY BADGES ── */
+.sev {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px; border-radius: 20px;
+  font-size: 10px; font-weight: 700; white-space: nowrap; border: 1px solid;
+}
+.sev-c { background: var(--red-l);    border-color: var(--red);    color: var(--red); }
+.sev-a { background: var(--orange-l); border-color: var(--orange); color: var(--orange); }
+.sev-m { background: var(--yellow-l); border-color: var(--yellow); color: var(--yellow); }
+.sev-b { background: var(--primary-dim); border-color: var(--primary); color: var(--primary); }
+
+/* ── EXPAND DETAIL ── */
+.err-detail { display: none; background: var(--bg2); border-bottom: 1px solid var(--border); }
+.err-detail.open { display: table-row; }
+.err-detail td { padding: 0; }
+.err-detail-inner {
+  padding: 20px 24px 24px 60px;
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px;
+}
+.detail-block {
+  display: block; background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 12px 14px;
+}
+.detail-block h5 {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--text3); margin-bottom: 8px;
+  padding-bottom: 6px; border-bottom: 1px solid var(--border);
+}
+.detail-block p { font-size: 12.5px; color: var(--text2); line-height: 1.7; }
+.detail-steps { list-style: none; counter-reset: step; }
+.detail-steps li {
+  font-size: 12px; color: var(--text2); padding: 4px 0;
+  display: flex; gap: 10px; align-items: flex-start; line-height: 1.55;
+}
+.detail-steps li::before {
+  content: counter(step); counter-increment: step;
+  background: var(--primary-dim); color: var(--primary); border-radius: 50%;
+  width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+}
+.detail-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  color: var(--primary); font-size: 11px; text-decoration: none;
+  padding: 3px 8px; background: var(--primary-dim); border-radius: var(--radius);
+  border: 1px solid rgba(188,140,255,.3); margin-top: 6px;
+}
+.detail-link:hover { background: var(--primary-glow); }
+
+/* ── CODE BLOCKS ── */
+.code-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--green);
+  margin: 4px 0;
+}
+.code-content {
+  flex: 1;
+  word-break: break-all;
+  color: var(--green);
+}
+.copy-code-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.copy-code-btn:hover {
+  color: var(--green);
+  background: var(--green-dim);
+}
+.copy-code-btn.copied {
+  color: var(--green);
+}
+
+/* ── CLIENT SCRIPT ── */
+.client-script {
+  background: var(--primary-dim); border: 1px solid rgba(188,140,255,.2);
+  border-left: 3px solid var(--primary);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 10px 12px; font-size: 12px; color: var(--text2);
+  line-height: 1.6; font-style: italic;
+}
+
+/* ── CALLOUTS ── */
+.callout, .tip {
+  border-radius: var(--radius); padding: 14px 16px;
+  display: flex; gap: 10px; margin: 12px 0;
+  font-size: 13px; color: var(--text2); line-height: 1.6;
+  background: var(--primary-dim); border-left: 3px solid var(--primary);
+}
+.warning {
+  border-radius: var(--radius); padding: 14px 16px;
+  display: flex; gap: 10px; margin: 12px 0;
+  font-size: 13px; color: var(--text2); line-height: 1.6;
+  background: var(--amber-dim); border-left: 3px solid var(--amber);
+}
+.danger {
+  border-radius: var(--radius); padding: 14px 16px;
+  display: flex; gap: 10px; margin: 12px 0;
+  font-size: 13px; color: var(--text2); line-height: 1.6;
+  background: var(--red-dim); border-left: 3px solid var(--red);
+}
+
+/* ── STEP NUMBER ── */
+.step-number {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--primary-dim); border: 1px solid rgba(188,140,255,.3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--primary);
+  flex-shrink: 0;
+}
+
+/* ── OVERVIEW CARDS ── */
+.overview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 20px 0; }
+.ov-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 16px; transition: border-color .2s;
+}
+.ov-card:hover { border-color: var(--border2); }
+.ov-card-icon { font-size: 22px; margin-bottom: 8px; }
+.ov-card-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.ov-card-desc { font-size: 11.5px; color: var(--text2); line-height: 1.5; }
+
+/* ── SCRIPTS GRID ── */
+.scripts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 4px; }
+.script-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 16px;
+}
+.script-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); margin-bottom: 8px; }
+
+/* ── TABLES GENERAL ── */
+table { width: 100%; border-collapse: collapse; }
+th {
+  background: var(--bg3); color: var(--text);
+  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 1px;
+  padding: 10px 14px; border-bottom: 1px solid var(--border2);
+}
+td {
+  color: var(--text2); padding: 10px 14px;
+  border-bottom: 1px solid var(--border); font-size: 13px;
+}
+tr:hover td { background: var(--bg3); }
+
+/* ── NO RESULTS ── */
+.no-results {
+  display: none; text-align: center;
+  padding: 48px 0; color: var(--text3); font-size: 14px;
+}
+.no-results.show { display: block; }
+.no-results h3 { font-size: 18px; color: var(--text2); margin-bottom: 8px; }
+.section.hidden { display: none; }
+
+/* ── FLOW DIAGRAM ── */
+.flow-diagram {
+  display: flex; align-items: center; gap: 0;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 16px 20px;
+  margin: 16px 0; overflow-x: auto; flex-wrap: nowrap;
+}
+.flow-node {
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: var(--radius); padding: 8px 14px;
+  font-size: 12px; font-weight: 600; color: var(--text);
+  white-space: nowrap; flex-shrink: 0; text-align: center;
+}
+.flow-arrow { color: var(--text3); font-size: 14px; padding: 0 8px; flex-shrink: 0; }
+.flow-node.highlight { border-color: var(--primary); color: var(--primary); background: var(--primary-dim); }
+
+/* ── SECTION TABS ── */
+.section-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.stab {
+  padding: 4px 12px; border-radius: 20px; cursor: pointer;
+  font-size: 11px; font-weight: 600; border: 1px solid var(--border2);
+  color: var(--text2); background: transparent; transition: all .15s; font-family: var(--sans);
+}
+.stab.active { background: var(--primary-dim); border-color: var(--primary); color: var(--primary); }
+.stab:hover  { border-color: var(--border2); color: var(--text); }
+
+/* ── SEARCH RESULTS ── */
+.search-group { border-bottom: 1px solid var(--border); }
+.search-group:last-child { border-bottom: none; }
+.search-group-header {
+  padding: 8px 14px; font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .5px;
+  color: var(--text3); background: var(--bg3);
+  border-bottom: 1px solid var(--border); font-family: var(--mono);
+}
+.search-result {
+  display: block; padding: 10px 14px;
+  color: var(--text); text-decoration: none;
+  border-bottom: 1px solid var(--border); transition: background .15s;
+}
+.search-result:last-child { border-bottom: none; }
+.search-result:hover { background: var(--bg3); }
+.search-result-title { font-weight: 500; margin-bottom: 4px; line-height: 1.3; }
+.search-result-excerpt { font-size: 12px; color: var(--text2); line-height: 1.4; }
+.search-result-badge {
+  display: inline-block; background: var(--primary-dim); color: var(--primary);
+  font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px;
+  margin-top: 4px; font-family: var(--mono);
+}
+.search-no-results { padding: 16px 14px; text-align: center; color: var(--text3); font-size: 13px; }
+.search-highlight { background: transparent; color: var(--primary); font-weight: 600; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1100px) {
+  .err-detail-inner { grid-template-columns: 1fr 1fr; }
+  .overview-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+  .hamburger { display: flex; align-items: center; justify-content: center; }
+  .main { margin-left: 0; }
+  .hero { padding: 56px 20px 28px; }
+  .hero h1 { font-size: 28px; }
+  .content { padding: 24px 16px 60px; }
+  .bento-grid { grid-template-columns: 1fr; }
+  .search-unified { max-width: 100%; }
+  .hero-top { flex-direction: column; gap: 16px; }
+  .toolbar { padding: 8px 20px; }
+}
+@media (max-width: 768px) {
+  .err-detail-inner { grid-template-columns: 1fr; gap: 16px; padding: 16px; }
+  .scripts-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .hero h1 { font-size: 24px; }
+  .bento-cell { padding: 14px 16px; }
+  .filter-btn { font-size: 11px; padding: 4px 8px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<button class="back-to-top" id="backToTop">↑ Topo</button>
+<button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+<div class="sidebar-overlay" id="overlay"></div>
+
+<!-- ═══════════════════════════ SIDEBAR ═══════════════════════════ -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-badge">
+      <span class="logo-badge-dot"></span>
+      <span>Disponível</span>
+    </div>
+    <div class="brand">IT<em>Hub</em></div>
+    <div class="brand-sub">// plataforma de guias técnicos</div>
+  </div>
+
+  <div class="sidebar-status" id="sidebarStatus">
+    <span class="status-dot"></span>
+    <span class="status-text" id="statusText">carregando...</span>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Fundação</div>
+    <a class="nav-item" href="#overview">
+      <span class="nav-item-icon" style="background:rgba(188,140,255,.1);border:1px solid rgba(188,140,255,.2);">🏗️</span>
+      <span class="nav-item-text">Visão Geral</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+    <a class="nav-item" href="#readiness">
+      <span class="nav-item-icon" style="background:rgba(188,140,255,.1);border:1px solid rgba(188,140,255,.2);">🔧</span>
+      <span class="nav-item-text">Infraestrutura & Readiness</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+    <a class="nav-item" href="#ports">
+      <span class="nav-item-icon" style="background:rgba(188,140,255,.1);border:1px solid rgba(188,140,255,.2);">🔌</span>
+      <span class="nav-item-text">Matriz de Portas</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+    <a class="nav-item" href="#logs">
+      <span class="nav-item-icon" style="background:rgba(188,140,255,.1);border:1px solid rgba(188,140,255,.2);">📋</span>
+      <span class="nav-item-text">Central de Logs</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+  </div>
+
+  <div class="nav-sep"></div>
+
+  <div class="nav-section">
+    <div class="nav-label">Módulos & Agentes</div>
+    <a class="nav-item" href="#adaudit">
+      <span class="nav-item-icon" style="background:rgba(77,159,255,.1);border:1px solid rgba(77,159,255,.2);">🔍</span>
+      <span class="nav-item-text">ADAudit Plus</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+    <a class="nav-item" href="#adselfservice">
+      <span class="nav-item-icon" style="background:rgba(188,140,255,.1);border:1px solid rgba(188,140,255,.2);">🔑</span>
+      <span class="nav-item-text">ADSelfService Plus</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+    <a class="nav-item" href="#admanager">
+      <span class="nav-item-icon" style="background:rgba(169,127,245,.1);border:1px solid rgba(169,127,245,.2);">👥</span>
+      <span class="nav-item-text">ADManager Plus</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+    <a class="nav-item" href="#ad360">
+      <span class="nav-item-icon" style="background:rgba(255,179,64,.1);border:1px solid rgba(255,179,64,.2);">🌐</span>
+      <span class="nav-item-text">AD360 Transversal</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+  </div>
+
+  <div class="nav-sep"></div>
+
+  <div class="nav-section">
+    <div class="nav-label">N3 Operations</div>
+    <a class="nav-item" href="#errors">
+      <span class="nav-item-icon" style="background:rgba(255,92,110,.1);border:1px solid rgba(255,92,110,.2);">⚠️</span>
+      <span class="nav-item-text">Catálogo de Erros</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+    <a class="nav-item" href="#scripts">
+      <span class="nav-item-icon" style="background:rgba(90,240,160,.1);border:1px solid rgba(90,240,160,.2);">⚙️</span>
+      <span class="nav-item-text">Scripts Operacionais</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+    <a class="nav-item" href="#backup">
+      <span class="nav-item-icon" style="background:rgba(188,140,255,.1);border:1px solid rgba(188,140,255,.2);">💾</span>
+      <span class="nav-item-text">Backup do Banco</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+  </div>
+
+  <div class="nav-sep"></div>
+
+  <div class="nav-section">
+    <div class="nav-label">Recursos</div>
+    <a class="nav-item" href="https://www.manageengine.com/productdocument.html" target="_blank" rel="noopener">
+      <span class="nav-item-icon" style="background:rgba(188,140,255,.08);border:1px solid rgba(188,140,255,.15);">📄</span>
+      <span class="nav-item-text">Documentação Oficial</span>
+      <span class="nav-item-arrow">↗</span>
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="status-row">
+      <span class="status-dot"></span>
+      <span>Hub ativo · GitHub Pages</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════ MAIN ═══════════════════════════ -->
+<main class="main">
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-top">
+      <div class="hero-left">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          ManageEngine · Identity
+        </div>
+        <h1>AD360 <span class="accent">Runbook Técnico</span></h1>
+        <p class="hero-desc">
+          Suite completa de gerenciamento de identidade e acesso. Autenticação, auditoria, gerenciamento de usuários e segurança de Active Directory em um ambiente unificado.
+        </p>
+        <div class="hero-meta">
+          <div class="hero-stat">
+            <span class="hero-stat-num">3</span>
+            <span class="hero-stat-label">Módulos<br>integrados</span>
+          </div>
+          <div class="hero-divider"></div>
+          <div class="hero-stat">
+            <span class="hero-stat-num">N1–N3</span>
+            <span class="hero-stat-label">Níveis de<br>suporte</span>
+          </div>
+          <div class="hero-divider"></div>
+          <div class="hero-stat">
+            <span class="hero-stat-num">50+</span>
+            <span class="hero-stat-label">Erros<br>catalogados</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="search-unified" id="searchUnified">
+        <div class="search-mode-toggle">
+          <button class="search-mode-btn active" id="modeLocal" title="Buscar nesta página">
+            <span>🔍</span><span>Página</span>
+          </button>
+          <button class="search-mode-btn" id="modeGlobal" title="Buscar em todos os guias" disabled>
+            <span>🌐</span><span>Global</span>
+          </button>
+        </div>
+        <span class="search-icon-wrap">🔍</span>
+        <input class="search-input-unified" id="searchUnifiedInput" type="text" placeholder="Buscar nesta página…" autocomplete="off" />
+        <div class="global-search-dropdown" id="globalSearchDropdown"></div>
+      </div>
+      <a href="../index.html" class="it-hub-btn">🏠 IT Hub</a>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <section class="content">
+
+    <!-- ══ VISÃO GERAL ══ -->
+    <section class="section" id="overview" data-section="overview">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Visão Geral Técnica — AD360 Suite</div>
+          <div class="section-desc">Arquitetura · Módulos Integrados · Requisitos · Dependências Críticas</div>
+        </div>
+      </div>
+
+      <div class="bento-section">
+        <div class="bento-section-header">
+          <div class="bento-section-eyebrow">IDENTITY · SUITE</div>
+          <div class="bento-section-title">Módulos Integrados AD360</div>
+          <div class="bento-section-count">4 componentes</div>
+        </div>
+        <div class="bento-grid">
+          <div class="bento-cell" id="adaudit">
+            <div class="bento-cell-id">MOD-101</div>
+            <div class="bento-cell-title">🔍 ADAudit Plus</div>
+            <div class="bento-cell-content">Auditoria e conformidade de Active Directory com relatórios detalhados e alertas em tempo real.</div>
+            <ul class="checklist">
+              <li><strong>Auditoria de logon</strong> e eventos de segurança</li>
+              <li><strong>Relatórios de conformidade</strong> (SOX, HIPAA, PCI)</li>
+              <li><strong>Alertas em tempo real</strong> para atividades suspeitas</li>
+              <li><strong>File Server Auditing</strong> (SACL/DACL)</li>
+            </ul>
+            <div class="bento-cell-footer">
+              <div class="bento-badges">
+                <span class="bento-badge info">AUDITORIA</span>
+                <span class="bento-badge info">AD</span>
+              </div>
+              <div class="bento-links"><a href="#errors" class="bento-link">Erros →</a></div>
+            </div>
+          </div>
+          <div class="bento-cell" id="adselfservice">
+            <div class="bento-cell-id">MOD-102</div>
+            <div class="bento-cell-title">🔑 ADSelfService Plus</div>
+            <div class="bento-cell-content">Auto-serviço para reset de senhas, atualização de informações e gerenciamento de contas.</div>
+            <ul class="checklist">
+              <li><strong>Reset de senha</strong> sem intervenção do helpdesk</li>
+              <li><strong>MFA</strong> para acesso ao self-service</li>
+              <li><strong>Desbloqueio de conta</strong> automatizado</li>
+              <li><strong>Atualização de perfil</strong> pelo próprio usuário</li>
+            </ul>
+            <div class="bento-cell-footer">
+              <div class="bento-badges">
+                <span class="bento-badge info">SELF-SERVICE</span>
+                <span class="bento-badge info">MFA</span>
+              </div>
+              <div class="bento-links"><a href="#errors" class="bento-link">Erros →</a></div>
+            </div>
+          </div>
+          <div class="bento-cell" id="admanager">
+            <div class="bento-cell-id">MOD-103</div>
+            <div class="bento-cell-title">👥 ADManager Plus</div>
+            <div class="bento-cell-content">Gerenciamento centralizado do Active Directory com automação de tarefas administrativas.</div>
+            <ul class="checklist">
+              <li><strong>Criação e gestão</strong> de usuários em massa</li>
+              <li><strong>Automação</strong> de workflows de RH</li>
+              <li><strong>Relatórios</strong> de gerenciamento do AD</li>
+              <li><strong>Delegação</strong> granular de permissões</li>
+            </ul>
+            <div class="bento-cell-footer">
+              <div class="bento-badges">
+                <span class="bento-badge info">GESTÃO</span>
+                <span class="bento-badge info">AUTOMAÇÃO</span>
+              </div>
+              <div class="bento-links"><a href="#errors" class="bento-link">Erros →</a></div>
+            </div>
+          </div>
+          <div class="bento-cell" id="ad360core">
+            <div class="bento-cell-id">MOD-104</div>
+            <div class="bento-cell-title">🔗 AD360 Core</div>
+            <div class="bento-cell-content">Plataforma central de integração entre todos os módulos de identidade ManageEngine.</div>
+            <ul class="checklist">
+              <li><strong>Console unificado</strong> para todos os módulos</li>
+              <li><strong>SSO integrado</strong> entre produtos</li>
+              <li><strong>Licenciamento</strong> centralizado</li>
+              <li><strong>Relatórios consolidados</strong> de identidade</li>
+            </ul>
+            <div class="bento-cell-footer">
+              <div class="bento-badges">
+                <span class="bento-badge info">CORE</span>
+                <span class="bento-badge info">IAM</span>
+              </div>
+              <div class="bento-links"><a href="#backup" class="bento-link">Backup →</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ INFRAESTRUTURA & READINESS ══ -->
+    <section class="section" id="readiness" data-section="readiness">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Infraestrutura & Readiness</div>
+          <div class="section-desc">Requisitos de sistema · Pré-requisitos de rede · Validações de ambiente</div>
+        </div>
+      </div>
+
+      <div class="bento-section">
+        <div class="bento-section-header">
+          <div class="bento-section-eyebrow">HARDWARE · REQUISITOS</div>
+          <div class="bento-section-title">Requisitos de Sistema</div>
+          <div class="bento-section-count">3 níveis</div>
+        </div>
+        <div class="bento-grid">
+          <div class="bento-cell">
+            <div class="bento-cell-id">RDY-101</div>
+            <div class="nav-item-icon" style="background:var(--primary);width:32px;height:32px;margin-bottom:12px;font-size:14px;">HW</div>
+            <div class="bento-cell-title">Especificações de Hardware</div>
+            <div class="bento-cell-content">Requisitos mínimos, recomendados e de produção para o AD360</div>
+            <table class="bento-table">
+              <thead><tr><th>Componente</th><th>Mínimo</th><th>Recomendado</th><th>Produção</th></tr></thead>
+              <tbody>
+                <tr><td>CPU</td><td>4 vCPU</td><td>8 vCPU</td><td>16+ vCPU</td></tr>
+                <tr><td>RAM</td><td>8 GB</td><td>16 GB</td><td>32+ GB</td></tr>
+                <tr><td>Disco</td><td>100 GB SSD</td><td>250 GB SSD</td><td>500+ GB SSD</td></tr>
+                <tr><td>Banco</td><td>PostgreSQL</td><td>PostgreSQL</td><td>SQL Server Std</td></tr>
+              </tbody>
+            </table>
+            <div class="bento-cell-footer">
+              <div class="bento-badges">
+                <span class="bento-badge info">INFRA</span>
+                <span class="bento-badge warning">VALIDAR</span>
+              </div>
+            </div>
+          </div>
+          <div class="bento-cell">
+            <div class="bento-cell-id">RDY-102</div>
+            <div class="nav-item-icon" style="background:var(--primary);width:32px;height:32px;margin-bottom:12px;font-size:14px;">✓</div>
+            <div class="bento-cell-title">Checklist de Pré-Instalação</div>
+            <div class="bento-cell-content">Valide todos os itens antes de iniciar a instalação ou troubleshooting</div>
+            <ul class="checklist">
+              <li><strong>Portas liberadas</strong> no firewall (ver Matriz de Portas)</li>
+              <li><strong>Conta de serviço</strong> com permissões adequadas no AD</li>
+              <li><strong>DC acessível</strong> via LDAP (389) e LDAPS (636)</li>
+              <li><strong>PostgreSQL ou SQL Server</strong> instalado e rodando</li>
+              <li><strong>DNS resolução</strong> correta do servidor para os DCs</li>
+              <li><strong>GPO de auditoria</strong> aplicada nos Domain Controllers</li>
+            </ul>
+            <div class="bento-cell-footer">
+              <div class="bento-badges">
+                <span class="bento-badge critical">⚠ CRÍTICO</span>
+                <span class="bento-badge info">PRÉ-INSTALL</span>
+              </div>
+              <div class="bento-links"><a href="#ports" class="bento-link">Portas →</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ MATRIZ DE PORTAS ══ -->
+    <section class="section" id="ports" data-section="ports">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Matriz de Portas — AD360 Suite</div>
+          <div class="section-desc">Todas as portas necessárias para operação correta do AD360 e seus módulos</div>
+        </div>
+      </div>
+
+      <div class="bento-section">
+        <div class="bento-section-header">
+          <div class="bento-section-eyebrow">REDE · PORTAS</div>
+          <div class="bento-section-title">Portas Críticas para Operação</div>
+          <div class="bento-section-count">Portas essenciais</div>
+        </div>
+        <div class="bento-grid">
+          <div class="bento-cell">
+            <div class="bento-cell-id">PORT-101</div>
+            <div class="nav-item-icon" style="background:var(--primary);width:32px;height:32px;margin-bottom:12px;font-size:14px;">LDAP</div>
+            <div class="bento-cell-title">Portas de Diretório</div>
+            <div class="bento-cell-content">Comunicação com Active Directory / Domain Controllers</div>
+            <table class="port-table">
+              <thead><tr><th>Porta</th><th>Protocolo</th><th>Origem</th><th>Destino</th><th>Uso</th></tr></thead>
+              <tbody>
+                <tr><td>389</td><td>LDAP</td><td>Server</td><td>DC</td><td>Consulta LDAP</td></tr>
+                <tr><td>636</td><td>LDAPS</td><td>Server</td><td>DC</td><td>LDAP Seguro</td></tr>
+                <tr><td>88</td><td>Kerberos</td><td>Server</td><td>DC</td><td>Autenticação</td></tr>
+                <tr><td>53</td><td>DNS</td><td>Server</td><td>DC</td><td>Resolução DNS</td></tr>
+                <tr><td>135</td><td>RPC</td><td>Server</td><td>DC</td><td>RPC Endpoint Mapper</td></tr>
+                <tr><td>445</td><td>SMB</td><td>Server</td><td>DC</td><td>Admin Share</td></tr>
+                <tr><td>3268</td><td>GC</td><td>Server</td><td>DC</td><td>Global Catalog</td></tr>
+                <tr><td>3269</td><td>GCS</td><td>Server</td><td>DC</td><td>Global Catalog Seg.</td></tr>
+              </tbody>
+            </table>
+            <div class="bento-cell-footer">
+              <div class="bento-badges">
+                <span class="bento-badge critical">⚠ CRÍTICO</span>
+                <span class="bento-badge info">LDAP</span>
+              </div>
+            </div>
+          </div>
+          <div class="bento-cell">
+            <div class="bento-cell-id">PORT-102</div>
+            <div class="nav-item-icon" style="background:var(--primary);width:32px;height:32px;margin-bottom:12px;font-size:14px;">WEB</div>
+            <div class="bento-cell-title">Portas de Console & Banco</div>
+            <div class="bento-cell-content">Acesso ao console web, agentes e banco de dados</div>
+            <table class="port-table">
+              <thead><tr><th>Porta</th><th>Protocolo</th><th>Origem</th><th>Destino</th><th>Uso</th></tr></thead>
+              <tbody>
+                <tr><td>8080</td><td>HTTP</td><td>Client</td><td>Server</td><td>Console Web (HTTP)</td></tr>
+                <tr><td>8443</td><td>HTTPS</td><td>Client</td><td>Server</td><td>Console Web (HTTPS)</td></tr>
+                <tr><td>8081</td><td>TCP</td><td>Agent</td><td>Server</td><td>Agente ADAudit Plus</td></tr>
+                <tr><td>5432</td><td>PostgreSQL</td><td>Server</td><td>DB</td><td>Banco de Dados</td></tr>
+                <tr><td>1433</td><td>SQL Server</td><td>Server</td><td>DB</td><td>Banco de Dados</td></tr>
+                <tr><td>49152-65535</td><td>RPC Dinâmico</td><td>Server</td><td>DC</td><td>Portas RPC Dinâmicas</td></tr>
+              </tbody>
+            </table>
+            <div class="bento-cell-footer">
+              <div class="bento-badges">
+                <span class="bento-badge critical">⚠ CRÍTICO</span>
+                <span class="bento-badge info">CONSOLE</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ CENTRAL DE LOGS ══ -->
+    <section class="section" id="logs" data-section="logs">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Central de Logs</div>
+          <div class="section-desc">Localização dos logs de cada componente do AD360 Suite</div>
+        </div>
+      </div>
+
+      <div class="bento-section">
+        <div class="bento-section-header">
+          <div class="bento-section-eyebrow">DIAGNÓSTICO · LOGS</div>
+          <div class="bento-section-title">Localização dos Logs por Componente</div>
+          <div class="bento-section-count">4 componentes</div>
+        </div>
+        <div class="bento-grid">
+          <div class="bento-cell">
+            <div class="bento-cell-id">LOG-101</div>
+            <div class="nav-item-icon" style="background:var(--primary);width:32px;height:32px;margin-bottom:12px;font-size:14px;">LOG</div>
+            <div class="bento-cell-title">Logs dos Servidores</div>
+            <div class="bento-cell-content">Caminhos dos logs de cada produto da suite AD360</div>
+            <table class="bento-table">
+              <thead><tr><th>Componente</th><th>Caminho do Log</th><th>Importância</th></tr></thead>
+              <tbody>
+                <tr><td>AD360 Server</td><td>C:\Program Files\ManageEngine\AD360\logs\</td><td style="color:var(--red)">Alta</td></tr>
+                <tr><td>ADAudit Plus</td><td>C:\Program Files\ManageEngine\ADAuditPlus\logs\</td><td style="color:var(--red)">Alta</td></tr>
+                <tr><td>ADSelfService Plus</td><td>C:\Program Files\ManageEngine\ADSelfService Plus\logs\</td><td style="color:var(--amber)">Média</td></tr>
+                <tr><td>ADManager Plus</td><td>C:\Program Files\ManageEngine\ADManager Plus\logs\</td><td style="color:var(--amber)">Média</td></tr>
+              </tbody>
+            </table>
+            <div class="bento-cell-footer">
+              <div class="bento-badges"><span class="bento-badge info">N3</span><span class="bento-badge info">DIAGNÓSTICO</span></div>
+            </div>
+          </div>
+          <div class="bento-cell">
+            <div class="bento-cell-id">LOG-102</div>
+            <div class="nav-item-icon" style="background:var(--primary);width:32px;height:32px;margin-bottom:12px;font-size:14px;">!</div>
+            <div class="bento-cell-title">Arquivos de Log Críticos</div>
+            <div class="bento-cell-content">Logs prioritários para análise N3 em problemas de serviço</div>
+            <ul class="checklist">
+              <li><strong>serverOut.txt</strong> — log principal do servidor (erros de startup)</li>
+              <li><strong>wrapper.log</strong> — log do serviço Windows (crashes, reinicializações)</li>
+              <li><strong>agent.log</strong> — comunicação entre agente e servidor</li>
+              <li><strong>database.log</strong> — operações e erros de banco de dados</li>
+              <li><strong>audit.log</strong> — eventos de auditoria processados</li>
+            </ul>
+            <div class="bento-cell-footer">
+              <div class="bento-badges"><span class="bento-badge critical">⚠ PRIORITÁRIO</span></div>
+              <div class="bento-links"><a href="#errors" class="bento-link">Erros →</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ CATÁLOGO DE ERROS ══ -->
+    <section class="section" id="errors" data-section="errors">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Catálogo de Erros</div>
+          <div class="section-desc">Erros catalogados por módulo · Severidade · Passos de resolução · Scripts para o cliente</div>
+        </div>
+      </div>
+
+      <div class="warning">
+        <span>!</span>
+        <div><strong>Atenção:</strong> Use os filtros abaixo para refinar a busca por módulo ou severidade. Clique em cada linha para expandir os detalhes de resolução.</div>
+      </div>
+
+      <!-- Toolbar de Filtros -->
+      <div class="toolbar">
+        <span class="toolbar-label">Filtrar:</span>
+        <button class="filter-btn all active" onclick="setFilter('all')">Todos</button>
+        <button class="filter-btn ada" onclick="setFilter('ada')">ADAudit</button>
+        <button class="filter-btn ads" onclick="setFilter('ads')">ADSelfService</button>
+        <button class="filter-btn adm" onclick="setFilter('adm')">ADManager</button>
+        <button class="filter-btn ad360" onclick="setFilter('ad360')">AD360</button>
+        <button class="filter-btn db" onclick="setFilter('db')">Database</button>
+        <button class="filter-btn critico" onclick="setFilter('critico')">Crítico</button>
+      </div>
+
+      <section class="section" id="section-ada-log">
+        <div class="cat-header" onclick="toggleCat(this)">
+          <span class="cat-code">ADA-LOG</span>
+          <span class="cat-name">Logs e Coleta ADAudit</span>
+          <span class="cat-count">0 itens</span>
+          <span class="cat-chevron">▼</span>
+        </div>
+        <table class="err-table">
+          <thead><tr><th>Código</th><th>Descrição</th><th>Erro</th><th>Severidade</th><th>Correção</th></tr></thead>
+          <tbody id="tbody-ada-log"></tbody>
+        </table>
+      </section>
+
+      <section class="section" id="section-ada-agt">
+        <div class="cat-header" onclick="toggleCat(this)">
+          <span class="cat-code">ADA-AGT</span>
+          <span class="cat-name">Agentes ADAudit</span>
+          <span class="cat-count">0 itens</span>
+          <span class="cat-chevron">▼</span>
+        </div>
+        <table class="err-table">
+          <thead><tr><th>Código</th><th>Descrição</th><th>Erro</th><th>Severidade</th><th>Correção</th></tr></thead>
+          <tbody id="tbody-ada-agt"></tbody>
+        </table>
+      </section>
+
+      <section class="section" id="section-ada-srv">
+        <div class="cat-header" onclick="toggleCat(this)">
+          <span class="cat-code">ADA-SRV</span>
+          <span class="cat-name">Serviço ADAudit Plus</span>
+          <span class="cat-count">0 itens</span>
+          <span class="cat-chevron">▼</span>
+        </div>
+        <table class="err-table">
+          <thead><tr><th>Código</th><th>Descrição</th><th>Erro</th><th>Severidade</th><th>Correção</th></tr></thead>
+          <tbody id="tbody-ada-srv"></tbody>
+        </table>
+      </section>
+
+      <section class="section" id="section-ada-rpt">
+        <div class="cat-header" onclick="toggleCat(this)">
+          <span class="cat-code">ADA-RPT</span>
+          <span class="cat-name">Relatórios ADAudit</span>
+          <span class="cat-count">0 itens</span>
+          <span class="cat-chevron">▼</span>
+        </div>
+        <table class="err-table">
+          <thead><tr><th>Código</th><th>Descrição</th><th>Erro</th><th>Severidade</th><th>Correção</th></tr></thead>
+          <tbody id="tbody-ada-rpt"></tbody>
+        </table>
+      </section>
+
+      <section class="section" id="section-ada-prm">
+        <div class="cat-header" onclick="toggleCat(this)">
+          <span class="cat-code">ADA-PRM</span>
+          <span class="cat-name">Permissões ADAudit</span>
+          <span class="cat-count">0 itens</span>
+          <span class="cat-chevron">▼</span>
+        </div>
+        <table class="err-table">
+          <thead><tr><th>Código</th><th>Descrição</th><th>Erro</th><th>Severidade</th><th>Correção</th></tr></thead>
+          <tbody id="tbody-ada-prm"></tbody>
+        </table>
+      </section>
+
+      <section class="section" id="section-ada-int">
+        <div class="cat-header" onclick="toggleCat(this)">
+          <span class="cat-code">ADA-INT</span>
+          <span class="cat-name">Integrações ADAudit</span>
+          <span class="cat-count">0 itens</span>
+          <span class="cat-chevron">▼</span>
+        </div>
+        <table class="err-table">
+          <thead><tr><th>Código</th><th>Descrição</th><th>Erro</th><th>Severidade</th><th>Correção</th></tr></thead>
+          <tbody id="tbody-ada-int"></tbody>
+        </table>
+      </section>
+
+      <section class="section" id="section-ada-gpo">
+        <div class="cat-header" onclick="toggleCat(this)">
+          <span class="cat-code">ADA-GPO</span>
+          <span class="cat-name">GPO & SYSVOL ADAudit</span>
+          <span class="cat-count">0 itens</span>
+          <span class="cat-chevron">▼</span>
+        </div>
+        <table class="err-table">
+          <thead><tr><th>Código</th><th>Descrição</th><th>Erro</th><th>Severidade</th><th>Correção</th></tr></thead>
+          <tbody id="tbody-ada-gpo"></tbody>
+        </table>
+      </section>
+
+      <section class="section" id="section-ada-sec">
+        <div class="cat-header" onclick="toggleCat(this)">
+          <span class="cat-code">ADA-SEC</span>
+          <span class="cat-name">Segurança & Alertas ADAudit</span>
+          <span class="cat-count">0 itens</span>
+          <span class="cat-chevron">▼</span>
+        </div>
+        <table class="err-table">
+          <thead><tr><th>Código</th><th>Descrição</th><th>Erro</th><th>Severidade</th><th>Correção</th></tr></thead>
+          <tbody id="tbody-ada-sec"></tbody>
+        </table>
+      </section>
+
+      <section class="section" id="section-ads-pwd">
+        <div class="cat-header" onclick="toggleCat(this)">
+          <span class="cat-code">ADS-PWD</span>
+          <span class="cat-name">Reset de Senha ADSelfService</span>
+          <span class="cat-count">0 itens</span>
+          <span class="cat-chevron">▼</span>
+        </div>
+        <table class="err-table">
+          <thead><tr><th>Código</th><th>Descrição</th><th>Erro</th><th>Severidade</th><th>Correção</th></tr></thead>
+          <tbody id="tbody-ads-pwd"></tbody>
+        </table>
+      </section>
+
+      <section class="section" id="section-adm-usr">
+        <div class="cat-header" onclick="toggleCat(this)">
+          <span class="cat-code">ADM-USR</span>
+          <span class="cat-name">Gestão de Usuários ADManager</span>
+          <span class="cat-count">0 itens</span>
+          <span class="cat-chevron">▼</span>
+        </div>
+        <table class="err-table">
+          <thead><tr><th>Código</th><th>Descrição</th><th>Erro</th><th>Severidade</th><th>Correção</th></tr></thead>
+          <tbody id="tbody-adm-usr"></tbody>
+        </table>
+      </section>
+
+      <section class="section" id="section-ad360-inf">
+        <div class="cat-header" onclick="toggleCat(this)">
+          <span class="cat-code">AD360-INF</span>
+          <span class="cat-name">Infraestrutura AD360</span>
+          <span class="cat-count">0 itens</span>
+          <span class="cat-chevron">▼</span>
+        </div>
+        <table class="err-table">
+          <thead><tr><th>Código</th><th>Descrição</th><th>Erro</th><th>Severidade</th><th>Correção</th></tr></thead>
+          <tbody id="tbody-ad360-inf"></tbody>
+        </table>
+      </section>
+
+      <section class="section" id="section-ad360-db">
+        <div class="cat-header" onclick="toggleCat(this)">
+          <span class="cat-code">AD360-DB</span>
+          <span class="cat-name">Banco de Dados</span>
+          <span class="cat-count">0 itens</span>
+          <span class="cat-chevron">▼</span>
+        </div>
+        <table class="err-table">
+          <thead><tr><th>Código</th><th>Descrição</th><th>Erro</th><th>Severidade</th><th>Correção</th></tr></thead>
+          <tbody id="tbody-ad360-db"></tbody>
+        </table>
+      </section>
+
+      <div class="no-results" id="noResults">
+        <h3>Nenhum resultado encontrado</h3>
+        <p>Tente ajustar os filtros ou o termo de busca.</p>
+      </div>
+    </section>
+
+    <!-- ══ SCRIPTS OPERACIONAIS ══ -->
+    <section class="section" id="scripts" data-section="scripts">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Scripts Operacionais</div>
+          <div class="section-desc">Scripts N3 para diagnóstico, validação e manutenção do AD360 Suite</div>
+        </div>
+      </div>
+
+      <div class="bento-section">
+        <div class="bento-section-header">
+          <div class="bento-section-eyebrow">N3 · SCRIPTS</div>
+          <div class="bento-section-title">Diagnóstico & Validação</div>
+          <div class="bento-section-count">2 scripts</div>
+        </div>
+        <div class="bento-grid">
+          <div class="bento-cell">
+            <div class="bento-cell-id">SCR-101</div>
+            <div class="bento-cell-title">⚡ Diagnóstico de Conectividade</div>
+            <div class="bento-cell-content">Testar portas críticas e status dos serviços do AD360</div>
+            <div class="code-block"><span class="code-content"><span class="comment"># Testar portas críticas do AD360</span>
+$ports = @(389, 636, 8080, 8443, 5432, 1433)
+foreach ($p in $ports) {
+  $check = <span class="cmd">Test-NetConnection</span> -ComputerName localhost -Port $p
+  if ($check.TcpTestSucceeded) {
+    Write-Host "Porta $p: OK" -ForegroundColor Green
+  } else {
+    Write-Warning "Porta $p: FECHADA"
+  }
+}
+
+<span class="comment"># Verificar serviços</span>
+<span class="cmd">Get-Service</span> *AD360*, *adaudit*, *adself*, *admanager* |
+  Select-Object Name, Status, StartType</span><button class="copy-code-btn" title="Copiar comando">⎘</button></div>
+            <div class="bento-cell-footer">
+              <div class="bento-badges"><span class="bento-badge info">POWERSHELL</span><span class="bento-badge info">N3</span></div>
+            </div>
+          </div>
+          <div class="bento-cell">
+            <div class="bento-cell-id">SCR-102</div>
+            <div class="bento-cell-title">🗄️ Validação de Banco de Dados</div>
+            <div class="bento-cell-content">Verificar conectividade e integridade do banco de dados</div>
+            <div class="code-block"><span class="code-content"><span class="comment"># PostgreSQL — verificar versão</span>
+<span class="cmd">psql</span> -U postgres -h localhost -c "SELECT version();"
+
+<span class="comment"># SQL Server — verificar versão</span>
+<span class="cmd">sqlcmd</span> -S localhost -E -Q "SELECT @@VERSION"
+
+<span class="comment"># Verificar conexões ativas (PostgreSQL)</span>
+SELECT * FROM pg_stat_activity
+WHERE state = 'active';</span><button class="copy-code-btn" title="Copiar comando">⎘</button></div>
+            <div class="bento-cell-footer">
+              <div class="bento-badges"><span class="bento-badge info">SQL</span><span class="bento-badge info">N3</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ BACKUP DO BANCO ══ -->
+    <section class="section" id="backup" data-section="backup">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Backup do Banco de Dados</div>
+          <div class="section-desc">Estratégia de backup · Procedimento de recovery · Boas práticas</div>
+        </div>
+      </div>
+
+      <div class="danger">
+        <span>🚨</span>
+        <div><strong>Crítico:</strong> Teste regularmente a restauração dos backups para garantir recoverability. Um backup não testado não é um backup confiável.</div>
+      </div>
+
+      <div class="bento-section">
+        <div class="bento-section-header">
+          <div class="bento-section-eyebrow">N3 · RECOVERY</div>
+          <div class="bento-section-title">Estratégia de Backup & Recovery</div>
+          <div class="bento-section-count">2 procedimentos</div>
+        </div>
+        <div class="bento-grid">
+          <div class="bento-cell">
+            <div class="bento-cell-id">BCK-101</div>
+            <div class="bento-cell-title">Estratégia de Backup</div>
+            <div class="bento-cell-content">Configuração e boas práticas para backup do banco de dados do AD360</div>
+            <ul class="checklist">
+              <li><strong>Backup Manual:</strong> execute <code>backupDB.bat</code> em <code>&lt;AD360_Install_Dir&gt;\bin</code></li>
+              <li><strong>Automático:</strong> configure em <code>Admin → General Settings → Database Settings</code></li>
+              <li><strong>Agendamento diário</strong> de backup completo recomendado</li>
+              <li><strong>Retenção mínima</strong> de 30 dias</li>
+              <li><strong>Atenção ao limite</strong> de 10 GB do SQL Express</li>
+              <li><strong>Armazenamento externo</strong> para backup crítico</li>
+            </ul>
+            <div class="bento-cell-footer">
+              <div class="bento-badges"><span class="bento-badge critical">⚠ CRÍTICO</span><span class="bento-badge info">BACKUP</span></div>
+            </div>
+          </div>
+          <div class="bento-cell">
+            <div class="bento-cell-id">BCK-102</div>
+            <div class="bento-cell-title">🔄 Procedimento de Recovery</div>
+            <div class="bento-cell-content">Passos para restauração do banco de dados em caso de falha</div>
+            <div class="bento-cell-steps">
+              <div class="bento-step">
+                <span class="bento-step-number">1</span>
+                <span class="bento-step-text">Parar todos os serviços: <code>net stop "ManageEngine AD360 *"</code></span>
+              </div>
+              <div class="bento-step">
+                <span class="bento-step-number">2</span>
+                <span class="bento-step-text">Restaurar banco via <code>SQL Server → Restore Database</code> ou <code>pg_restore</code></span>
+              </div>
+              <div class="bento-step">
+                <span class="bento-step-number">3</span>
+                <span class="bento-step-text">Validar integridade: <code>DBCC CHECKDB</code> (SQL) ou <code>pg_dumpall</code> (PostgreSQL)</span>
+              </div>
+              <div class="bento-step">
+                <span class="bento-step-number">4</span>
+                <span class="bento-step-text">Iniciar serviços e validar: <code>net start "ManageEngine AD360 *"</code></span>
+              </div>
+            </div>
+            <div class="bento-cell-footer">
+              <div class="bento-badges"><span class="bento-badge critical">⚠ DRP</span><span class="bento-badge info">RECOVERY</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Links Oficiais -->
+      <div class="bento-section" style="margin-top:32px">
+        <div class="bento-section-header">
+          <div class="bento-section-eyebrow">RECURSOS · LINKS</div>
+          <div class="bento-section-title">Documentação Oficial ManageEngine</div>
+          <div class="bento-section-count">4 produtos</div>
+        </div>
+        <div class="bento-grid">
+          <div class="bento-cell">
+            <div class="bento-cell-id">DOC-101</div>
+            <div class="bento-cell-title">📚 Links Oficiais por Produto</div>
+            <div class="bento-cell-content">Acesso rápido à documentação e suporte de cada módulo</div>
+            <table class="bento-table">
+              <thead><tr><th>Produto</th><th>Documentação</th><th>Suporte</th></tr></thead>
+              <tbody>
+                <tr><td>AD360</td><td><a href="https://www.manageengine.com/products/ad360/" target="_blank" style="color:var(--primary)">Guia Oficial</a></td><td><a href="https://support.manageengine.com/" target="_blank" style="color:var(--primary)">Portal</a></td></tr>
+                <tr><td>ADAudit Plus</td><td><a href="https://www.manageengine.com/products/active-directory-audit/" target="_blank" style="color:var(--primary)">Documentação</a></td><td><a href="https://support.manageengine.com/adaudit-plus/" target="_blank" style="color:var(--primary)">Suporte</a></td></tr>
+                <tr><td>ADSelfService Plus</td><td><a href="https://www.manageengine.com/products/self-service-password/" target="_blank" style="color:var(--primary)">Guia</a></td><td><a href="https://support.manageengine.com/adselfservice-plus/" target="_blank" style="color:var(--primary)">Help Desk</a></td></tr>
+                <tr><td>ADManager Plus</td><td><a href="https://www.manageengine.com/products/ad-manager/" target="_blank" style="color:var(--primary)">Manual</a></td><td><a href="https://support.manageengine.com/admanager-plus/" target="_blank" style="color:var(--primary)">Suporte</a></td></tr>
+              </tbody>
+            </table>
+            <div class="bento-cell-footer">
+              <div class="bento-badges"><span class="bento-badge info">DOCS</span><span class="bento-badge info">OFICIAL</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </section><!-- /.content -->
+</main>
+
+<script>
+// ══════════════════════════════════════════
+// DATA — ERRORS CATALOG
+// ══════════════════════════════════════════
+const ERRORS = [
+  // ADA-LOG
+  {id:"ADA-LOG-001",cat:"ada-log",mod:"ada",desc:"Sem coleta de logs do AD",err:"GPO não aplicada / serviço parado",sev:"CRÍTICO",fix:"Verificar GPO de auditoria > reiniciar serviço > checar conectividade DC",steps:["Verificar GPO: Group Policy Management > Default Domain Controllers Policy","Confirmar Audit Account Logon, Account Management, Logon habilitados","Reiniciar serviço ManageEngine ADAudit Plus","Verificar Domain Settings no console — todos os DCs em verde"],codes:["repadmin /showrepl","gpresult /r"],client:"Identificamos que a coleta de logs não estava ativa por uma falha na configuração de auditoria. Já ajustamos e a visibilidade foi restabelecida. Vamos monitorar para garantir estabilidade.",link:"https://pitstop.manageengine.com"},
+  {id:"ADA-LOG-002",cat:"ada-log",prod:"ada",desc:"Logs incompletos / eventos faltando",err:"Advanced Audit Policy não configurada",sev:"ALTO",fix:"Ativar Advanced Audit Policy em Configuração > Audit Policy no console",steps:["ADAudit Plus > Domain Settings > Configure Audit Policy","Ativar Advanced Audit Policy (subcategorias granulares)","Confirmar via gpresult /r no DC que a política foi aplicada"],client:"Identificamos que a política avançada de auditoria estava incompleta. Já aplicamos as configurações corretas. Os eventos agora estão sendo coletados corretamente."},
+
+  // N3 (injeção oficial)
+  {id:"ADA-LOG-901",cat:"ada-log",mod:"ada",desc:"Falha de Auditoria Avançada (Advanced Audit Policy)",err:"GPO de Advanced Audit Policy não aplicada no(s) DC(s)",sev:"CRÍTICO",fix:"Aplicar Advanced Audit Policy nos DCs e validar com gpresult/auditpol",steps:["Validar aplicação de GPO no DC: gpresult /r (Computer)","Validar subcategorias: auditpol /get /category:*","Reaplicar política: gpupdate /force e aguardar replicação","Validar replicação/erros: repadmin /showrepl"],codes:["gpresult /r","auditpol /get /category:*","gpupdate /force","repadmin /showrepl"],client:"Identificamos que a política avançada de auditoria não estava aplicada em um ou mais controladores de domínio. Após aplicar e validar a política, os eventos voltarão a ser coletados normalmente.",link:"https://pitstop.manageengine.com"},
+  {id:"ADA-LOG-003",cat:"ada-log",prod:"ada",desc:"Delay na coleta (eventos atrasados)",err:"Fila grande / performance do servidor",sev:"MÉDIO",fix:"Checar CPU/RAM do servidor + tamanho do Event Log nos DCs",steps:["Verificar CPU/RAM no servidor ADAudit Plus (mín: 8 vCPU / 16GB)","Verificar tamanho do Security Log nos DCs (mín: 512MB)","Considerar instalação de agente para reduzir carga de coleta remota"],client:"Houve um atraso na coleta de eventos por sobrecarga de processamento. Aplicamos otimizações e os dados estão atualizados."},
+  {id:"ADA-LOG-004",cat:"ada-log",prod:"ada",desc:"Eventos sobrescritos antes da coleta",err:"Event Log size muito pequeno",sev:"ALTO",fix:"Aumentar tamanho do Security Log nos DCs (mín. 512MB recomendado)",steps:["Event Viewer no DC > Windows Logs > Security > Properties","Aumentar 'Maximum log size' para pelo menos 524288 KB (512MB)","Selecionar 'Archive the log when full, do not overwrite events'"],client:"Eventos estavam sendo perdidos por sobreescrita do log. Aumentamos o tamanho do log de segurança nos servidores para evitar recorrência."},
+  {id:"ADA-LOG-005",cat:"ada-log",prod:"ada",desc:"Sem dados do File Server",err:"SACL não configurada nos compartilhamentos",sev:"ALTO",fix:"Ativar SACL nas pastas auditadas > ADAudit > File Audit > Configure Object Level Auditing",steps:["ADAudit Plus > File Audit > selecionar o servidor","Clicar em 'Configure' > Object Level Auditing","Verificar que as pastas alvo estão com SACL configurada","Testar criando/modificando um arquivo e aguardando o evento"],client:"A auditoria de arquivos não estava ativa por ausência de configuração de nível de objeto (SACL). Aplicamos a configuração correta e a coleta já está funcionando."},
+  {id:"ADA-LOG-006",cat:"ada-log",prod:"ada",desc:"Sem dados de Workstations",err:"Agente não instalado ou política não aplicada",sev:"MÉDIO",fix:"Instalar agente via UI ou GPO; verificar política de auditoria nas workstations",steps:["ADAudit Plus > Workstation Audit > Add Computers","Instalar agente via UI ou via GPO (ver guia de instalação)","Configurar Audit Policy nas workstations (Logon, Account Logon)"],client:"A monitoração de estações de trabalho não estava configurada. Iniciamos o processo de instalação e configuração para o escopo solicitado."},
+  {id:"ADA-LOG-007",cat:"ada-log",prod:"ada",desc:"Eventos duplicados / repetidos",err:"Bug ou configuração dupla de fonte",sev:"BAIXO",fix:"Atualizar para build mais recente; verificar fontes duplicadas em Domain Settings",steps:["Verificar versão atual: Help > About","Atualizar para último build em manageengine.com/products/active-directory-audit/service-pack.html","Se persistir após update: abrir chamado com support@adauditplus.com"],client:"Identificamos e estamos investigando a duplicidade de eventos. Aplicaremos a correção necessária e confirmaremos quando normalizado."},
+
+  // ADA-AGT
+  {id:"ADA-AGT-001",cat:"ada-agt",mod:"ada",desc:"Agente não instala no servidor alvo",err:"Admin share inacessível / Remcom.exe bloqueado",sev:"CRÍTICO",fix:"Restaurar Remcom.exe; criar exceção AV; garantir acesso ao \\\\server\\admin$",steps:["Verificar se Remcom.exe existe em <instalação>\\bin\\","Se ausente: restaurar do pacote de instalação original","Criar exceção no antivírus para a pasta inteira de instalação","Verificar acesso ao admin share: net use \\\\servidor\\admin$ /user:dominio\\conta"],codes:["net use \\\\TARGET\\admin$ /user:DOMAIN\\svc_account","Test-NetConnection TARGET -Port 445"],client:"Identificamos que o antivírus estava impedindo a instalação do agente de monitoração. Aplicamos a exceção necessária e a instalação será realizada em seguida.",link:"https://pitstop.manageengine.com"},
+  {id:"ADA-AGT-002",cat:"ada-agt",prod:"ada",desc:"No communication from agent to server",err:"Firewall bloqueando porta 8081",sev:"ALTO",fix:"Liberar TCP 8081 bidirecional entre agente e servidor ADAudit Plus",steps:["Testar conexão: telnet servidor-adaudit 8081","Abrir regra de firewall TCP 8081 bidirecional no servidor alvo e no ADAudit","Reiniciar agente após liberação da porta"],client:"Havia um bloqueio de rede impedindo a comunicação do agente com o servidor de monitoração. A regra de firewall foi ajustada e a comunicação foi restabelecida."},
+  {id:"ADA-AGT-003",cat:"ada-agt",prod:"ada",desc:"Initial profile fetch não ocorre",err:"Conta sem acesso ao admin share",sev:"ALTO",fix:"Reconfigurar credencial em Domain Settings > Modify Credentials + Log On do serviço",steps:["ADAudit Plus > Domain Settings > Modify Credentials","Informar conta com acesso ao \\\\server\\admin$","services.msc > ManageEngine ADAudit Plus > Log On > This Account > informar mesma conta","Reiniciar o serviço após alteração"],client:"A conta de serviço não tinha acesso suficiente ao servidor alvo. Atualizamos as credenciais e a sincronização foi normalizada."},
+  {id:"ADA-AGT-004",cat:"ada-agt",prod:"ada",desc:"Agente para após instalação",err:"Remote Registry Service parado no alvo",sev:"MÉDIO",fix:"Iniciar serviço Remote Registry no servidor alvo; configurar para Automático",steps:["No servidor alvo: services.msc > Remote Registry","Iniciar o serviço e definir para Automático","Reiniciar o agente ADAudit no servidor alvo"],client:"Um serviço auxiliar estava parado no servidor monitorado, impedindo a coleta. Já normalizamos e o monitoramento voltou a funcionar."},
+  {id:"ADA-AGT-005",cat:"ada-agt",prod:"ada",desc:"Erro de MSI na instalação do agente",err:"Windows Installer Service corrompido",sev:"MÉDIO",fix:"msiexec /unregister + msiexec /register no alvo; reiniciar e tentar novamente",steps:["No servidor alvo: Win+R > msiexec /unregister > Enter","Win+R > msiexec /register > Enter","Reiniciar o servidor alvo","Tentar reinstalar o agente pelo console ADAudit Plus"],client:"Houve um problema no instalador do Windows no servidor alvo. Após correção, o agente foi instalado com sucesso."},
+  {id:"ADA-AGT-006",cat:"ada-agt",prod:"ada",desc:"Agente desconecta periodicamente",err:"Instabilidade de rede ou link WAN",sev:"MÉDIO",fix:"Verificar qualidade da rede; usar agente (obrigatório em WAN)",steps:["Verificar latência e perda de pacotes entre servidores","Em ambientes WAN: agente é obrigatório para coleta estável","Considerar buffer de eventos local configurado no agente"],client:"A instabilidade de rede estava causando desconexões do agente. Ajustamos a configuração para maior resiliência em ambiente de rede instável."},
+
+  // ADA-SRV
+  {id:"ADA-SRV-001",cat:"ada-srv",prod:"ada",desc:"Serviço ADAudit Plus não inicia",err:"Porta em uso / banco indisponível / licença",sev:"CRÍTICO",fix:"Checar netstat porta 8080/8443; iniciar PostgreSQL; verificar licença",steps:["netstat -ano | findstr :8080","Se porta em uso: identificar processo e encerrar ou reconfigurar","Verificar serviço PostgreSQL em services.msc","Verificar licença: Help > License no console"],client:"Identificamos uma indisponibilidade no serviço de monitoração. Já estamos investigando — causa identificada: [porta/banco/licença]. Atualizaremos em breve."},
+  {id:"ADA-SRV-002",cat:"ada-srv",prod:"ada",desc:"Serviço cai frequentemente",err:"Memória insuficiente / conflito de porta",sev:"CRÍTICO",fix:"Aumentar heap JVM em wrapper.conf; checar logs em <instalação>\\logs\\serverOut.txt",steps:["Verificar logs: <instalação>\\logs\\serverOut.txt","Ajustar heap: <instalação>\\conf\\wrapper.conf > wrapper.java.maxmemory","Mínimo recomendado: 4096 MB; MSS produção: 8192 MB","Verificar se outra aplicação conflita na mesma porta"],client:"O serviço estava reiniciando por insuficiência de memória. Ajustamos a configuração de memória e estamos monitorando a estabilidade."},
+  {id:"ADA-SRV-003",cat:"ada-srv",prod:"ada",desc:"Lentidão geral no console",err:"Banco pesado / heap insuficiente",sev:"ALTO",fix:"Ajustar JVM heap; arquivar logs antigos; vacuum no PostgreSQL",steps:["Admin > Database Maintenance > arquivar dados > 90 dias","Executar vacuum no PostgreSQL (se banco nativo)","Aumentar heap JVM (ver ADA-SRV-002)","Verificar espaço em disco (mín. 20% livre)"],client:"A lentidão está relacionada ao volume de dados processados. Aplicamos otimizações — aguarde alguns minutos para normalização completa."},
+  {id:"ADA-SRV-004",cat:"ada-srv",prod:"ada",desc:"Console web inacessível / blank page",err:"Certificado SSL expirado ou AV bloqueando",sev:"ALTO",fix:"Renovar certificado; excluir pasta de instalação do escopo do AV",steps:["Verificar validade do certificado SSL","Renovar e reimportar via <instalação>\\bin\\ChangeJREKeyStore.bat","Adicionar exceção do AV para a pasta de instalação completa","Tentar acessar por http:// sem SSL para isolar o problema"],client:"Estamos verificando a acessibilidade ao console. Identificamos [causa] e já estamos aplicando a correção."},
+  {id:"ADA-SRV-005",cat:"ada-srv",prod:"ada",desc:"Alto consumo de disco",err:"Logs acumulados / banco sem manutenção",sev:"MÉDIO",fix:"Admin > Database Maintenance > arquivar/deletar dados antigos",steps:["Admin > Database Maintenance no console ADAudit","Configurar política de retenção (ex: 365 dias)","Arquivar dados antigos em storage externo","Monitorar espaço em disco semanalmente"],client:"O crescimento do volume de dados estava consumindo o espaço em disco. Aplicamos política de retenção e o espaço foi normalizado."},
+  {id:"ADA-SRV-006",cat:"ada-srv",prod:"ada",desc:"Erro de licença / produto em trial",err:"Licença expirada ou número de objetos excedido",sev:"CRÍTICO",fix:"Help > License > verificar status; contatar ManageEngine para renovação",steps:["Help > License no console ADAudit Plus","Verificar data de expiração e número de objetos licenciados","Contatar renovação: sales@manageengine.com","Aplicar novo arquivo de licença após renovação"],client:"Identificamos uma questão de licenciamento que está impactando o monitoramento. Estamos em contato com o fornecedor para resolução urgente."},
+
+  // ADA-RPT
+  {id:"ADA-RPT-001",cat:"ada-rpt",prod:"ada",desc:"Relatórios não atualizam",err:"Scheduler parado ou banco sobrecarregado",sev:"ALTO",fix:"Reiniciar serviço ADAudit; verificar espaço em disco e performance DB",steps:["Reiniciar serviço ManageEngine ADAudit Plus","Verificar espaço em disco (>20% livre)","Verificar logs em <instalação>\\logs\\"],client:"Houve um atraso na atualização dos relatórios por processamento interno. Já normalizamos e os dados estão atualizados."},
+  {id:"ADA-RPT-002",cat:"ada-rpt",prod:"ada",desc:"Relatório retorna vazio",err:"Filtro incorreto ou coleta não ativa",sev:"MÉDIO",fix:"Ajustar período/filtro; confirmar que coleta está ativa para o DC filtrado",steps:["Verificar período do relatório (Data Início / Data Fim)","Confirmar timezone do servidor (Admin > General Settings)","Confirmar que o DC filtrado está ativo em Domain Settings","Verificar se a política de auditoria cobre o tipo de evento do relatório"],client:"O relatório estava vazio por um problema de filtro de data/hora. Já ajustamos e os dados estão disponíveis corretamente."},
+  {id:"ADA-RPT-003",cat:"ada-rpt",prod:"ada",desc:"Erro 'No data available'",err:"Audit Policy não configurada / SACL ausente",sev:"ALTO",fix:"Verificar Audit Policy + Object Level Auditing + Event Log size nos DCs",steps:["Verificar Audit Policy nos DCs","Verificar Object Level Auditing (para mudanças em objetos AD)","Verificar Event Log size nos DCs (mín 512MB)","Testar gerando um evento manual e verificando se aparece"],client:"Os dados de auditoria não estavam sendo gerados por configuração incompleta. Aplicamos as políticas necessárias e os eventos passarão a ser registrados."},
+  {id:"ADA-RPT-004",cat:"ada-rpt",prod:"ada",desc:"Erro ao gerar relatório GPO",err:"GPMC não instalado / Watch via Agent desativado",sev:"MÉDIO",fix:"Instalar GPMC ou ativar Watch via Agent: Admin > Configuration > GPO Settings Changes",steps:["Opção 1: Instalar GPMC via Server Manager > Add Roles > Group Policy Management","Opção 2: Admin > Configuration > GPO Settings Changes > Enable Watch via Agent","Testar gerando alteração em GPO de teste"],client:"Identificamos que um componente necessário para os relatórios de GPO não estava instalado. Já corrigimos e os relatórios estão disponíveis."},
+  {id:"ADA-RPT-005",cat:"ada-rpt",prod:"ada",desc:"Relatório agendado não chega por e-mail",err:"SMTP não configurado ou destinatário incorreto",sev:"MÉDIO",fix:"Admin > Mail Server Settings; testar envio; verificar e-mail do destinatário",steps:["ADAudit Plus > Admin > Mail Server Settings","Preencher: SMTP host, porta, SSL, usuário/senha","Clicar em 'Test Email' para validar","Verificar e-mail do destinatário no agendamento do relatório"],client:"Os relatórios programados não estavam chegando por uma falha de configuração de e-mail. Corrigimos a integração e o próximo envio ocorrerá conforme agendado."},
+  {id:"ADA-RPT-006",cat:"ada-rpt",prod:"ada",desc:"Relatório demora muito / timeout",err:"Banco próximo do limite / SQL Express 10GB",sev:"ALTO",fix:"Migrar para SQL Server Standard; arquivar dados históricos",steps:["Verificar tipo de banco: Support > Basic Check > Machine Details","Se SQL Express: checar tamanho do banco (limite 10GB)","Migrar para SQL Server Standard para remover limitação","Arquivar dados históricos via Database Maintenance"],client:"A lentidão nos relatórios é decorrente do volume de dados e limitação do banco atual. Estamos trabalhando em uma solução de médio prazo."},
+  {id:"ADA-RPT-007",cat:"ada-rpt",prod:"ada",desc:"'User does not have admin privilege'",err:"Conta sem permissão de leitura do Security Log",sev:"MÉDIO",fix:"Configurar permissões mínimas conforme guia oficial manageengine.com",steps:["Seguir guia: privileges-required-for-ad-windows-server-workstation-audit.html","Alternativa: usar conta com Domain Admin para eliminar restrições","Verificar que a conta tem acesso ao Security Log nos DCs"],client:"Identificamos uma restrição de permissão que impedia a geração de relatórios. Já ajustamos e os relatórios estão funcionando normalmente."},
+
+  // ADA-PRM
+  {id:"ADA-PRM-001",cat:"ada-prm",prod:"ada",desc:"Access Denied — Error 401",err:"Conta de serviço sem permissão Security Log",sev:"CRÍTICO",fix:"Conceder Domain Admin ou permissão mínima de leitura de Security Log",steps:["Verificar conta de serviço: Domain Settings > Modify Credentials","Opção 1: usar conta Domain Admin","Opção 2: seguir guia de permissões mínimas (service account configuration guide)","Testar conexão ao Event Viewer remoto com as novas credenciais"],client:"Identificamos uma restrição de acesso que estava impedindo a coleta de eventos. Já corrigimos as permissões e o monitoramento foi normalizado."},
+  {id:"ADA-PRM-002",cat:"ada-prm",prod:"ada",desc:"Network Access Denied",err:"Conta sem acesso ao admin share / Event Log",sev:"ALTO",fix:"Verificar permissões da conta de serviço; garantir acesso ao \\\\server\\admin$",steps:["Testar: net use \\\\servidor\\admin$ /user:dominio\\conta","Verificar política de rede que restringe acesso ao admin share","Confirmar que o serviço 'Server' está ativo no servidor alvo"],client:"Houve uma restrição de acesso de rede ao servidor monitorado. Já corrigimos e a coleta foi normalizada."},
+  {id:"ADA-PRM-003",cat:"ada-prm",prod:"ada",desc:"'Not enough credentials provided'",err:"Credenciais não configuradas no Domain Settings",sev:"ALTO",fix:"Domain Settings > Modify Credentials; inserir conta com privilégios adequados",steps:["ADAudit Plus > Domain Settings","Hover sobre o domínio > Modify Credentials","Inserir conta com Domain Admin ou permissões mínimas","Confirmar e aguardar sincronização"],client:"As credenciais de acesso ao domínio precisavam ser atualizadas. Já fizemos a atualização e o serviço voltou ao normal."},
+  {id:"ADA-PRM-004",cat:"ada-prm",prod:"ada",desc:"Erro 80070005 — Access is denied",err:"Permissão insuficiente no AD ou na OU",sev:"ALTO",fix:"Verificar permissões da conta de serviço na OU alvo; adicionar permissão de leitura",steps:["Identificar o objeto/OU que gerou o erro 80070005","Abrir ADUC > Properties do objeto/OU > Security","Adicionar a conta de serviço com permissão de leitura","Testar a operação novamente"],client:"Identificamos uma restrição de permissão no diretório. Já corrigimos o acesso e a operação está funcionando normalmente."},
+  {id:"ADA-PRM-005",cat:"ada-prm",prod:"ada",desc:"Não consegue reverter alteração no AD",err:"Limitação da API do AD para o atributo",sev:"BAIXO",fix:"Reverter manualmente via ADUC ou PowerShell; documentar como limitação conhecida",steps:["Identificar o atributo que não pode ser revertido","Reverter manualmente: ADUC > Properties do objeto > editar atributo","Ou via PowerShell: Set-ADUser -Identity user -Attribute valor","Documentar no ticket como limitação conhecida da ferramenta"],client:"Para esse atributo específico, a reversão automática tem uma limitação técnica. Realizamos a correção manual e o objeto está com os dados corretos."},
+
+  // ADA-INT
+  {id:"ADA-INT-001",cat:"ada-int",prod:"ada",desc:"Falha na integração com SIEM (Syslog)",err:"Porta syslog bloqueada ou formato incorreto",sev:"ALTO",fix:"Verificar porta UDP/TCP 514; confirmar formato syslog no destino",steps:["Admin > Notification > Syslog","Verificar IP/hostname e porta do SIEM","Confirmar formato: CEF, LEEF ou RFC5424","Testar conectividade: telnet siem-ip 514"],client:"Identificamos uma falha na integração com o SIEM. Já corrigimos a configuração e os eventos estão sendo encaminhados normalmente."},
+  {id:"ADA-INT-002",cat:"ada-int",prod:"ada",desc:"Falha na integração com Log360",err:"API key inválida ou porta bloqueada",sev:"ALTO",fix:"Verificar configuração de integração; regenerar API key em Admin > Integrations",steps:["Admin > Integrations > Log360","Verificar URL e API key do Log360","Regenerar API key se necessário","Confirmar porta 8095 liberada no firewall"],client:"A integração com o console de SIEM foi reestabelecida após ajuste na configuração de autenticação."},
+  {id:"ADA-INT-003",cat:"ada-int",prod:"ada",desc:"Sem dados do Azure AD / Entra ID",err:"Tenant não configurado ou token OAuth expirado",sev:"ALTO",fix:"Reconfigurar tenant: ADAudit > Cloud > Azure AD > reautenticar",steps:["ADAudit Plus > Cloud > Azure AD","Verificar se o tenant está configurado","Reautenticar clicando em 'Connect' e seguindo o fluxo OAuth","Verificar permissões da app registrada no Azure (AuditLog.Read, Directory.Read.All)"],client:"A coleta de eventos do Azure AD estava interrompida por expiração de token. Já reestabelecemos a integração e os dados estão sendo coletados novamente."},
+  {id:"ADA-INT-004",cat:"ada-int",prod:"ada",desc:"File Server NAS sem dados (NetApp/EMC)",err:"DACL/SACL desabilitada por padrão em NAS",sev:"MÉDIO",fix:"Contatar suporte ManageEngine para habilitação; ativar via console conforme guia",steps:["Verificar na documentação de Known Issues se o NAS é suportado","Contatar support@adauditplus.com para habilitação de DACL/SACL em NAS","Aguardar orientação do suporte para configuração específica do modelo"],client:"A auditoria detalhada nesse tipo de NAS requer configuração específica. Estamos em contato com o suporte do fabricante para aplicar a configuração adequada."},
+  {id:"ADA-INT-005",cat:"ada-int",prod:"ada",desc:"Integração com ticketing não dispara",err:"Webhook mal configurado",sev:"MÉDIO",fix:"Verificar URL e autenticação do webhook em Admin > Notification",steps:["Admin > Notification > Helpdesk Integration","Verificar URL do webhook e método (POST/GET)","Testar manualmente o endpoint com um cliente REST","Verificar logs da plataforma de destino para mais detalhes"],client:"A integração com o sistema de chamados foi ajustada. Os alertas voltarão a gerar tickets automaticamente."},
+
+  // ADA-GPO
+  {id:"ADA-GPO-001",cat:"ada-gpo",prod:"ada",desc:"SYSVOL share inacessível",err:"PDC SYSVOL não acessível pelo servidor ADAudit",sev:"ALTO",fix:"Ping PDC pelo flat name; verificar \\\\PDC\\sysvol; habilitar Watch via Agent",steps:["Ping PDC pelo flat name a partir do servidor ADAudit","Testar acesso: File Explorer > \\\\PDC\\sysvol","Se inacessível: adicionar sufixo DNS em TCP/IP avançado","Alternativa: Admin > Configuration > GPO Settings Changes > Watch via Agent"],client:"Identificamos uma limitação de acesso ao compartilhamento de políticas do domínio. Já contornamos via configuração alternativa e os relatórios de GPO estão disponíveis."},
+  {id:"ADA-GPO-002",cat:"ada-gpo",prod:"ada",desc:"RPC error ao auditar GPOs",err:"Portas RPC dinâmicas bloqueadas (49152-65535)",sev:"ALTO",fix:"Liberar TCP 135 + dinâmicas 49152-65535; ou habilitar Watch via Agent",steps:["Firewall > Inbound Rules > habilitar Remote Event Log Management rules","Liberar TCP 135 e faixa 49152-65535","Alternativa rápida: ADAudit > Admin > GPO Settings > Watch via Agent"],client:"Uma regra de firewall estava bloqueando a coleta de alterações em políticas de grupo. Já aplicamos a correção e os dados de GPO estão sendo auditados normalmente."},
+  {id:"ADA-GPO-003",cat:"ada-gpo",prod:"ada",desc:"Alterações de GPO não aparecem",err:"GPMC não instalado / Watch via Agent desativado",sev:"MÉDIO",fix:"Instalar GPMC ou ativar Watch via Agent: Admin > Configuration > GPO Settings Changes",steps:["Opção 1: Server Manager > Add Features > Group Policy Management","Opção 2: Admin > Configuration > GPO Settings Changes > Enable Watch via Agent"],client:"A auditoria de alterações em políticas de grupo foi normalizada após ajuste de configuração."},
+  {id:"ADA-GPO-004",cat:"ada-gpo",prod:"ada",desc:"Falha Hardened UNC Paths",err:"Política bloqueando acesso ao SYSVOL",sev:"MÉDIO",fix:"gpedit.msc > Hardened UNC Paths > adicionar RequireMutualAuthentication=0",steps:["No servidor ADAudit: gpedit.msc","Computer Configuration > Admin Templates > Network > Network Provider > Hardened UNC Paths","Enable > Show > Value: \\\\*\\SYSVOL > Data: RequireMutualAuthentication=0,RequireIntegrity=0,RequirePrivacy=0","Ou habilitar Watch via Agent como alternativa"],client:"Resolvemos uma incompatibilidade de política de rede que afetava a auditoria de GPOs. O ambiente está normalizado."},
+
+  // ADA-SEC
+  {id:"ADA-SEC-001",cat:"ada-sec",prod:"ada",desc:"Múltiplos logon failures em conta privilegiada",err:"Possível ataque de força bruta / credencial comprometida",sev:"CRÍTICO",fix:"Bloquear conta preventivamente; investigar via Logon Activity Report; acionar IR",steps:["ADAudit Plus > Reports > Logon Activity > Failed Logons","Identificar origem: IP, máquina, horário, frequência","Se padrão de ataque: bloquear conta e IP de origem","Acionar playbook de Incident Response; documentar tudo"],client:"Identificamos uma atividade de segurança atípica na conta [Nome]. Já iniciamos a investigação e tomamos medidas preventivas. Entraremos em contato com mais detalhes em breve."},
+  {id:"ADA-SEC-002",cat:"ada-sec",prod:"ada",desc:"Alteração de GPO não autorizada",err:"Possível movimentação lateral / ataque",sev:"CRÍTICO",fix:"Verificar quem alterou via GPO Reports; reverter se não autorizado; escalar",steps:["ADAudit Plus > Reports > Group Policy Changes","Identificar conta e máquina que fez a alteração","Confirmar com cliente se era ação autorizada","Se não autorizado: reverter GPO e acionar CSIRT imediatamente"],client:"Identificamos uma alteração não prevista em uma política de segurança do ambiente. Estamos investigando com urgência e entraremos em contato imediatamente."},
+  {id:"ADA-SEC-003",cat:"ada-sec",prod:"ada",desc:"Conta admin ativa fora do horário",err:"Possível acesso indevido ou conta comprometida",sev:"ALTO",fix:"Verificar After-Hours Activity Report; confirmar com cliente se era ação prevista",steps:["ADAudit Plus > Reports > After-Hours Activity","Identificar: conta, horário, origem, atividades realizadas","Contatar cliente para confirmar se era acesso autorizado","Se não autorizado: iniciar processo de resposta a incidente"],client:"Detectamos atividade de uma conta administrativa fora do horário habitual. Estamos verificando se é uma ação autorizada. Aguardamos sua confirmação para prosseguir."},
+  {id:"ADA-SEC-004",cat:"ada-sec",prod:"ada",desc:"Criação de usuário por conta não autorizada",err:"Possível persistência pós-comprometimento",sev:"CRÍTICO",fix:"Desativar usuário criado; investigar conta que o criou; escalar para CSIRT",steps:["Desativar imediatamente o usuário criado indevidamente","ADAudit Plus > Reports > User Management > User Creation","Identificar conta que criou; verificar outras ações dessa conta","Acionar CSIRT; preservar evidências; não limpar logs"],client:"Detectamos a criação de um usuário não autorizado no ambiente. Tomamos medidas imediatas de contenção e estamos investigando. Entraremos em contato com urgência."},
+  {id:"ADA-SEC-005",cat:"ada-sec",prod:"ada",desc:"CVE identificada na versão em uso",err:"Vulnerabilidade conhecida no build atual",sev:"CRÍTICO",fix:"Verificar Release Notes; aplicar patch imediatamente; comunicar ao cliente",steps:["Verificar versão: Help > About","Consultar: manageengine.com/products/active-directory-audit/adaudit-plus-release-notes.html","Planejar janela de manutenção para update","Aplicar: <instalação>\\bin\\UpdateManager.bat","Comunicar ao cliente antes e após a aplicação do patch"],client:"Identificamos uma vulnerabilidade de segurança na versão atual da ferramenta. Vamos aplicar o patch em janela de manutenção [data]. O impacto será [X minutos de indisponibilidade]."},
+  {id:"ADA-AGT-002",cat:"ada-agt",mod:"ada",desc:"No communication from agent to server",err:"Firewall bloqueando porta 8081",sev:"ALTO",fix:"Liberar TCP 8081 bidirecional entre agente e servidor ADAudit Plus",steps:["Testar conexão: telnet servidor-adaudit 8081","Abrir regra de firewall TCP 8081 bidirecional no servidor alvo e no ADAudit","Reiniciar agente após liberação da porta"],client:"Havia um bloqueio de rede impedindo a comunicação do agente com o servidor de monitoração. A regra de firewall foi ajustada e a comunicação foi restabelecida."},
+  {id:"ADA-AGT-003",cat:"ada-agt",mod:"ada",desc:"Initial profile fetch não ocorre",err:"Conta sem acesso ao admin share",sev:"ALTO",fix:"Reconfigurar credencial em Domain Settings > Modify Credentials + Log On do serviço",steps:["ADAudit Plus > Domain Settings > Modify Credentials","Informar conta com acesso ao \\\\server\\admin$","services.msc > ManageEngine ADAudit Plus > Log On > This Account","Reiniciar o serviço após alteração"],client:"A conta de serviço não tinha acesso suficiente ao servidor alvo. Atualizamos as credenciais e a sincronização foi normalizada."},
+  {id:"ADA-AGT-004",cat:"ada-agt",mod:"ada",desc:"Agente para após instalação",err:"Remote Registry Service parado no alvo",sev:"MÉDIO",fix:"Iniciar serviço Remote Registry no servidor alvo; configurar para Automático",steps:["No servidor alvo: services.msc > Remote Registry","Iniciar o serviço e definir para Automático","Reiniciar o agente ADAudit no servidor alvo"],client:"Um serviço auxiliar estava parado no servidor monitorado, impedindo a coleta. Já normalizamos e o monitoramento voltou a funcionar."},
+  {id:"ADA-AGT-005",cat:"ada-agt",mod:"ada",desc:"Erro de MSI na instalação do agente",err:"Windows Installer Service corrompido",sev:"MÉDIO",fix:"msiexec /unregister + msiexec /register no alvo; reiniciar e tentar novamente",steps:["No servidor alvo: Win+R > msiexec /unregister > Enter","Win+R > msiexec /register > Enter","Reiniciar o servidor alvo","Tentar reinstalar o agente pelo console ADAudit Plus"],client:"Houve um problema no instalador do Windows no servidor alvo. Após correção, o agente foi instalado com sucesso."},
+  {id:"ADA-AGT-006",cat:"ada-agt",mod:"ada",desc:"Agente desconecta periodicamente",err:"Instabilidade de rede ou link WAN",sev:"MÉDIO",fix:"Verificar qualidade da rede; usar agente (obrigatório em WAN)",steps:["Verificar latência e perda de pacotes entre servidores","Em ambientes WAN: agente é obrigatório para coleta estável","Considerar buffer de eventos local configurado no agente"],client:"A instabilidade de rede estava causando desconexões do agente. Ajustamos a configuração para maior resiliência em ambiente de rede instável."},
+
+  // ADA-SRV
+  {id:"ADA-SRV-001",cat:"ada-srv",mod:"ada",desc:"Serviço ADAudit Plus não inicia",err:"Porta em uso / banco indisponível / licença",sev:"CRÍTICO",fix:"Checar netstat porta 8080/8443; iniciar PostgreSQL; verificar licença",steps:["netstat -ano | findstr :8080","Se porta em uso: identificar processo e encerrar ou reconfigurar","Verificar serviço PostgreSQL em services.msc","Verificar licença: Help > License no console"],client:"Identificamos uma indisponibilidade no serviço de monitoração. Já estamos investigando — causa identificada. Atualizaremos em breve."},
+  {id:"ADA-SRV-002",cat:"ada-srv",mod:"ada",desc:"Serviço cai frequentemente",err:"Memória insuficiente / conflito de porta",sev:"CRÍTICO",fix:"Aumentar heap JVM em wrapper.conf; checar logs em <instalação>\\logs\\serverOut.txt",steps:["Verificar logs: <instalação>\\logs\\serverOut.txt","Ajustar heap: <instalação>\\conf\\wrapper.conf > wrapper.java.maxmemory","Mínimo recomendado: 4096 MB; MSS produção: 8192 MB","Verificar se outra aplicação conflita na mesma porta"],client:"O serviço estava reiniciando por insuficiência de memória. Ajustamos a configuração de memória e estamos monitorando a estabilidade."},
+  {id:"ADA-SRV-003",cat:"ada-srv",mod:"ada",desc:"Lentidão geral no console",err:"Banco pesado / heap insuficiente",sev:"ALTO",fix:"Ajustar JVM heap; arquivar logs antigos; vacuum no PostgreSQL",steps:["Admin > Database Maintenance > arquivar dados > 90 dias","Executar vacuum no PostgreSQL (se banco nativo)","Aumentar heap JVM (ver ADA-SRV-002)","Verificar espaço em disco (mín. 20% livre)"],client:"A lentidão está relacionada ao volume de dados processados. Aplicamos otimizações — aguarde alguns minutos para normalização completa."},
+  {id:"ADA-SRV-004",cat:"ada-srv",mod:"ada",desc:"Console web inacessível / blank page",err:"Certificado SSL expirado ou AV bloqueando",sev:"ALTO",fix:"Renovar certificado; excluir pasta de instalação do escopo do AV",steps:["Verificar validade do certificado SSL","Renovar e reimportar via <instalação>\\bin\\ChangeJREKeyStore.bat","Adicionar exceção do AV para a pasta de instalação completa","Tentar acessar por http:// sem SSL para isolar o problema"],client:"Estamos verificando a acessibilidade ao console. Identificamos a causa e já estamos aplicando a correção."},
+  {id:"ADA-SRV-005",cat:"ada-srv",mod:"ada",desc:"Alto consumo de disco",err:"Logs acumulados / banco sem manutenção",sev:"MÉDIO",fix:"Admin > Database Maintenance > arquivar/deletar dados antigos",steps:["Admin > Database Maintenance no console ADAudit","Configurar política de retenção (ex: 365 dias)","Arquivar dados antigos em storage externo","Monitorar espaço em disco semanalmente"],client:"O crescimento do volume de dados estava consumindo o espaço em disco. Aplicamos política de retenção e o espaço foi normalizado."},
+  {id:"ADA-SRV-006",cat:"ada-srv",mod:"ada",desc:"Erro de licença / produto em trial",err:"Licença expirada ou número de objetos excedido",sev:"CRÍTICO",fix:"Help > License > verificar status; contatar ManageEngine para renovação",steps:["Help > License no console ADAudit Plus","Verificar data de expiração e número de objetos licenciados","Contatar renovação: sales@manageengine.com","Aplicar novo arquivo de licença após renovação"],client:"Identificamos uma questão de licenciamento que está impactando o monitoramento. Estamos em contato com o fornecedor para resolução urgente."},
+
+  // ADA-RPT
+  {id:"ADA-RPT-001",cat:"ada-rpt",mod:"ada",desc:"Relatórios não atualizam",err:"Scheduler parado ou banco sobrecarregado",sev:"ALTO",fix:"Reiniciar serviço ADAudit; verificar espaço em disco e performance DB",steps:["Reiniciar serviço ManageEngine ADAudit Plus","Verificar espaço em disco (>20% livre)","Verificar logs em <instalação>\\logs\\"],client:"Houve um atraso na atualização dos relatórios por processamento interno. Já normalizamos e os dados estão atualizados."},
+  {id:"ADA-RPT-002",cat:"ada-rpt",mod:"ada",desc:"Relatório retorna vazio",err:"Filtro incorreto ou coleta não ativa",sev:"MÉDIO",fix:"Ajustar período/filtro; confirmar que coleta está ativa para o DC filtrado",steps:["Verificar período do relatório (Data Início / Data Fim)","Confirmar timezone do servidor (Admin > General Settings)","Confirmar que o DC filtrado está ativo em Domain Settings","Verificar se a política de auditoria cobre o tipo de evento do relatório"],client:"O relatório estava vazio por um problema de filtro de data/hora. Já ajustamos e os dados estão disponíveis corretamente."},
+  {id:"ADA-RPT-003",cat:"ada-rpt",mod:"ada",desc:"Erro 'No data available'",err:"Audit Policy não configurada / SACL ausente",sev:"ALTO",fix:"Verificar Audit Policy + Object Level Auditing + Event Log size nos DCs",steps:["Verificar Audit Policy nos DCs","Verificar Object Level Auditing (para mudanças em objetos AD)","Verificar Event Log size nos DCs (mín 512MB)","Testar gerando um evento manual e verificando se aparece"],client:"Os dados de auditoria não estavam sendo gerados por configuração incompleta. Aplicamos as políticas necessárias e os eventos passarão a ser registrados."},
+  {id:"ADA-RPT-004",cat:"ada-rpt",mod:"ada",desc:"Erro ao gerar relatório GPO",err:"GPMC não instalado / Watch via Agent desativado",sev:"MÉDIO",fix:"Instalar GPMC ou ativar Watch via Agent: Admin > Configuration > GPO Settings Changes",steps:["Opção 1: Instalar GPMC via Server Manager > Add Roles > Group Policy Management","Opção 2: Admin > Configuration > GPO Settings Changes > Enable Watch via Agent","Testar gerando alteração em GPO de teste"],client:"Identificamos que um componente necessário para os relatórios de GPO não estava instalado. Já corrigimos e os relatórios estão disponíveis."},
+  {id:"ADA-RPT-005",cat:"ada-rpt",mod:"ada",desc:"Relatório agendado não chega por e-mail",err:"SMTP não configurado ou destinatário incorreto",sev:"MÉDIO",fix:"Admin > Mail Server Settings; testar envio; verificar e-mail do destinatário",steps:["ADAudit Plus > Admin > Mail Server Settings","Preencher: SMTP host, porta, SSL, usuário/senha","Clicar em 'Test Email' para validar","Verificar e-mail do destinatário no agendamento do relatório"],client:"Os relatórios programados não estavam chegando por uma falha de configuração de e-mail. Corrigimos a integração e o próximo envio ocorrerá conforme agendado."},
+  {id:"ADA-RPT-006",cat:"ada-rpt",mod:"ada",desc:"Relatório demora muito / timeout",err:"Banco próximo do limite / SQL Express 10GB",sev:"ALTO",fix:"Migrar para SQL Server Standard; arquivar dados históricos",steps:["Verificar tipo de banco: Support > Basic Check > Machine Details","Se SQL Express: checar tamanho do banco (limite 10GB)","Migrar para SQL Server Standard para remover limitação","Arquivar dados históricos via Database Maintenance"],client:"A lentidão nos relatórios é decorrente do volume de dados e limitação do banco atual. Estamos trabalhando em uma solução de médio prazo."},
+  {id:"ADA-RPT-007",cat:"ada-rpt",mod:"ada",desc:"'User does not have admin privilege'",err:"Conta sem permissão de leitura do Security Log",sev:"MÉDIO",fix:"Configurar permissões mínimas conforme guia oficial manageengine.com",steps:["Seguir guia: privileges-required-for-ad-windows-server-workstation-audit.html","Alternativa: usar conta com Domain Admin para eliminar restrições","Verificar que a conta tem acesso ao Security Log nos DCs"],client:"Identificamos uma restrição de permissão que impedia a geração de relatórios. Já ajustamos e os relatórios estão funcionando normalmente."},
+
+  // ADA-PRM
+  {id:"ADA-PRM-001",cat:"ada-prm",mod:"ada",desc:"Access Denied — Error 401",err:"Conta de serviço sem permissão Security Log",sev:"CRÍTICO",fix:"Conceder Domain Admin ou permissão mínima de leitura de Security Log",steps:["Verificar conta de serviço: Domain Settings > Modify Credentials","Opção 1: usar conta Domain Admin","Opção 2: seguir guia de permissões mínimas (service account configuration guide)","Testar conexão ao Event Viewer remoto com as novas credenciais"],client:"Identificamos uma restrição de acesso que estava impedindo a coleta de eventos. Já corrigimos as permissões e o monitoramento foi normalizado."},
+  {id:"ADA-PRM-002",cat:"ada-prm",mod:"ada",desc:"Network Access Denied",err:"Conta sem acesso ao admin share / Event Log",sev:"ALTO",fix:"Verificar permissões da conta de serviço; garantir acesso ao \\\\server\\admin$",steps:["Testar: net use \\\\servidor\\admin$ /user:dominio\\conta","Verificar política de rede que restringe acesso ao admin share","Confirmar que o serviço 'Server' está ativo no servidor alvo"],client:"Houve uma restrição de acesso de rede ao servidor monitorado. Já corrigimos e a coleta foi normalizada."},
+  {id:"ADA-PRM-003",cat:"ada-prm",mod:"ada",desc:"'Not enough credentials provided'",err:"Credenciais não configuradas no Domain Settings",sev:"ALTO",fix:"Domain Settings > Modify Credentials; inserir conta com privilégios adequados",steps:["ADAudit Plus > Domain Settings","Hover sobre o domínio > Modify Credentials","Inserir conta com Domain Admin ou permissões mínimas","Confirmar e aguardar sincronização"],client:"As credenciais de acesso ao domínio precisavam ser atualizadas. Já fizemos a atualização e o serviço voltou ao normal."},
+  {id:"ADA-PRM-004",cat:"ada-prm",mod:"ada",desc:"Erro 80070005 — Access is denied",err:"Permissão insuficiente no AD ou na OU",sev:"ALTO",fix:"Verificar permissões da conta de serviço na OU alvo; adicionar permissão de leitura",steps:["Identificar o objeto/OU que gerou o erro 80070005","Abrir ADUC > Properties do objeto/OU > Security","Adicionar a conta de serviço com permissão de leitura","Testar a operação novamente"],client:"Identificamos uma restrição de permissão no diretório. Já corrigimos o acesso e a operação está funcionando normalmente."},
+
+  // ADA-INT
+  {id:"ADA-INT-001",cat:"ada-int",mod:"ada",desc:"Falha na integração com SIEM (Syslog)",err:"Porta syslog bloqueada ou formato incorreto",sev:"ALTO",fix:"Verificar porta UDP/TCP 514; confirmar formato syslog no destino",steps:["Admin > Notification > Syslog","Verificar IP/hostname e porta do SIEM","Confirmar formato: CEF, LEEF ou RFC5424","Testar conectividade: telnet siem-ip 514"],client:"Identificamos uma falha na integração com o SIEM. Já corrigimos a configuração e os eventos estão sendo encaminhados normalmente."},
+  {id:"ADA-INT-002",cat:"ada-int",mod:"ada",desc:"Falha na integração com Log360",err:"API key inválida ou porta bloqueada",sev:"ALTO",fix:"Verificar configuração de integração; regenerar API key em Admin > Integrations",steps:["Admin > Integrations > Log360","Verificar URL e API key do Log360","Regenerar API key se necessário","Confirmar porta 8095 liberada no firewall"],client:"A integração com o console de SIEM foi reestabelecida após ajuste na configuração de autenticação."},
+  {id:"ADA-INT-003",cat:"ada-int",mod:"ada",desc:"Sem dados do Azure AD / Entra ID",err:"Tenant não configurado ou token OAuth expirado",sev:"ALTO",fix:"Reconfigurar tenant: ADAudit > Cloud > Azure AD > reautenticar",steps:["ADAudit Plus > Cloud > Azure AD","Verificar se o tenant está configurado","Reautenticar clicando em 'Connect' e seguindo o fluxo OAuth","Verificar permissões da app registrada no Azure (AuditLog.Read, Directory.Read.All)"],client:"A coleta de eventos do Azure AD estava interrompida por expiração de token. Já reestabelecemos a integração e os dados estão sendo coletados novamente."},
+
+  // ADA-GPO
+  {id:"ADA-GPO-001",cat:"ada-gpo",mod:"ada",desc:"SYSVOL share inacessível",err:"PDC SYSVOL não acessível pelo servidor ADAudit",sev:"ALTO",fix:"Ping PDC pelo flat name; verificar \\\\PDC\\sysvol; habilitar Watch via Agent",steps:["Ping PDC pelo flat name a partir do servidor ADAudit","Testar acesso: File Explorer > \\\\PDC\\sysvol","Se inacessível: adicionar sufixo DNS em TCP/IP avançado","Alternativa: Admin > Configuration > GPO Settings Changes > Watch via Agent"],client:"Identificamos uma limitação de acesso ao compartilhamento de políticas do domínio. Já contornamos via configuração alternativa e os relatórios de GPO estão disponíveis."},
+  {id:"ADA-GPO-002",cat:"ada-gpo",mod:"ada",desc:"RPC error ao auditar GPOs",err:"Portas RPC dinâmicas bloqueadas (49152-65535)",sev:"ALTO",fix:"Liberar TCP 135 + dinâmicas 49152-65535; ou habilitar Watch via Agent",steps:["Firewall > Inbound Rules > habilitar Remote Event Log Management rules","Liberar TCP 135 e faixa 49152-65535","Alternativa rápida: ADAudit > Admin > GPO Settings > Watch via Agent"],client:"Uma regra de firewall estava bloqueando a coleta de alterações em políticas de grupo. Já aplicamos a correção e os dados de GPO estão sendo auditados normalmente."},
+  {id:"ADA-GPO-003",cat:"ada-gpo",mod:"ada",desc:"Alterações de GPO não aparecem",err:"GPMC não instalado / Watch via Agent desativado",sev:"MÉDIO",fix:"Instalar GPMC ou ativar Watch via Agent: Admin > Configuration > GPO Settings Changes",steps:["Opção 1: Server Manager > Add Features > Group Policy Management","Opção 2: Admin > Configuration > GPO Settings Changes > Enable Watch via Agent"],client:"A auditoria de alterações em políticas de grupo foi normalizada após ajuste de configuração."},
+
+  // ADA-SEC
+  {id:"ADA-SEC-001",cat:"ada-sec",mod:"ada",desc:"Múltiplos logon failures em conta privilegiada",err:"Possível ataque de força bruta / credencial comprometida",sev:"CRÍTICO",fix:"Bloquear conta preventivamente; investigar via Logon Activity Report; acionar IR",steps:["ADAudit Plus > Reports > Logon Activity > Failed Logons","Identificar origem: IP, máquina, horário, frequência","Se padrão de ataque: bloquear conta e IP de origem","Acionar playbook de Incident Response; documentar tudo"],client:"Identificamos uma atividade de segurança atípica. Já iniciamos a investigação e tomamos medidas preventivas. Entraremos em contato com mais detalhes em breve."},
+  {id:"ADA-SEC-002",cat:"ada-sec",mod:"ada",desc:"Alteração de GPO não autorizada",err:"Possível movimentação lateral / ataque",sev:"CRÍTICO",fix:"Verificar quem alterou via GPO Reports; reverter se não autorizado; escalar",steps:["ADAudit Plus > Reports > Group Policy Changes","Identificar conta e máquina que fez a alteração","Confirmar com cliente se era ação autorizada","Se não autorizado: reverter GPO e acionar CSIRT imediatamente"],client:"Identificamos uma alteração não prevista em uma política de segurança do ambiente. Estamos investigando com urgência e entraremos em contato imediatamente."},
+  {id:"ADA-SEC-003",cat:"ada-sec",mod:"ada",desc:"Conta admin ativa fora do horário",err:"Possível acesso indevido ou conta comprometida",sev:"ALTO",fix:"Verificar After-Hours Activity Report; confirmar com cliente se era ação prevista",steps:["ADAudit Plus > Reports > After-Hours Activity","Identificar: conta, horário, origem, atividades realizadas","Contatar cliente para confirmar se era acesso autorizado","Se não autorizado: iniciar processo de resposta a incidente"],client:"Detectamos atividade de uma conta administrativa fora do horário habitual. Estamos verificando se é uma ação autorizada. Aguardamos sua confirmação para prosseguir."},
+  {id:"ADA-SEC-004",cat:"ada-sec",mod:"ada",desc:"Criação de usuário por conta não autorizada",err:"Possível persistência pós-comprometimento",sev:"CRÍTICO",fix:"Desativar usuário criado; investigar conta que o criou; escalar para CSIRT",steps:["Desativar imediatamente o usuário criado indevidamente","ADAudit Plus > Reports > User Management > User Creation","Identificar conta que criou; verificar outras ações dessa conta","Acionar CSIRT; preservar evidências; não limpar logs"],client:"Detectamos a criação de um usuário não autorizado no ambiente. Tomamos medidas imediatas de contenção e estamos investigando. Entraremos em contato com urgência."},
+
+  // ADS-PWD
+  {id:"ADS-PWD-001",cat:"ads-pwd",mod:"ads",desc:"Reset de senha não funciona para usuário",err:"Conta bloqueada ou sem permissão de reset",sev:"ALTO",fix:"Verificar configuração de permissions no AD; validar conta de serviço do ADSelfService",steps:["ADSelfService Plus > Admin > User Enrollment > verificar se usuário está inscrito","Verificar se conta de serviço tem 'Reset Password' permissions na OU do usuário","Testar com conta Domain Admin para isolar o problema","Verificar logs: ADSelfService Plus\\logs\\"],client:"Identificamos o problema no reset de senha e já corrigimos. O usuário já pode redefinir a senha normalmente."},
+  {id:"ADS-PWD-002",cat:"ads-pwd",mod:"ads",desc:"MFA não funciona durante o reset",err:"Token expirado ou provedor MFA não configurado",sev:"ALTO",fix:"Verificar configuração do provedor MFA em Admin > MFA; reenviar token",steps:["Admin > MFA > verificar provedores configurados","Verificar conectividade com o provedor (ex: TOTP, Email, SMS)","Solicitar reenvio do token ou usar método alternativo de MFA","Verificar logs de MFA: ADSelfService Plus\\logs\\mfa.log"],client:"Houve uma falha na autenticação multifator durante o reset. Já corrigimos a configuração e o processo está funcionando normalmente."},
+  {id:"ADS-PWD-003",cat:"ads-pwd",mod:"ads",desc:"Portal ADSelfService inacessível",err:"Serviço parado / porta bloqueada",sev:"CRÍTICO",fix:"Verificar serviço ADSelfService Plus; checar porta 8888/8443",steps:["services.msc > ManageEngine ADSelfService Plus > verificar se está rodando","netstat -ano | findstr :8888","Verificar firewall: porta 8888 (HTTP) e 8443 (HTTPS)","Verificar logs em ADSelfService Plus\\logs\\serverOut.txt"],client:"O portal de auto-serviço está temporariamente indisponível. Estamos trabalhando na restauração. Previsão: [tempo]."},
+
+  // ADM-USR
+  {id:"ADM-USR-001",cat:"adm-usr",mod:"adm",desc:"Criação de usuário em massa falha",err:"Conta de serviço sem permissão de Create User na OU alvo",sev:"ALTO",fix:"Conceder permissão 'Create User Objects' na OU alvo para a conta de serviço",steps:["Abrir ADUC > Properties da OU alvo > Security > Advanced","Adicionar a conta de serviço com permissão 'Create User Objects'","Aplicar a todas as sub-OUs se necessário","Testar criação de usuário único antes de operação em massa"],client:"Identificamos uma restrição de permissão na criação de usuários. Já corrigimos e o processo de onboarding foi normalizado."},
+  {id:"ADM-USR-002",cat:"adm-usr",mod:"adm",desc:"Workflow de automação não dispara",err:"Template de automação mal configurado / trigger não ativo",sev:"MÉDIO",fix:"Verificar configuração do workflow em ADManager > Automation",steps:["ADManager Plus > Automation > Workflow Templates","Verificar se o template está ativo (status: Enabled)","Verificar triggers: tipo de evento, OU, grupo alvo","Testar manualmente o workflow com um usuário de teste"],client:"O workflow automatizado foi verificado e reativado. Os próximos eventos de [tipo] serão processados automaticamente."},
+
+  // AD360-INF
+  {id:"AD360-INF-001",cat:"ad360-inf",mod:"ad360",desc:"AD360 Core não integra com módulos",err:"Porta de integração bloqueada / token inválido",sev:"CRÍTICO",fix:"Verificar configuração de integração em AD360 > Settings > Module Integration",steps:["AD360 > Settings > Module Integration > verificar status de cada módulo","Verificar se os módulos estão acessíveis nas portas configuradas","Regenerar tokens de integração se necessário","Verificar logs: AD360\\logs\\integration.log"],client:"Identificamos uma falha na integração entre os componentes do AD360. Já estamos trabalhando na correção."},
+
+  // AD360-DB
+  {id:"AD360-DB-001",cat:"ad360-db",mod:"db",desc:"Banco de dados não inicia com o servidor",err:"Serviço PostgreSQL/SQL Server parado",sev:"CRÍTICO",fix:"Iniciar serviço de banco; verificar logs de banco; validar espaço em disco",steps:["services.msc > verificar serviço PostgreSQL ou SQL Server","Se parado: iniciar o serviço e aguardar","Verificar logs do banco em C:\\Program Files\\PostgreSQL\\logs\\ ou Event Viewer","Verificar espaço em disco (mín. 20% livre)","Reiniciar serviço AD360 após banco disponível"],client:"O banco de dados estava indisponível, causando falha no serviço. Já restauramos a conectividade e os serviços estão operando normalmente."},
+  {id:"AD360-DB-002",cat:"ad360-db",mod:"db",desc:"Banco SQL Express atingiu limite de 10GB",err:"SQL Express limitado a 10GB — banco cheio",sev:"CRÍTICO",fix:"Migrar para SQL Server Standard; ou arquivar/deletar dados antigos",steps:["Verificar tamanho atual: EXEC sp_databases","Arquivar dados históricos via Database Maintenance do produto","Planejar migração para SQL Server Standard (sem limite)","Após migração: reconfigurar connection string em Admin > Database Settings"],client:"O banco de dados atingiu o limite de capacidade. Estamos realizando a limpeza de dados históricos e planejando a migração para uma versão sem limitação de tamanho."},
+];
+
+// ══════════════════════════════════════════
+// NORMALIZE
+// ══════════════════════════════════════════
+const ERRORS_N3 = ERRORS.map(e => ({
+  id: e.id,
+  cat: e.cat,
+  mod: e.mod ?? 'ad360',
+  desc: e.desc ?? '—',
+  err: e.err ?? '—',
+  sev: e.sev ?? 'MÉDIO',
+  fix: e.fix ?? '—',
+  steps: Array.isArray(e.steps) ? e.steps : [],
+  codes: Array.isArray(e.codes) ? e.codes : [],
+  client: e.client ?? '',
+  link: e.link ?? 'https://pitstop.manageengine.com'
+}));
+
+// ══════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════
+function sevHTML(s) {
+  const map = {CRÍTICO:'sev-c', ALTO:'sev-a', MÉDIO:'sev-m', BAIXO:'sev-b'};
+  const icons = {CRÍTICO:'🔴', ALTO:'🟠', MÉDIO:'🟡', BAIXO:'🟢'};
+  return `<span class="sev ${map[s]||'sev-m'}">${icons[s]||''} ${s}</span>`;
+}
+
+function modColor(m) {
+  return {ada:'var(--blue)', ads:'var(--purple)', adm:'var(--purple)', db:'var(--purple)', ad360:'var(--amber)'}[m] || 'var(--text2)';
+}
+
+function buildRow(e) {
+  const tr = document.createElement('tr');
+  tr.className = 'err-row';
+  tr.dataset.mod = e.mod;
+  tr.dataset.cat = e.cat;
+  tr.dataset.sev = e.sev;
+  tr.dataset.id = e.id;
+  tr.dataset.text = (e.id + ' ' + e.desc + ' ' + e.err + ' ' + (e.fix || '')).toLowerCase();
+  // Add data-severity for auto-expand
+  if (['CRÍTICO','CRITICAL','HIGH'].includes(e.sev?.toUpperCase())) {
+    tr.setAttribute('data-severity', 'critical');
+  }
+  tr.innerHTML = `
+    <td class="td-code" style="color:${modColor(e.mod)}">${e.id}</td>
+    <td class="td-desc">${e.desc}</td>
+    <td class="td-err">${e.err}</td>
+    <td class="td-sev">${sevHTML(e.sev)}</td>
+    <td class="td-fix">${e.fix}</td>`;
+
+  const detail = document.createElement('tr');
+  detail.className = 'err-detail';
+  const stepsHTML = (e.steps || []).map(s => `<li>${s}</li>`).join('');
+  const clientHTML = e.client ? `<div class="client-script">${e.client}</div>` : '';
+  const linkHTML = e.link ? `<a class="detail-link" href="${e.link}" target="_blank" rel="noopener noreferrer">📚 Pitstop / KB</a>` : '';
+  const codesHTML = (e.codes || []).length
+    ? `<div class="code-block"><span class="code-content">${(e.codes || []).map(c => `<span class="cmd">${c}</span>`).join('\n')}</span><button class="copy-code-btn" title="Copiar comando">⎘</button></div>`
+    : '';
+  detail.innerHTML = `<td colspan="5"><div class="err-detail-inner">
+    <div class="detail-block"><h5>Passos de Resolução</h5><ol class="detail-steps">${stepsHTML}</ol>${linkHTML}</div>
+    <div class="detail-block"><h5>Comandos / Scripts</h5>${codesHTML || '<span style="color:var(--text3);font-size:12px">Ver seção Scripts Operacionais</span>'}</div>
+    <div class="detail-block"><h5>Script para o Cliente</h5>${clientHTML}</div>
+    <div class="escalate-bar">
+      <button class="escalate-btn" 
+        data-title="${e.desc}"
+        data-code="${e.id}"
+        data-module="${e.mod}"
+        data-severity="${e.sev}">
+        ⬆ Escalar para N2
+      </button>
+    </div>
+  </div></td>`;
+
+  tr.addEventListener('click', () => {
+    const open = tr.classList.toggle('expanded');
+    detail.classList.toggle('open', open);
+  });
+  return [tr, detail];
+}
+
+function renderAll() {
+  ERRORS_N3.forEach(e => {
+    const tbody = document.getElementById('tbody-' + e.cat);
+    if (!tbody) return;
+    const [tr, det] = buildRow(e);
+    tbody.appendChild(tr);
+    tbody.appendChild(det);
+  });
+
+  // Update category counts
+  const categories = {};
+  ERRORS_N3.forEach(e => { categories[e.cat] = (categories[e.cat] || 0) + 1; });
+  Object.entries(categories).forEach(([cat, count]) => {
+    const countEl = document.querySelector(`#section-${cat} .cat-count`);
+    if (countEl) countEl.textContent = `${count} itens`;
+  });
+}
+
+// ══════════════════════════════════════════
+// FILTER & SEARCH
+// ══════════════════════════════════════════
+let currentFilter = 'all';
+
+function setFilter(f) {
+  // 1. Captura posição atual ANTES de renderizar
+  const scrollY = window.scrollY;
+
+  // 2. Remove active de todos, adiciona no clicado
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.classList.contains(f));
+  });
+
+  // 3. Executa a função de filtro/renderização existente
+  performSearch(document.getElementById('searchUnifiedInput').value);
+
+  // 4. Restaura a posição de scroll após renderização
+  requestAnimationFrame(() => {
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const targetScroll = Math.min(scrollY, maxScroll);
+    window.scrollTo({ top: targetScroll, behavior: 'instant' });
+  });
+}
+
+function performSearch(query) {
+  const lowerQuery = query.toLowerCase();
+  let visible = 0;
+  document.querySelectorAll('.err-row').forEach(row => {
+    const mod = row.dataset.mod, sev = row.dataset.sev.toLowerCase(), text = row.dataset.text;
+    let show = true;
+    if (currentFilter === 'critico') show = sev === 'crítico';
+    else if (currentFilter !== 'all') show = mod === currentFilter;
+    if (show && query) show = text.includes(lowerQuery);
+    row.classList.toggle('hidden', !show);
+    const next = row.nextElementSibling;
+    if (next?.classList.contains('err-detail')) {
+      next.classList.toggle('hidden', !show);
+      if (!show) { next.classList.remove('open'); row.classList.remove('expanded'); }
+    }
+    if (show) visible++;
+  });
+  const noResultsEl = document.getElementById('noResults');
+  if (noResultsEl) noResultsEl.classList.toggle('show', visible === 0 && query !== '');
+}
+
+// ══════════════════════════════════════════
+// COLLAPSE CATEGORIES
+// ══════════════════════════════════════════
+function toggleCat(header) {
+  header.classList.toggle('collapsed');
+  const table = header.nextElementSibling;
+  if (table) table.style.display = header.classList.contains('collapsed') ? 'none' : '';
+}
+
+// ══════════════════════════════════════════
+// COPY CODE
+// ══════════════════════════════════════════
+function copyCode(btn) {
+  const block = btn.parentElement;
+  const text = block.innerText.replace('Copiar', '').replace('Copiado!', '').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// ══════════════════════════════════════════
+// PROGRESS BAR
+// ══════════════════════════════════════════
+function updateProgressBar() {
+  const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrolled = (winScroll / height) * 100;
+  document.getElementById('progressBar').style.width = scrolled + '%';
+}
+
+// ══════════════════════════════════════════
+// SCROLLSPY
+// ══════════════════════════════════════════
+function initScrollSpy() {
+  const sections = document.querySelectorAll('[data-section]');
+  const navItems = document.querySelectorAll('.nav-item');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id');
+        navItems.forEach(item => {
+          item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  renderAll();
+  initScrollSpy();
+
+  // Copy button functionality for code blocks
+  document.querySelectorAll('.copy-code-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const code = btn.previousElementSibling?.textContent || '';
+      navigator.clipboard.writeText(code.trim()).then(() => {
+        btn.textContent = '✓';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = '⎘';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    });
+  });
+
+  // Wrap existing static code blocks
+  document.querySelectorAll('code, pre, .cmd-text, .command').forEach(el => {
+    if (el.closest('.code-block')) return;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'code-block';
+    const content = document.createElement('span');
+    content.className = 'code-content';
+    content.textContent = el.textContent;
+    const btn = document.createElement('button');
+    btn.className = 'copy-code-btn';
+    btn.title = 'Copiar comando';
+    btn.textContent = '⎘';
+    wrapper.appendChild(content);
+    wrapper.appendChild(btn);
+    el.replaceWith(wrapper);
+  });
+
+  // Auto-expand seções críticas
+  document.querySelectorAll('[data-severity="critical"]').forEach(el => {
+    const detail = el.nextElementSibling;
+    if (detail && detail.classList.contains('err-detail')) {
+      el.classList.add('expanded');
+      detail.classList.add('open');
+    }
+  });
+
+  // Search
+  const searchInput = document.getElementById('searchUnifiedInput');
+  searchInput.addEventListener('input', e => performSearch(e.target.value));
+
+  // Progress bar
+  window.addEventListener('scroll', updateProgressBar);
+  updateProgressBar();
+
+  // Back to top
+  const backTop = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    backTop.classList.toggle('visible', window.scrollY > 400);
+  });
+  backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // Home FAB button visibility
+  const homeFab = document.getElementById('homeFab');
+  if (homeFab) {
+    window.addEventListener('scroll', () => {
+      homeFab.classList.toggle('visible', window.scrollY > 200);
+    });
+  }
+
+  // Mobile sidebar
+  document.getElementById('hamburger').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('open');
+  });
+  document.getElementById('overlay').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
+  });
+
+  // GitHub API — última atualização do repositório
+  fetch('https://api.github.com/repos/dejotta1/IT_Hub/commits?per_page=1')
+    .then(r => r.json())
+    .then(data => {
+      const statusText = document.getElementById('statusText');
+      if (!statusText || !data[0]) return;
+
+      const commitDate = new Date(data[0].commit.author.date);
+      const now = new Date();
+      const diffDays = Math.floor((now - commitDate) / (1000 * 60 * 60 * 24));
+
+      let label = '';
+      if (diffDays === 0) label = 'atualizado hoje';
+      else if (diffDays === 1) label = 'atualizado ontem';
+      else if (diffDays <= 7) label = `atualizado há ${diffDays} dias`;
+      else if (diffDays <= 30) label = `atualizado há ${Math.floor(diffDays/7)} sem.`;
+      else label = `atualizado há ${Math.floor(diffDays/30)} meses`;
+
+      statusText.textContent = label;
+
+      // Aviso visual se desatualizado (> 30 dias)
+      if (diffDays > 30) {
+        statusText.classList.add('status-stale');
+        document.querySelector('.status-dot').style.background = 'var(--amber)';
+      }
+    })
+    .catch(() => {
+      const statusText = document.getElementById('statusText');
+      if (statusText) statusText.textContent = 'GitHub Pages · online';
+    });
+
+  // ── ESCALATE BUTTON FUNCTIONALITY ───────────────────────
+  document.querySelectorAll('.escalate-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+
+      const title    = btn.dataset.title    || 'Não identificado';
+      const code     = btn.dataset.code     || 'N/A';
+      const module   = btn.dataset.module   || 'Runbook';
+      const severity = btn.dataset.severity || 'N/A';
+      const pageUrl  = window.location.href;
+      const now      = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+
+      const template = `
+🔺 ESCALONAMENTO N1 → N2
+━━━━━━━━━━━━━━━━━━━━━━━
+📋 Chamado: [INSERIR ID DO CHAMADO]
+🕐 Horário: ${now}
+📦 Módulo: ${module}
+🔑 Código: ${code}
+⚠️  Severidade: ${severity}
+📌 Cenário: ${title}
+
+🔗 Referência: ${pageUrl}
+
+📝 O que foi feito no N1:
+- [ ] Verificado status do serviço
+- [ ] Consultado runbook (link acima)
+- [ ] [DESCREVER AÇÕES TOMADAS]
+
+❓ Motivo do escalonamento:
+[DESCREVER POR QUE NÃO FOI RESOLVIDO NO N1]
+
+👤 Analista N1: [SEU NOME]
+      `.trim();
+
+      navigator.clipboard.writeText(template).then(() => {
+        const original = btn.textContent;
+        btn.textContent = '✓ Template copiado!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('copied');
+        }, 3000);
+      });
+    });
+  });
+});
+</script>
+
+<a id="homeFab" href="../index.html" class="home-fab">
+  <span class="home-fab-icon">←</span> IT Hub
+</a>
+
+</body>
+</html>

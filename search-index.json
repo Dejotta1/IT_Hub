@@ -1,0 +1,602 @@
+[
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "Saúde do Ambiente & Readiness",
+    "anchor": "#env-health",
+    "tags": ["saude", "ambiente", "readiness", "monitoramento", "servicos"],
+    "excerpt": "Validar integridade dos serviços AD360, conectividade com AD, e estado dos bancos PostgreSQL/MS SQL."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "Visão Geral da Arquitetura",
+    "anchor": "#overview",
+    "tags": ["arquitetura", "overview", "componentes", "servicos"],
+    "excerpt": "Estrutura completa do AD360: ADAudit Plus, ADManager Plus, AD360 SelfService, e integrações."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "Legenda de Severidade",
+    "anchor": "#legend",
+    "tags": ["legenda", "severidade", "critico", "alto", "medio"],
+    "excerpt": "Classificação de erros: Crítico (impacto operacional), Alto (funcionalidade afetada), Médio (workaround disponível)."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "Portas de Comunicação",
+    "anchor": "#ports",
+    "tags": ["portas", "comunicacao", "rede", "firewall"],
+    "excerpt": "Portas essenciais: 389/636 (LDAP), 3268 (GC), 135 (RPC), 8020/8383 (ADAudit), 8888/8889 (ADManager)."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "Logs Suite Diagnóstica",
+    "anchor": "#logs-suite",
+    "tags": ["logs", "diagnostico", "troubleshooting", "eventos"],
+    "excerpt": "Localização de logs críticos: ADAudit logs, ADManager logs, Windows Event Viewer, e ferramentas de análise."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "Scripts de Operação",
+    "anchor": "#scripts-ops",
+    "tags": ["scripts", "operacao", "powershell", "automacao"],
+    "excerpt": "Scripts essenciais para validação de portas, reset de serviços, diagnóstico de banco e análise de logs."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "ADAudit Plus - Coleta de Logs",
+    "anchor": "#ada-log",
+    "tags": ["adaudit", "logs", "eventos", "coleta"],
+    "excerpt": "Problemas na coleta de eventos do Active Directory, falhas de conectividade com DCs e análise de logs."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "ADAudit Plus - Agente de Coleta",
+    "anchor": "#ada-agt",
+    "tags": ["adaudit", "agente", "coleta", "deploy"],
+    "excerpt": "Instalação e configuração do agente ADAudit, problemas de comunicação e troubleshooting de deploy."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "ADAudit Plus - Serviço/Infraestrutura",
+    "anchor": "#ada-srv",
+    "tags": ["adaudit", "servico", "infraestrutura", "performance"],
+    "excerpt": "Problemas de performance do serviço ADAudit, consumo de memória, e configuração de infraestrutura."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "ADAudit Plus - Relatórios",
+    "anchor": "#ada-rpt",
+    "tags": ["adaudit", "relatorios", "exportacao", "schedule"],
+    "excerpt": "Falhas na geração de relatórios, problemas de agendamento e exportação de dados do ADAudit."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "ADAudit Plus - Permissões",
+    "anchor": "#ada-prm",
+    "tags": ["adaudit", "permissoes", "acesso", "seguranca"],
+    "excerpt": "Configuração de permissões de acesso no ADAudit, problemas de autenticação e gestão de usuários."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "ADAudit Plus - Integrações",
+    "anchor": "#ada-int",
+    "tags": ["adaudit", "integracoes", "siem", "api"],
+    "excerpt": "Problemas com integrações do ADAudit, configuração de APIs e envio de dados para sistemas externos."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "ADAudit Plus - Group Policy",
+    "anchor": "#ada-gpo",
+    "tags": ["adaudit", "gpo", "group", "policy"],
+    "excerpt": "Análise de Group Policies via ADAudit, problemas de auditoria e configuração de políticas."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "ADAudit Plus - Alertas Críticos",
+    "anchor": "#ada-sec",
+    "tags": ["adaudit", "alertas", "criticos", "seguranca"],
+    "excerpt": "Configuração e troubleshooting de alertas críticos de segurança no ADAudit Plus."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "ADManager Plus - Gestão de Usuários",
+    "anchor": "#adm-user",
+    "tags": ["admanager", "usuarios", "gestao", "bulk"],
+    "excerpt": "Problemas na gestão de usuários em massa, criação de contas e sincronização com Active Directory."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "ADManager Plus - Gestão de Grupos",
+    "anchor": "#adm-group",
+    "tags": ["admanager", "grupos", "membership", "nested"],
+    "excerpt": "Troubleshooting de gestão de grupos, memberships aninhados e delegação de permissões."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "ADManager Plus - Importação/Exportação",
+    "anchor": "#adm-ie",
+    "tags": ["admanager", "importacao", "exportacao", "csv"],
+    "excerpt": "Problemas com importação/exportação em massa, formatação de CSV e validação de dados."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "ADManager Plus - Schedulings",
+    "anchor": "#adm-sch",
+    "tags": ["admanager", "scheduling", "automacao", "tasks"],
+    "excerpt": "Configuração e troubleshooting de tarefas agendadas no ADManager Plus."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "ADManager Plus - Relatórios",
+    "anchor": "#adm-rpt",
+    "tags": ["admanager", "relatorios", "auditoria", "compliance"],
+    "excerpt": "Geração de relatórios de auditoria, problemas de formatação e exportação no ADManager."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "AD360 SelfService - Reset de Senha",
+    "anchor": "#ad360-pwd",
+    "tags": ["ad360", "senha", "reset", "selfservice"],
+    "excerpt": "Problemas com reset de senha via SelfService, validação de identidade e notificações."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "AD360 SelfService - Unlock de Conta",
+    "anchor": "#ad360-unlock",
+    "tags": ["ad360", "unlock", "conta", "bloqueio"],
+    "excerpt": "Troubleshooting de unlock automático de contas, políticas de bloqueio e notificações."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "AD360 SelfService - Atualização de Perfil",
+    "anchor": "#ad360-profile",
+    "tags": ["ad360", "perfil", "atualizacao", "atributos"],
+    "excerpt": "Problemas na atualização de informações de perfil pelo usuário, validação de campos e sincronização."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "AD360 SelfService - Workflow",
+    "anchor": "#ad360-wf",
+    "tags": ["ad360", "workflow", "aprovacao", "processos"],
+    "excerpt": "Configuração de workflows de aprovação, problemas de notificação e gestão de solicitações."
+  },
+  {
+    "guide": "AD360",
+    "file": "ad360/AD360_Troubleshooting_Guide.html",
+    "section": "AD360 SelfService - Mobile",
+    "anchor": "#ad360-mobile",
+    "tags": ["ad360", "mobile", "app", "smartphone"],
+    "excerpt": "Problemas com aplicativo mobile AD360, autenticação e sincronização de dados."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Readiness do Ambiente",
+    "anchor": "#readiness",
+    "tags": ["readiness", "ambiente", "preparacao", "infraestrutura"],
+    "excerpt": "Validação completa do ambiente Endpoint Central: serviços, portas, banco e configurações iniciais."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Saúde do Ambiente",
+    "anchor": "#env-health",
+    "tags": ["saude", "ambiente", "monitoramento", "servicos"],
+    "excerpt": "Monitoramento da saúde do ambiente: status dos serviços, performance e diagnóstico geral."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Visão Geral",
+    "anchor": "#overview",
+    "tags": ["overview", "visao", "geral", "arquitetura"],
+    "excerpt": "Arquitetura completa do Endpoint Central: Central Server, Distribution Server, Gateway e componentes."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Agent Management",
+    "anchor": "#agt",
+    "tags": ["agent", "management", "agentes", "deploy"],
+    "excerpt": "Gestão completa de agentes: instalação, comunicação, manutenção e troubleshooting de conectividade."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Software Deployment",
+    "anchor": "#swd",
+    "tags": ["software", "deployment", "deploy", "instalacao"],
+    "excerpt": "Deploy de softwares: problemas com MSI/EXE, configuração de SMB e status de instalação."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Patch Management",
+    "anchor": "#patch",
+    "tags": ["patch", "management", "atualizacoes", "windows"],
+    "excerpt": "Gestão de patches: problemas com Windows Updates, WSUS e configuração de políticas."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "MDM (Mobile Device Management)",
+    "anchor": "#mdm",
+    "tags": ["mdm", "mobile", "ios", "android"],
+    "excerpt": "Gestão de dispositivos móveis: Apple iOS/macOS, Android Enterprise e Windows Modern Management."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Remote Control",
+    "anchor": "#remote",
+    "tags": ["remote", "control", "acesso", "remoto"],
+    "excerpt": "Acesso remoto: configuração de Gateway, problemas de conectividade e performance."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Vulnerability Management",
+    "anchor": "#sec-vuln",
+    "tags": ["vulnerability", "security", "scan", "cve"],
+    "excerpt": "Gestão de vulnerabilidades: scan de segurança, sincronização de CVE e configuração de políticas."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Agent Installation",
+    "anchor": "#agt-install",
+    "tags": ["agent", "install", "deployment", "gpo"],
+    "excerpt": "Problemas na instalação de agentes: Push, GPO, manual e troubleshooting de conectividade inicial."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Agent Communication",
+    "anchor": "#agt-comm",
+    "tags": ["agent", "communication", "heartbeat", "firewall"],
+    "excerpt": "Problemas de comunicação entre agentes e servidor: heartbeat, firewall e resolução de nomes."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Agent Maintenance",
+    "anchor": "#agt-maint",
+    "tags": ["agent", "maintenance", "reinstall", "upgrade"],
+    "excerpt": "Manutenção de agentes: reinstalação, upgrade, limpeza e troubleshooting de performance."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Software Deployment Failures",
+    "anchor": "#swd-deploy",
+    "tags": ["software", "deployment", "msi", "exe"],
+    "excerpt": "Falhas no deploy de softwares: problemas com MSI/EXE, permissões e configuração de pacotes."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "SMB Deployment Issues",
+    "anchor": "#swd-smb",
+    "tags": ["smb", "deployment", "share", "permissions"],
+    "excerpt": "Problemas com deploy via SMB: compartilhamento de rede, permissões e configuração de acesso."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Deployment Status",
+    "anchor": "#swd-status",
+    "tags": ["deployment", "status", "monitoring", "logs"],
+    "excerpt": "Monitoramento de status de deployment: análise de logs, troubleshooting e verificação de instalação."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Patch Configuration",
+    "anchor": "#patch-config",
+    "tags": ["patch", "configuration", "wsus", "policies"],
+    "excerpt": "Configuração de patch management: WSUS, políticas de grupo e configuração de repositórios."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Patch Deployment",
+    "anchor": "#patch-deploy",
+    "tags": ["patch", "deployment", "windows", "updates"],
+    "excerpt": "Deploy de patches: problemas com Windows Updates, configuração e troubleshooting de instalação."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Patch Compliance",
+    "anchor": "#patch-comp",
+    "tags": ["patch", "compliance", "reporting", "auditoria"],
+    "excerpt": "Compliance de patches: relatórios, auditoria e verificação de status de atualização."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Apple iOS/macOS Management",
+    "anchor": "#mdm-apple",
+    "tags": ["apple", "ios", "macos", "apns"],
+    "excerpt": "Gestão de dispositivos Apple: APNS, certificados, ABM e configuração de políticas iOS/macOS."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Android Enterprise Management",
+    "anchor": "#mdm-android",
+    "tags": ["android", "enterprise", "afw", "google"],
+    "excerpt": "Gestão de dispositivos Android: Android Enterprise, binding de conta e configuração de políticas."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Windows Modern Management",
+    "anchor": "#mdm-windows",
+    "tags": ["windows", "mdm", "modern", "management"],
+    "excerpt": "Gestão moderna do Windows: MDM enrollment, configuração de políticas e troubleshooting."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Remote Control Gateway",
+    "anchor": "#remote-gw",
+    "tags": ["remote", "gateway", "tunnel", "video"],
+    "excerpt": "Configuração do Gateway de acesso remoto: túnel de vídeo, performance e troubleshooting."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Remote Control Sessions",
+    "anchor": "#remote-sess",
+    "tags": ["remote", "sessions", "rdp", "vnc"],
+    "excerpt": "Gestão de sessões remotas: RDP, VNC, configuração e troubleshooting de conexões."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Vulnerability Scanning",
+    "anchor": "#sec-vuln-scan",
+    "tags": ["vulnerability", "scanning", "security", "assessment"],
+    "excerpt": "Scan de vulnerabilidades: configuração, agendamento e troubleshooting de varreduras de segurança."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-runbook-main.html",
+    "section": "Vulnerability Remediation",
+    "anchor": "#sec-vuln-rem",
+    "tags": ["vulnerability", "remediation", "fix", "patch"],
+    "excerpt": "Remediação de vulnerabilidades: deploy de correções, verificação e gestão de CVEs."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-update-checklist.html",
+    "section": "EC Update Checklist",
+    "anchor": "#",
+    "tags": ["update", "checklist", "atualizacao", "ppm", "upgrade"],
+    "excerpt": "Checklist interativo para atualização do Endpoint Central. Passos validados, comprovante PDF e acompanhamento em tempo real."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-update-checklist.html",
+    "section": "Validar Snapshot",
+    "anchor": "#step-1",
+    "tags": ["snapshot", "backup", "rollback", "vmware"],
+    "excerpt": "Validação de snapshot antes do update. Confirmar com cliente para garantir rollback em caso de falha."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-update-checklist.html",
+    "section": "Monitorar Wrapper em Tempo Real",
+    "anchor": "#step-2",
+    "tags": ["wrapper", "logs", "monitoramento", "powershell"],
+    "excerpt": "Monitoramento do wrapper.log em tempo real durante update. Comando Get-Content -Wait para acompanhamento."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-update-checklist.html",
+    "section": "Stopar Serviço",
+    "anchor": "#step-3",
+    "tags": ["servico", "stop", "shutdown", "manageengine"],
+    "excerpt": "Parada completa do serviço ManageEngine Endpoint Central antes de iniciar atualização."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-update-checklist.html",
+    "section": "Baixar PPM da Versão",
+    "anchor": "#step-4",
+    "tags": ["ppm", "download", "manageengine", "service-pack"],
+    "excerpt": "Download do arquivo PPM da versão do site oficial ManageEngine para atualização."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-update-checklist.html",
+    "section": "Validar Arquivo Baixado",
+    "anchor": "#step-5",
+    "tags": ["arquivo", "bloqueado", "unblock", "windows"],
+    "excerpt": "Verificação se arquivo PPM não está bloqueado pelo Windows. Desbloquear via propriedades se necessário."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-update-checklist.html",
+    "section": "Executar initPgsql.bat",
+    "anchor": "#step-6",
+    "tags": ["initpgsql", "database", "postgresql", "batch"],
+    "excerpt": "Execução do initPgsql.bat para preparação do banco PostgreSQL antes do update."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-update-checklist.html",
+    "section": "Executar UpdateManager.bat",
+    "anchor": "#step-7",
+    "tags": ["updatemanager", "interface", "atualizacao", "gui"],
+    "excerpt": "Execução do UpdateManager.bat para abrir interface de atualização do Endpoint Central."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-update-checklist.html",
+    "section": "Adicionar Arquivo PPM",
+    "anchor": "#step-8",
+    "tags": ["ppm", "browse", "selecionar", "atualizacao"],
+    "excerpt": "Seleção do arquivo PPM no UpdateManager para iniciar processo de atualização."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-update-checklist.html",
+    "section": "Subir Serviços e Validar",
+    "anchor": "#step-9",
+    "tags": ["validacao", "console", "agentes", "pos-update"],
+    "excerpt": "Validação pós-update: console acessível, versão confirmada, agentes comunicando e cliente validado."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-update-checklist.html",
+    "section": "Gerar Comprovante PDF",
+    "anchor": "#comprovante",
+    "tags": ["comprovante", "pdf", "assinatura", "documentacao"],
+    "excerpt": "Geração de comprovante PDF com todos os passos executados, observações e assinatura do analista."
+  },
+  {
+    "guide": "PAM360",
+    "file": "pam360/pam360.html",
+    "section": "Saúde do Cofre & Readiness",
+    "anchor": "#env-health",
+    "tags": ["saude", "cofre", "readiness", "seguranca"],
+    "excerpt": "Validação da saúde do cofre PAM360: encryption key, JVM, database e cluster HA."
+  },
+  {
+    "guide": "PAM360",
+    "file": "pam360/pam360.html",
+    "section": "Matriz de Comunicação",
+    "anchor": "#infra",
+    "tags": ["comunicacao", "portas", "rede", "conectividade"],
+    "excerpt": "Portas e protocolos essenciais do PAM360: HTTPS, Gateway 7272, database e conectividade externa."
+  },
+  {
+    "guide": "PAM360",
+    "file": "pam360/pam360.html",
+    "section": "Cofre & Criptografia",
+    "anchor": "#vault",
+    "tags": ["cofre", "criptografia", "keys", "encryption"],
+    "excerpt": "Gestão do cofre PAM360: encryption key, inicialização, backup e recuperação de dados."
+  },
+  {
+    "guide": "PAM360",
+    "file": "pam360/pam360.html",
+    "section": "Rotação de Senhas",
+    "anchor": "#rotation",
+    "tags": ["rotacao", "senhas", "password", "management"],
+    "excerpt": "Rotação automática de senhas: configuração, troubleshooting e integração com Active Directory."
+  },
+  {
+    "guide": "PAM360",
+    "file": "pam360/pam360.html",
+    "section": "Gateway de Sessão",
+    "anchor": "#gateway",
+    "tags": ["gateway", "sessao", "rdp", "ssh"],
+    "excerpt": "Gateway de acesso remoto: RDP/SSH via browser, configuração de porta 7272 e troubleshooting."
+  },
+  {
+    "guide": "PAM360",
+    "file": "pam360/pam360.html",
+    "section": "Central de Diagnóstico",
+    "anchor": "#diag",
+    "tags": ["diagnostico", "logs", "troubleshooting", "suporte"],
+    "excerpt": "Suíte de diagnóstico PAM360: análise de logs, ferramentas de troubleshooting e validação de serviços."
+  },
+  {
+    "guide": "PAM360",
+    "file": "pam360/pam360.html",
+    "section": "Console de Engenharia",
+    "anchor": "#scripts",
+    "tags": ["console", "engenharia", "scripts", "n3"],
+    "excerpt": "Console avançado de engenharia PAM360: scripts de diagnóstico, ferramentas N3 e comandos especiais."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "Mail Fetching — Loop de E-mail",
+    "anchor": "#SDP-MAIL-101",
+    "tags": ["mail", "email", "loop", "duplicado", "ticket", "spam", "inbound"],
+    "excerpt": "Tickets duplicados por loop de e-mail. Merge em massa e aplicação de filtro SPAM."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "OAuth2 — Client Secret Expirado",
+    "anchor": "#SDP-MAIL-102",
+    "tags": ["oauth", "oauth2", "m365", "microsoft", "secret", "expirado", "mail fetching"],
+    "excerpt": "Mail Fetching parou após expiração do Client Secret M365. Renovar no Azure e reautorizar no SDP."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "Field & Form Rules — Campos Dinâmicos",
+    "anchor": "#SDP-LOGIC-001",
+    "tags": ["campo", "dinamico", "form", "rules", "logica", "template", "catalog"],
+    "excerpt": "Configurar campos condicionais no Service Catalog. Show/Hide field baseado em valor de outro campo."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "Lentidão — Tuning de Performance",
+    "anchor": "#SDP-INFRA-202",
+    "tags": ["lentidao", "performance", "lento", "jvm", "memoria", "heap", "lucene"],
+    "excerpt": "Lentidão ao abrir chamados. Ajuste de heap JVM no wrapper.conf e reindexação do Lucene."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "Matriz de Portas",
+    "anchor": "#ports",
+    "tags": ["portas", "porta", "rede", "firewall", "comunicacao"],
+    "excerpt": "Portas essenciais do ServiceDesk Plus para comunicação com agentes e integrações externas."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-playbook-operational.html",
+    "section": "Vincular Chamados em Massa",
+    "anchor": "#",
+    "tags": ["merge", "chamado", "duplicado", "massa", "parent", "vincular"],
+    "excerpt": "Consolidar tickets duplicados via Merge. Definir chamado original como Parent."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-playbook-operational.html",
+    "section": "Scan de Ativos — Filial Remota",
+    "anchor": "#",
+    "tags": ["ativo", "asset", "scan", "filial", "remoto", "discovery", "agent"],
+    "excerpt": "Discovery Agent em filial remota. Porta 9000 obrigatória para comunicação com servidor central."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-playbook-operational.html",
+    "section": "Troca de Secret OAuth2 M365",
+    "anchor": "#",
+    "tags": ["oauth", "secret", "azure", "microsoft", "m365", "inbound", "mail"],
+    "excerpt": "Renovar Client Secret expirado no Azure portal e reautorizar inbound mail no SDP."
+  }
+]

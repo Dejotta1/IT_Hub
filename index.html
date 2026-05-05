@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IT Hub — Plataforma de Guias Técnicos</title>
+  <link rel="stylesheet" href="./shared/tokens.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <style>
+    :root {
+      /* Local variables not in shared tokens */
+      --blue-glow:  rgba(77,159,255,.2);
+      --teal:       #3ddba8;
+      --teal-dim:   rgba(61,219,168,.1);
+      --rose:       #ff7a95;
+      --rose-dim:   rgba(255,122,149,.1);
+      --r:       10px;
+      --r-lg:    14px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 14px;
+      line-height: 1.65;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg2); }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: fixed; top: 0; left: 0;
+      width: var(--sidebar-w); height: 100vh;
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      z-index: 200; overflow-y: auto;
+      transition: transform .3s ease;
+    }
+    .sidebar-logo {
+      padding: 22px 18px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--blue-dim);
+      border: 1px solid rgba(77,159,255,.25);
+      border-radius: 5px;
+      padding: 2px 9px 2px 7px;
+      margin-bottom: 10px;
+    }
+    .logo-badge-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--teal);
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .logo-badge span {
+      font-family: var(--mono); font-size: 9.5px;
+      color: var(--teal); letter-spacing: .8px; font-weight: 500;
+    }
+    .brand {
+      font-family: var(--display); font-size: 20px; font-weight: 800;
+      color: var(--text); letter-spacing: -.5px; line-height: 1.15;
+    }
+    .brand em { color: var(--blue); font-style: normal; }
+    .brand-sub {
+      font-family: var(--mono); font-size: 10.5px; color: var(--text3);
+      margin-top: 5px;
+    }
+
+    .nav-section { padding: 10px 0 2px; }
+    .nav-label {
+      padding: 5px 18px;
+      font-family: var(--mono); font-size: 9px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 1.8px; color: var(--text3);
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 18px; font-size: 13px; font-weight: 500;
+      color: var(--text2); text-decoration: none;
+      transition: all .15s ease;
+    }
+    .nav-item:hover { color: var(--text); background: var(--bg3); }
+    .nav-item.active { color: var(--text); background: var(--bg3); }
+    .nav-item-icon {
+      width: 26px; height: 26px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; flex-shrink: 0;
+    }
+    .nav-item-icon img { width: 15px; height: 15px; object-fit: contain; display: block; }
+    .nav-item-text { flex: 1; }
+    .nav-item-arrow { font-size: 11px; color: var(--text3); opacity: 0; transition: opacity .15s; }
+    .nav-item:hover .nav-item-arrow { opacity: 1; }
+    .nav-sep { height: 1px; background: var(--border); margin: 6px 18px; }
+
+    .sidebar-footer {
+      margin-top: auto; padding: 14px 18px;
+      border-top: 1px solid var(--border);
+    }
+    .status-row {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11px; color: var(--text3);
+    }
+    .status-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--teal); flex-shrink: 0;
+    }
+
+    .hamburger {
+      display: none;
+      position: fixed; top: 14px; left: 14px;
+      z-index: 300; background: var(--bg3);
+      border: 1px solid var(--border2); border-radius: 8px;
+      padding: 8px 10px; cursor: pointer; color: var(--text2);
+      font-size: 16px;
+    }
+    .sidebar-overlay {
+      display: none;
+      position: fixed; inset: 0; background: rgba(0,0,0,.6);
+      z-index: 150;
+    }
+
+    /* ── MAIN ── */
+    .main { margin-left: var(--sidebar-w); min-height: 100vh; }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 44px 48px 36px;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-eyebrow {
+      font-family: var(--mono); font-size: 9px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .hero-eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--teal); }
+    .hero h1 {
+      font-family: var(--display); font-size: 36px; font-weight: 800;
+      color: var(--text); line-height: 1.08; letter-spacing: -1.2px;
+      margin-bottom: 10px;
+    }
+    .hero h1 .accent { color: var(--blue); }
+    .hero-desc {
+      color: var(--text2); max-width: 540px;
+      font-size: 14px; line-height: 1.7; margin-bottom: 24px;
+    }
+    .hero-stats {
+      display: flex; align-items: center; gap: 20px;
+      margin-bottom: 28px;
+    }
+    .hero-stat { display: flex; align-items: baseline; gap: 7px; }
+    .hero-stat-num {
+      font-family: var(--display); font-size: 22px; font-weight: 800;
+    }
+    .hero-stat-label { font-size: 12px; color: var(--text2); }
+    .hero-divider { width: 1px; height: 24px; background: var(--border2); }
+
+    /* ── UNIFIED SEARCH ── */
+    .search-unified {
+      display: flex;
+      align-items: center;
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: var(--r);
+      max-width: 560px;
+      overflow: visible;
+      position: relative;
+    }
+    .search-unified:focus-within {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px var(--blue-dim);
+    }
+    .search-mode-toggle {
+      display: flex;
+      flex-shrink: 0;
+      border-right: 1px solid var(--border2);
+    }
+    .search-mode-btn {
+      display: flex; align-items: center; gap: 5px;
+      padding: 9px 12px;
+      font-family: var(--mono); font-size: 9px; font-weight: 600;
+      letter-spacing: .8px; text-transform: uppercase;
+      color: var(--text3);
+      background: none; border: none; cursor: pointer;
+      transition: all .15s;
+      white-space: nowrap;
+    }
+    .search-mode-btn.active {
+      color: var(--blue);
+      background: var(--blue-dim);
+    }
+    .search-mode-btn:first-child { border-radius: var(--r) 0 0 var(--r); }
+    .search-icon-wrap {
+      padding: 0 10px 0 14px;
+      color: var(--text3); font-size: 14px;
+      display: flex; align-items: center;
+      flex-shrink: 0;
+    }
+    .search-input-unified {
+      flex: 1;
+      background: none; border: none; outline: none;
+      color: var(--text);
+      font-family: var(--sans); font-size: 13px;
+      padding: 10px 14px 10px 0;
+    }
+    .search-input-unified::placeholder { color: var(--text3); }
+
+    /* hidden legacy inputs — JS still references them */
+    #search, #globalSearch { display: none; }
+
+    /* Global search dropdown */
+    .global-search-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0; right: 0;
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: var(--r);
+      max-height: 360px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+      box-shadow: 0 8px 24px rgba(0,0,0,.4);
+    }
+    .global-search-dropdown.open { display: block; }
+    .global-search-group { border-bottom: 1px solid var(--border); }
+    .global-search-group:last-child { border-bottom: none; }
+    .global-search-group-header {
+      padding: 8px 14px;
+      font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .5px;
+      color: var(--text3); background: var(--bg3);
+      border-bottom: 1px solid var(--border);
+      font-family: var(--mono);
+    }
+    .global-search-result {
+      display: block; padding: 10px 14px;
+      color: var(--text); text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      transition: background .15s;
+    }
+    .global-search-result:last-child { border-bottom: none; }
+    .global-search-result:hover { background: var(--bg3); }
+    .global-search-result-title { font-weight: 500; margin-bottom: 4px; line-height: 1.3; }
+    .global-search-result-excerpt { font-size: 12px; color: var(--text2); line-height: 1.4; }
+    .global-search-result-badge {
+      display: inline-block;
+      background: var(--blue-dim); color: var(--blue);
+      font-size: 10px; font-weight: 600;
+      padding: 2px 6px; border-radius: 4px;
+      margin-left: 8px; text-transform: uppercase; letter-spacing: .3px;
+      font-family: var(--mono);
+    }
+    .global-search-no-results {
+      padding: 16px 14px; text-align: center;
+      color: var(--text3); font-size: 13px;
+    }
+    .global-search-highlight { background: transparent; color: var(--blue); font-weight: 600; }
+
+    /* ── FILTER BAR (hidden, kept for JS) ── */
+    .filter-bar { display: none; }
+
+    /* ── CONTENT ── */
+    .content { padding: 0 48px 80px; }
+
+    /* ── BENTO SECTIONS ── */
+    .bento-section { border-bottom: 1px solid var(--border); }
+    .bento-section:last-child { border-bottom: none; }
+
+    .section-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 18px 0 0;
+      margin-bottom: 0;
+    }
+    .section-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .section-label {
+      font-family: var(--mono); font-size: 9px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 2px;
+    }
+    .section-count {
+      font-family: var(--mono); font-size: 9px;
+      color: var(--text3); margin-left: auto;
+    }
+
+    .bento-grid {
+      display: grid;
+      background: var(--border);
+      gap: 1px;
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      margin: 14px 0 24px;
+    }
+    .bento-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .bento-5 { grid-template-columns: repeat(5, 1fr); }
+    .bento-2 { grid-template-columns: 1fr 1fr; }
+
+    /* bento card = .card for JS compat */
+    .card {
+      background: var(--bg2);
+      padding: 20px 22px;
+      display: flex; flex-direction: column; gap: 6px;
+      text-decoration: none; color: inherit;
+      transition: background .15s;
+      position: relative;
+    }
+    .card:hover { background: var(--bg3); }
+    .card.hidden { display: none; }
+
+    .card-eyebrow {
+      font-family: var(--mono); font-size: 8px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+    .card-title {
+      font-size: 15px; font-weight: 600;
+      color: var(--text); line-height: 1.2;
+    }
+    .card-desc {
+      font-size: 12px; color: var(--text2);
+      line-height: 1.55; flex: 1; margin-top: 2px;
+    }
+    .card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 12px; padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .card-tag {
+      font-family: var(--mono); font-size: 8px; font-weight: 600;
+      letter-spacing: .8px; padding: 2px 7px; border-radius: 4px;
+    }
+    .card-arrow { font-size: 14px; }
+    .card-soon {
+      font-family: var(--mono); font-size: 8px;
+      color: var(--text3); border: 1px solid var(--border2);
+      padding: 2px 7px; border-radius: 4px;
+    }
+
+    /* coming-soon dimming */
+    .card.coming-soon {
+      opacity: .45; cursor: default; pointer-events: none;
+    }
+
+    /* category color helpers */
+    .c-teal   .card-eyebrow { color: var(--teal); }
+    .c-teal   .card-arrow   { color: var(--teal); }
+    .c-teal   .card-tag     { background: var(--teal-dim); color: var(--teal); }
+
+    .c-red    .card-eyebrow { color: var(--red); }
+    .c-red    .card-arrow   { color: var(--red); }
+    .c-red    .card-tag     { background: var(--red-dim); color: var(--red); }
+
+    .c-amber  .card-eyebrow { color: var(--amber); }
+    .c-amber  .card-arrow   { color: var(--amber); }
+    .c-amber  .card-tag     { background: var(--amber-dim); color: var(--amber); }
+
+    .c-purple .card-eyebrow { color: var(--purple); }
+    .c-purple .card-arrow   { color: var(--purple); }
+    .c-purple .card-tag     { background: var(--purple-dim); color: var(--purple); }
+
+    /* section dot colors */
+    .dot-teal   { background: var(--teal); }
+    .dot-red    { background: var(--red); }
+    .dot-amber  { background: var(--amber); }
+    .dot-purple { background: var(--purple); }
+
+    .lbl-teal   { color: var(--teal); }
+    .lbl-red    { color: var(--red); }
+    .lbl-amber  { color: var(--amber); }
+    .lbl-purple { color: var(--purple); }
+
+    /* Card meta information */
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text2, #8894ab);
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border, #1e2438);
+      font-family: var(--mono, monospace);
+    }
+    .meta-sep {
+      color: var(--text3, #4a556a);
+    }
+    .meta-scenarios {
+      color: var(--text2, #8894ab);
+    }
+    .meta-updated {
+      color: var(--text3, #4a556a);
+    }
+
+    /* ── NO RESULTS ── */
+    .no-results {
+      display: none; text-align: center;
+      padding: 64px 24px; color: var(--text3); font-size: 13px;
+    }
+    .no-results.visible { display: block; }
+    .no-results-icon { font-size: 36px; margin-bottom: 12px; }
+    .no-results-title {
+      font-family: var(--display); font-size: 18px;
+      color: var(--text2); margin-bottom: 8px;
+    }
+
+    /* ── INFOBOX ── */
+    .infobox {
+      margin: 8px 0 0;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-left: 3px solid var(--blue);
+      border-radius: 0 var(--r) var(--r) 0;
+      padding: 12px 16px;
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 12.5px; color: var(--text2);
+    }
+
+    /* ── CREDITS ── */
+    .credits {
+      margin-top: 40px; padding: 24px 26px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    }
+    .credits-avatar {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--display); font-size: 17px; font-weight: 800; color: #fff;
+      flex-shrink: 0; overflow: hidden;
+    }
+    .credits-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .credits-info { flex: 1; min-width: 160px; }
+    .credits-label {
+      font-family: var(--mono); font-size: 9px; color: var(--text3);
+      text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 3px;
+    }
+    .credits-name {
+      font-family: var(--display); font-size: 15px; font-weight: 800;
+      color: var(--text); margin-bottom: 3px;
+    }
+    .credits-email, .credits-linkedin {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--blue); text-decoration: none; display: block;
+    }
+    .credits-linkedin { display: inline-flex; gap: 4px; margin-top: 3px; }
+    .credits-email:hover, .credits-linkedin:hover { text-decoration: underline; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.open { display: block; }
+      .hamburger { display: flex; align-items: center; justify-content: center; }
+      .main { margin-left: 0; }
+      .hero { padding: 56px 20px 28px; }
+      .hero h1 { font-size: 26px; }
+      .content { padding: 0 16px 60px; }
+      .bento-3, .bento-5 { grid-template-columns: 1fr 1fr; }
+      .bento-2 { grid-template-columns: 1fr; }
+      .search-unified { max-width: 100%; }
+    }
+    @media (max-width: 560px) {
+      .bento-3, .bento-5, .bento-2 { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 22px; }
+      .search-mode-btn span { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+  <div class="sidebar-overlay" id="overlay"></div>
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-badge">
+        <span class="logo-badge-dot"></span>
+        <span>Disponível</span>
+      </div>
+      <div class="brand">IT<em>Hub</em></div>
+      <div class="brand-sub">// plataforma de guias técnicos</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">ManageEngine</div>
+      <a class="nav-item" href="./endpoint-central/ec-runbook-main.html">
+        <span class="nav-item-icon" style="background:rgba(77,159,255,.1);border:1px solid rgba(77,159,255,.2);">
+          <img src="./image/EC.png" alt="Endpoint Central" onerror="this.replaceWith(document.createTextNode('🖥️'))"/>
+        </span>
+        <span class="nav-item-text">Endpoint Central</span>
+        <span class="nav-item-arrow">›</span>
+      </a>
+      <a class="nav-item" href="./ad360/ad360-runbook-main.html">
+        <span class="nav-item-icon" style="background:rgba(169,127,245,.1);border:1px solid rgba(169,127,245,.2);">🗂️</span>
+        <span class="nav-item-text">AD360</span>
+        <span class="nav-item-arrow">›</span>
+      </a>
+      <a class="nav-item" href="./pam360/pam360-runbook-main.html">
+        <span class="nav-item-icon" style="background:rgba(77,159,255,.1);border:1px solid rgba(77,159,255,.2);">
+          <img src="./image/pam360.png" alt="PAM360" onerror="this.replaceWith(document.createTextNode('🔑'))"/>
+        </span>
+        <span class="nav-item-text">PAM360</span>
+        <span class="nav-item-arrow">›</span>
+      </a>
+      <a class="nav-item" href="./sdp/sdp-runbook-main.html">
+        <span class="nav-item-icon" style="background:rgba(90,240,160,.1);border:1px solid rgba(90,240,160,.2);">🎧</span>
+        <span class="nav-item-text">ServiceDesk Plus</span>
+        <span class="nav-item-arrow">›</span>
+      </a>
+    </div>
+
+    <div class="nav-sep"></div>
+
+    <div class="nav-section">
+      <div class="nav-label">Cybersecurity</div>
+      <a class="nav-item" href="#" style="opacity:.45;pointer-events:none;">
+        <span class="nav-item-icon" style="background:rgba(255,92,110,.1);border:1px solid rgba(255,92,110,.2);">🛡️</span>
+        <span class="nav-item-text">Cloudflare</span>
+      </a>
+      <a class="nav-item" href="#" style="opacity:.45;pointer-events:none;">
+        <span class="nav-item-icon" style="background:rgba(255,92,110,.1);border:1px solid rgba(255,92,110,.2);">🔐</span>
+        <span class="nav-item-text">Checkpoint</span>
+      </a>
+      <a class="nav-item" href="#" style="opacity:.45;pointer-events:none;">
+        <span class="nav-item-icon" style="background:rgba(255,92,110,.1);border:1px solid rgba(255,92,110,.2);">🧬</span>
+        <span class="nav-item-text">SentinelOne</span>
+      </a>
+    </div>
+
+    <div class="nav-sep"></div>
+
+    <div class="nav-section">
+      <div class="nav-label">Infra &amp; Backup</div>
+      <a class="nav-item" href="#" style="opacity:.45;pointer-events:none;">
+        <span class="nav-item-icon" style="background:rgba(255,179,64,.1);border:1px solid rgba(255,179,64,.2);">💾</span>
+        <span class="nav-item-text">Veeam</span>
+      </a>
+    </div>
+
+    <div class="nav-sep"></div>
+
+    <div class="nav-section">
+      <div class="nav-label">Recursos</div>
+      <a class="nav-item" href="https://www.manageengine.com/productdocument.html" target="_blank" rel="noopener">
+        <span class="nav-item-icon" style="background:rgba(61,219,168,.08);border:1px solid rgba(61,219,168,.15);">📄</span>
+        <span class="nav-item-text">Documentação ME</span>
+        <span class="nav-item-arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="status-row">
+        <span class="status-dot"></span>
+        <span>Hub ativo · GitHub Pages</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HERO -->
+    <header class="hero">
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-dot"></span>
+        IT Hub · Plataforma Técnica
+      </div>
+      <h1>Guias &amp; <span class="accent">Runbooks</span></h1>
+      <p class="hero-desc">
+        Plataforma centralizada de guias técnicos, troubleshooting e boas práticas para as principais ferramentas de TI.
+      </p>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-num" style="color:var(--teal)">4</span>
+          <span class="hero-stat-label">Ativos</span>
+        </div>
+        <div class="hero-divider"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-num" style="color:var(--text3)">10</span>
+          <span class="hero-stat-label">Em breve</span>
+        </div>
+        <div class="hero-divider"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-num" style="color:var(--text)">4</span>
+          <span class="hero-stat-label">Categorias</span>
+        </div>
+      </div>
+
+      <!-- UNIFIED SEARCH -->
+      <div class="search-unified" id="searchUnified">
+        <div class="search-mode-toggle">
+          <button class="search-mode-btn active" id="modeIndex" title="Buscar nesta página">
+            🔍 <span>Esta página</span>
+          </button>
+          <button class="search-mode-btn" id="modeGlobal" title="Buscar em todos os guias">
+            🔎 <span>Todos os guias</span>
+          </button>
+        </div>
+        <div class="search-icon-wrap">›</div>
+        <input
+          class="search-input-unified"
+          id="searchUnifiedInput"
+          type="search"
+          placeholder="Buscar ferramenta ou guia…"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <span style="font-size:11px; opacity:0.4; font-family: monospace; padding-right: 8px;">Ctrl+K</span>
+        <div class="global-search-dropdown" id="globalSearchDropdown"></div>
+      </div>
+
+      <!-- hidden legacy inputs para compatibilidade com JS -->
+      <input type="hidden" id="search" />
+      <input type="hidden" id="globalSearch" />
+    </header>
+
+    <!-- FILTER BAR (hidden, mantido para o JS) -->
+    <div class="filter-bar" role="tablist">
+      <button class="filter-btn active" data-cat="all" role="tab" aria-selected="true">
+        <span class="fb-dot"></span> Todas
+        <span class="filter-count" id="count-all">13</span>
+      </button>
+      <button class="filter-btn" data-cat="manageengine" role="tab">
+        <span class="fb-dot"></span> ManageEngine
+        <span class="filter-count" id="count-manageengine">3</span>
+      </button>
+      <button class="filter-btn" data-cat="cybersecurity" role="tab">
+        <span class="fb-dot"></span> Cybersecurity
+        <span class="filter-count" id="count-cybersecurity">5</span>
+      </button>
+      <button class="filter-btn" data-cat="infra" role="tab">
+        <span class="fb-dot"></span> Infra &amp; Backup
+        <span class="filter-count" id="count-infra">3</span>
+      </button>
+      <button class="filter-btn" data-cat="productivity" role="tab">
+        <span class="fb-dot"></span> Productivity
+        <span class="filter-count" id="count-productivity">2</span>
+      </button>
+    </div>
+
+    <!-- CONTENT -->
+    <section class="content">
+
+      <!-- ManageEngine -->
+      <div class="bento-section">
+        <div class="section-header">
+          <div class="section-dot dot-teal"></div>
+          <span class="section-label lbl-teal">ManageEngine</span>
+          <span class="section-count">4 guias</span>
+        </div>
+        <div class="bento-grid bento-5">
+          <a class="card c-teal" data-color="blue" data-cat="manageengine" data-name="endpoint central" href="./endpoint-central/ec-runbook-main.html">
+            <span class="card-eyebrow">Runbook · Endpoint</span>
+            <div class="card-title">Endpoint Central</div>
+            <div class="card-desc">Guias, erros comuns e rotinas de diagnóstico para gerenciamento de endpoints. Cobertura de deploy, patches e inventário.</div>
+            <div class="card-footer">
+              <span class="card-tag">ec-runbook</span>
+              <span class="card-arrow">↗</span>
+            </div>
+          </a>
+          <a class="card c-teal" data-color="teal" data-cat="manageengine" data-name="ad360" href="./ad360/ad360-runbook-main.html">
+            <span class="card-eyebrow">Runbook · Identity</span>
+            <div class="card-title">AD360</div>
+            <div class="card-desc">Guia completo com ADAudit, ADSelfService, ADManager e mais. Inclui busca, filtros e cenários de erro documentados.</div>
+            <div class="card-footer">
+              <span class="card-tag">ad360-runbook</span>
+              <span class="card-arrow">↗</span>
+            </div>
+          </a>
+          <a class="card c-teal" data-color="purple" data-cat="manageengine" data-name="pam360" href="./pam360/pam360-runbook-main.html">
+            <span class="card-eyebrow">Runbook · Security</span>
+            <div class="card-title">PAM360</div>
+            <div class="card-desc">Troubleshooting e boas práticas do PAM360. Cobertura de cofres, sessões privilegiadas e integração SSO.</div>
+            <div class="card-footer">
+              <span class="card-tag">pam360-runbook</span>
+              <span class="card-arrow">↗</span>
+            </div>
+          </a>
+          <a class="card c-teal" data-color="green" data-cat="manageengine" data-name="servicedesk plus" href="./sdp/sdp-runbook-main.html">
+            <span class="card-eyebrow">Runbook · ITSM</span>
+            <div class="card-title">ServiceDesk Plus</div>
+            <div class="card-desc">Guia de troubleshooting para Service Desk. Foco em mensageria, automação de chamados, gestão de ativos e banco de dados.</div>
+            <div class="card-footer">
+              <span class="card-tag">sdp-runbook</span>
+              <span class="card-arrow">↗</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Cybersecurity -->
+      <div class="bento-section">
+        <div class="section-header">
+          <div class="section-dot dot-red"></div>
+          <span class="section-label lbl-red">Cybersecurity</span>
+          <span class="section-count">5 guias</span>
+        </div>
+        <div class="bento-grid bento-5">
+          <div class="card c-red coming-soon" data-color="rose" data-cat="cybersecurity" data-name="cloudflare">
+            <span class="card-eyebrow">WAF · Zero Trust</span>
+            <div class="card-title">Cloudflare</div>
+            <div class="card-desc">WAF, Tunnels, DNS e políticas de Zero Trust Access.</div>
+            <div class="card-footer"><span class="card-soon">em breve</span></div>
+          </div>
+          <div class="card c-red coming-soon" data-color="red" data-cat="cybersecurity" data-name="resecurity">
+            <span class="card-eyebrow">Threat Intel</span>
+            <div class="card-title">Resecurity</div>
+            <div class="card-desc">Dark web monitoring e resposta a incidentes.</div>
+            <div class="card-footer"><span class="card-soon">em breve</span></div>
+          </div>
+          <div class="card c-red coming-soon" data-color="red" data-cat="cybersecurity" data-name="checkpoint">
+            <span class="card-eyebrow">Firewall · VPN</span>
+            <div class="card-title">Check Point</div>
+            <div class="card-desc">SmartConsole, políticas e troubleshooting de blade.</div>
+            <div class="card-footer"><span class="card-soon">em breve</span></div>
+          </div>
+          <div class="card c-red coming-soon" data-color="red" data-cat="cybersecurity" data-name="sentinelone">
+            <span class="card-eyebrow">EDR · XDR</span>
+            <div class="card-title">SentinelOne</div>
+            <div class="card-desc">Agentes, políticas de detecção e console Singularity.</div>
+            <div class="card-footer"><span class="card-soon">em breve</span></div>
+          </div>
+          <div class="card c-red coming-soon" data-color="purple" data-cat="cybersecurity" data-name="delinea">
+            <span class="card-eyebrow">PAM · Secrets</span>
+            <div class="card-title">Delinea</div>
+            <div class="card-desc">Secret Server, rotação de credenciais e auditoria.</div>
+            <div class="card-footer"><span class="card-soon">em breve</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Infra & Backup -->
+      <div class="bento-section">
+        <div class="section-header">
+          <div class="section-dot dot-amber"></div>
+          <span class="section-label lbl-amber">Infra &amp; Backup</span>
+          <span class="section-count">3 guias</span>
+        </div>
+        <div class="bento-grid bento-3">
+          <div class="card c-amber coming-soon" data-color="amber" data-cat="infra" data-name="veeam">
+            <span class="card-eyebrow">Backup · Recovery</span>
+            <div class="card-title">Veeam</div>
+            <div class="card-desc">Políticas de backup, restore granular e repositórios imutáveis.</div>
+            <div class="card-footer"><span class="card-soon">em breve</span></div>
+          </div>
+          <div class="card c-amber coming-soon" data-color="blue" data-cat="infra" data-name="dropbox">
+            <span class="card-eyebrow">Storage · Cloud</span>
+            <div class="card-title">Dropbox Business</div>
+            <div class="card-desc">Administração, permissões e integrações corporativas.</div>
+            <div class="card-footer"><span class="card-soon">em breve</span></div>
+          </div>
+          <div class="card c-amber coming-soon" data-color="amber" data-cat="infra" data-name="jfrog">
+            <span class="card-eyebrow">Artifacts · DevOps</span>
+            <div class="card-title">JFrog Artifactory</div>
+            <div class="card-desc">Repositórios, permissões e pipelines de build.</div>
+            <div class="card-footer"><span class="card-soon">em breve</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Productivity -->
+      <div class="bento-section">
+        <div class="section-header">
+          <div class="section-dot dot-purple"></div>
+          <span class="section-label lbl-purple">Productivity</span>
+          <span class="section-count">2 guias</span>
+        </div>
+        <div class="bento-grid bento-2">
+          <div class="card c-purple coming-soon" data-color="cyan" data-cat="productivity" data-name="clickup">
+            <span class="card-eyebrow">Project · Tasks</span>
+            <div class="card-title">ClickUp</div>
+            <div class="card-desc">Workspaces, automações e integrações com times de TI.</div>
+            <div class="card-footer"><span class="card-soon">em breve</span></div>
+          </div>
+          <div class="card c-purple coming-soon" data-color="cyan" data-cat="productivity" data-name="figma">
+            <span class="card-eyebrow">Design · Proto</span>
+            <div class="card-title">Figma</div>
+            <div class="card-desc">Organização de arquivos, permissões e plugins corporativos.</div>
+            <div class="card-footer"><span class="card-soon">em breve</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="no-results" id="no-results">
+        <div class="no-results-icon">🔍</div>
+        <div class="no-results-title">Nenhum resultado encontrado</div>
+        <div>Tente outro termo.</div>
+      </div>
+
+      <div class="infobox">
+        <span>💡</span>
+        <span>
+          Guias marcados como <strong>em breve</strong> estão em desenvolvimento.
+          Sugestões? <a href="mailto:djalmagabriel01@gmail.com" style="color:var(--blue)">Fale comigo</a>.
+        </span>
+      </div>
+
+      <div class="credits">
+        <div class="credits-avatar">
+          <img src="./image/avatar.png" alt="Foto de perfil" onerror="this.replaceWith(document.createTextNode('DG'))"/>
+        </div>
+        <div class="credits-info">
+          <div class="credits-label">Desenvolvido por</div>
+          <div class="credits-name">Djalma Gabriel Gusmão</div>
+          <a class="credits-email" href="mailto:djalmagabriel01@gmail.com">djalmagabriel01@gmail.com</a>
+          <a class="credits-linkedin" href="https://www.linkedin.com/in/djalma-gusmao/" target="_blank" rel="noopener">in/djalma-gusmao ↗</a>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+    // Module metadata
+    const MODULE_META = {
+      "Endpoint Central": {
+        scenarios: 47,
+        coverage: "Completo",
+        updated: "Mai 2026",
+        color: "var(--blue)"
+      },
+      "ServiceDesk Plus": {
+        scenarios: 12,
+        coverage: "Básico",
+        updated: "Mai 2026",
+        color: "var(--green)"
+      },
+      "AD360": {
+        scenarios: 23,
+        coverage: "Completo",
+        updated: "Mai 2026",
+        color: "var(--purple)"
+      },
+      "PAM360": {
+        scenarios: 18,
+        coverage: "Completo",
+        updated: "Mai 2026",
+        color: "var(--amber)"
+      }
+    };
+
+    // ── Cards & filtros (mantidos para compatibilidade) ──
+    const cards   = document.querySelectorAll('.card');
+    const filters = document.querySelectorAll('.filter-btn');
+    const noRes   = document.getElementById('no-results');
+
+    let activeCat  = 'all';
+    let searchTerm = '';
+
+    function updateCounts() {
+      ['manageengine','cybersecurity','infra','productivity'].forEach(cat => {
+        const el = document.getElementById('count-' + cat);
+        if (el) el.textContent = [...cards].filter(c => c.dataset.cat === cat).length;
+      });
+      const all = document.getElementById('count-all');
+      if (all) all.textContent = cards.length;
+    }
+
+    function applyFilters() {
+      let visible = 0;
+      cards.forEach(card => {
+        const matchCat  = activeCat === 'all' || card.dataset.cat === activeCat;
+        const matchTerm = !searchTerm || card.dataset.name.includes(searchTerm.toLowerCase());
+        const show = matchCat && matchTerm;
+        card.classList.toggle('hidden', !show);
+        if (show) visible++;
+      });
+      noRes.classList.toggle('visible', visible === 0);
+    }
+
+    filters.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filters.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+        btn.classList.add('active'); btn.setAttribute('aria-selected','true');
+        activeCat = btn.dataset.cat;
+        applyFilters();
+      });
+    });
+
+    updateCounts();
+
+    // ── Mobile sidebar ──
+    const sidebar   = document.getElementById('sidebar');
+    const overlay   = document.getElementById('overlay');
+    const hamburger = document.getElementById('hamburger');
+    hamburger.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('open'); });
+    overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+
+    // ── Unified Search ──
+    let searchMode = 'index'; // 'index' | 'global'
+
+    const modeIndexBtn  = document.getElementById('modeIndex');
+    const modeGlobalBtn = document.getElementById('modeGlobal');
+    const unifiedInput  = document.getElementById('searchUnifiedInput');
+    const dropdown      = document.getElementById('globalSearchDropdown');
+
+    function setMode(mode) {
+      searchMode = mode;
+      unifiedInput.value = '';
+      searchTerm = '';
+      applyFilters();
+      dropdown.classList.remove('open');
+
+      if (mode === 'index') {
+        modeIndexBtn.classList.add('active');
+        modeGlobalBtn.classList.remove('active');
+        unifiedInput.placeholder = 'Buscar ferramenta ou guia…';
+      } else {
+        modeGlobalBtn.classList.add('active');
+        modeIndexBtn.classList.remove('active');
+        unifiedInput.placeholder = 'Buscar em todos os guias…';
+      }
+    }
+
+    modeIndexBtn.addEventListener('click',  () => setMode('index'));
+    modeGlobalBtn.addEventListener('click', () => setMode('global'));
+
+    unifiedInput.addEventListener('input', e => {
+      const val = e.target.value.trim();
+      if (searchMode === 'index') {
+        searchTerm = val;
+        applyFilters();
+      } else {
+        performGlobalSearch(val);
+      }
+    });
+
+    // ── Global Search ──
+    let searchIndex = [];
+    
+    // Load search index immediately
+    fetch('./search-index.json')
+      .then(r => r.json())
+      .then(data => { searchIndex = data; })
+      .catch(() => { searchIndex = []; });
+
+    async function loadSearchIndex() {
+      try {
+        const r = await fetch('./search-index.json');
+        searchIndex = await r.json();
+      } catch(e) { console.warn('search-index.json não carregado', e); }
+    }
+
+    function highlightText(text, query) {
+      return text.replace(new RegExp(`(${query})`, 'gi'), '<mark class="global-search-highlight">$1</mark>');
+    }
+
+    function runSearch(query) {
+      const q = query.trim().toLowerCase();
+      if (q.length < 2) return [];
+      return searchIndex.filter(item => {
+        const haystack = [
+          item.section,
+          item.guide,
+          item.excerpt,
+          ...(item.tags || [])
+        ].join(' ').toLowerCase();
+        return haystack.includes(q);
+      }).slice(0, 8);
+    }
+
+    function performGlobalSearch(query) {
+      if (query.length < 2) { dropdown.classList.remove('open'); return; }
+      const q = query.toLowerCase();
+      const results = searchIndex.filter(i =>
+        i.section.toLowerCase().includes(q) ||
+        i.tags.some(t => t.toLowerCase().includes(q)) ||
+        i.excerpt.toLowerCase().includes(q)
+      );
+      const grouped = {};
+      results.forEach(i => { if (!grouped[i.guide]) grouped[i.guide] = []; grouped[i.guide].push(i); });
+      renderDropdown(grouped, query);
+    }
+
+    function renderDropdown(grouped, query) {
+      if (!Object.keys(grouped).length) {
+        dropdown.innerHTML = '<div class="global-search-no-results">Nenhum resultado encontrado</div>';
+        dropdown.classList.add('open'); return;
+      }
+      let html = '';
+      Object.keys(grouped).forEach(guide => {
+        html += `<div class="global-search-group"><div class="global-search-group-header">${guide}</div>`;
+        grouped[guide].forEach(item => {
+          const badgeColor = getGuideColor(item.guide);
+          html += `<a href="./" + item.file + item.anchor class="global-search-result">
+            <div class="global-search-result-title">${highlightText(item.section, query)}<span class="global-search-result-badge" style="background: ${badgeColor.bg}; color: ${badgeColor.color}; border: 1px solid ${badgeColor.border};">${item.guide}</span></div>
+            <div class="global-search-result-excerpt">${highlightText(item.excerpt, query)}</div>
+          </a>`;
+        });
+        html += '</div>';
+      });
+      dropdown.innerHTML = html;
+      dropdown.classList.add('open');
+    }
+
+    function getGuideColor(guide) {
+      const colors = {
+        'Endpoint Central': { bg: 'var(--blue-dim)', color: 'var(--blue)', border: 'rgba(77,159,255,.25)' },
+        'ServiceDesk Plus': { bg: 'var(--green-dim)', color: 'var(--green)', border: 'rgba(90,240,160,.25)' },
+        'AD360': { bg: 'var(--purple-dim)', color: 'var(--purple)', border: 'rgba(169,127,245,.25)' },
+        'PAM360': { bg: 'var(--amber-dim)', color: 'var(--amber)', border: 'rgba(255,179,64,.25)' }
+      };
+      return colors[guide] || { bg: 'var(--bg3)', color: 'var(--text2)', border: 'var(--border2)' };
+    }
+
+    document.addEventListener('click', e => {
+      if (!e.target.closest('#searchUnified')) dropdown.classList.remove('open');
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { dropdown.classList.remove('open'); unifiedInput.blur(); }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        unifiedInput.focus();
+        unifiedInput.select();
+      }
+    });
+
+    loadSearchIndex();
+
+    // Inject module metadata into cards
+    Object.entries(MODULE_META).forEach(([name, meta]) => {
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        if (!card.textContent.includes(name)) return;
+        if (card.querySelector('.card-meta')) return; // avoid duplicating
+
+        const metaEl = document.createElement('div');
+        metaEl.className = 'card-meta';
+        metaEl.innerHTML = `
+          <span class="meta-scenarios">${meta.scenarios} cenários</span>
+          <span class="meta-sep">·</span>
+          <span class="meta-coverage" style="color:${meta.color}">${meta.coverage}</span>
+          <span class="meta-sep">·</span>
+          <span class="meta-updated">Atualizado ${meta.updated}</span>
+        `;
+        card.appendChild(metaEl);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — Página não encontrada · IT Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <style>
+    :root {
+      --bg:      #07080b;
+      --bg2:     #0d0f15;
+      --bg3:     #131620;
+      --border:  #1a1f2e;
+      --text:    #e8ecf5;
+      --text2:   #7d8899;
+      --text3:   #3e4759;
+      --blue:    #3d8ef0;
+      --teal:    #2ec89a;
+      --red:     #f04f5e;
+      --amber:   #f5a623;
+      --purple:  #9b72f5;
+      --mono:    'JetBrains Mono', monospace;
+      --sans:    'DM Sans', sans-serif;
+      --display: 'Syne', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; height: 100%; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    /* Bento wrapper */
+    .bento {
+      background: var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    /* Hero cell */
+    .cell-hero {
+      background: var(--bg2);
+      padding: 36px 36px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--red);
+    }
+
+    .error-code {
+      font-family: var(--display);
+      font-size: 80px;
+      font-weight: 800;
+      color: var(--bg3);
+      line-height: 1;
+      letter-spacing: -3px;
+      position: relative;
+      user-select: none;
+    }
+
+    .error-code::after {
+      content: '404';
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--text);
+      clip-path: inset(0 0 60% 0);
+    }
+
+    .error-title {
+      font-family: var(--display);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.4px;
+      line-height: 1.2;
+    }
+
+    .error-desc {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.6;
+      max-width: 380px;
+    }
+
+    /* Grid row */
+    .cell-grid-row {
+      background: var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+    }
+
+    .cell-sm {
+      background: var(--bg2);
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .cell-sm-eyebrow {
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .cell-sm-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .cell-sm-desc {
+      font-size: 10px;
+      color: var(--text3);
+      line-height: 1.4;
+    }
+
+    /* CTA cell */
+    .cell-cta {
+      background: var(--bg2);
+      padding: 24px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .cta-text {
+      font-size: 12px;
+      color: var(--text3);
+      font-family: var(--mono);
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--blue);
+      color: #e8ecf5;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      transition: opacity 0.15s;
+      white-space: nowrap;
+    }
+
+    .cta-btn:hover { opacity: 0.85; }
+
+    /* Status bar */
+    .status {
+      margin-top: 1px;
+      background: var(--bg2);
+      border-radius: 0 0 14px 14px;
+      padding: 12px 36px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 9px;
+      color: var(--text3);
+      font-family: var(--mono);
+    }
+
+    .status-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--red);
+    }
+
+    /* Animation */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .container {
+      animation: fadeUp 0.4s ease both;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .error-code { font-size: 56px; }
+      .error-title { font-size: 18px; }
+      .cell-hero { padding: 28px 24px 22px; }
+      .cell-cta { padding: 20px 24px; flex-direction: column; align-items: flex-start; }
+      .status { padding: 12px 24px; flex-wrap: wrap; gap: 12px; }
+      .cell-grid-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="bento">
+
+      <!-- Hero -->
+      <div class="cell-hero">
+        <span class="eyebrow">Erro · 404 · Não encontrado</span>
+        <div class="error-code">404</div>
+        <div class="error-title">Página não encontrada</div>
+        <p class="error-desc">O link que você acessou não existe ou foi movido para outro endereço. Verifique a URL ou volte para o IT Hub.</p>
+      </div>
+
+      <!-- Info grid -->
+      <div class="cell-grid-row">
+        <div class="cell-sm">
+          <span class="cell-sm-eyebrow" style="color:var(--teal)">Possível causa</span>
+          <div class="cell-sm-title">Link desatualizado</div>
+          <div class="cell-sm-desc">O arquivo pode ter sido renomeado ou movido de pasta.</div>
+        </div>
+        <div class="cell-sm">
+          <span class="cell-sm-eyebrow" style="color:var(--amber)">O que fazer</span>
+          <div class="cell-sm-title">Volte ao index</div>
+          <div class="cell-sm-desc">Navegue pelo IT Hub e encontre o guia que procura.</div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cell-cta">
+        <span class="cta-text">it-hub / index.html</span>
+        <a href="./index.html" class="cta-btn">← Voltar ao IT Hub</a>
+      </div>
+
+    </div>
+
+    <!-- Status bar -->
+    <div class="status">
+      <div class="status-item">
+        <div class="status-dot"></div>
+        página não encontrada
+      </div>
+      <div class="status-item" style="color:var(--border)">·</div>
+      <div class="status-item">github pages · 404</div>
+    </div>
+  </div>
+
+</body>
+</html>

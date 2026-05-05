@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AD360 — Operational Playbook</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Local variables not in shared tokens */
+  --radius:  12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.6; min-height: 100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+.sidebar-logo { padding: 22px 18px; border-bottom: 1px solid var(--border); }
+.sidebar-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+}
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--purple);
+  flex-shrink: 0;
+  animation: pulse 2.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.status-text {
+  color: var(--text3);
+}
+.status-stale {
+  color: var(--amber) !important;
+}
+.brand { font-family: var(--display); font-size: 20px; font-weight: 800; color: var(--text); letter-spacing: -.5px; }
+.brand em { color: var(--purple); font-style: normal; }
+
+.nav-section { padding: 10px 0; }
+.nav-label { padding: 5px 18px; font-family: var(--mono); font-size: 9px; font-weight: 600; text-transform: uppercase; color: var(--text3); letter-spacing: 1.8px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 18px; font-size: 13px; color: var(--text2); text-decoration: none; transition: 0.15s; }
+.nav-item:hover, .nav-item.active { color: var(--text); background: var(--bg3); }
+.nav-item.active { border-left: 3px solid var(--purple); }
+
+.main { margin-left: var(--sidebar-w); }
+.hero { padding: 48px; border-bottom: 1px solid var(--border); background: linear-gradient(135deg, #07080b 0%, #1a0f2e 100%); }
+.hero h1 { font-family: var(--display); font-size: 38px; font-weight: 800; color: var(--text); letter-spacing: -1.5px; }
+.hero h1 .accent { color: var(--purple); }
+
+/* ── TOOLBAR ── */
+.toolbar { position: sticky; top: 0; z-index: 50; background: rgba(7, 8, 11, 0.9); backdrop-filter: blur(10px); padding: 15px 48px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+.filter-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border2); background: var(--bg2); color: var(--text2); cursor: pointer; font-size: 12px; font-weight: 600; transition: 0.2s; }
+.filter-btn:hover, .filter-btn.active { border-color: var(--purple); color: var(--purple); background: var(--purple-dim); }
+
+/* ── BENTO CARDS ── */
+.content { padding: 30px 48px 80px; }
+.playbook-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 20px; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; gap: 16px; transition: 0.2s; }
+.card:hover { border-color: var(--border2); transform: translateY(-2px); }
+
+.card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+.card-badge { font-family: var(--mono); font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; border: 1px solid; }
+.badge-users { color: var(--blue); border-color: var(--blue-dim); }
+.badge-groups { color: var(--green); border-color: var(--green-dim); }
+.badge-computers { color: var(--amber); border-color: var(--amber-dim); }
+.badge-reports { color: var(--purple); border-color: var(--purple-dim); }
+.badge-alerts { color: var(--red); border-color: var(--red-dim); }
+.badge-automation { color: var(--cyan); border-color: var(--cyan-dim); }
+.badge-security { color: var(--orange); border-color: var(--orange-dim); }
+.badge-integration { color: var(--pink); border-color: var(--pink-dim); }
+
+.card-title { font-family: var(--display); font-size: 17px; font-weight: 700; color: var(--text); }
+.card-section-h { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text3); letter-spacing: 1px; margin-bottom: 4px; display: block; }
+.card-text { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+.action-box { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px; }
+.step-list { list-style: none; padding: 0; }
+.step-list li { position: relative; padding-left: 22px; margin-bottom: 8px; font-size: 12.5px; color: var(--text); }
+.step-list li::before { content: "→"; position: absolute; left: 0; color: var(--purple); font-weight: 800; }
+
+.ref-link { font-size: 11px; color: var(--purple); text-decoration: none; display: flex; align-items: center; gap: 5px; margin-top: auto; }
+.ref-link:hover { text-decoration: underline; }
+
+/* ── ESCALATE BUTTON STYLES ─────────────────────── */
+.escalate-bar {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.escalate-btn {
+  background: none;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all .15s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.escalate-btn:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+  background: var(--amber-dim);
+}
+.escalate-btn.copied {
+  border-color: var(--green);
+  color: var(--green);
+  background: var(--green-dim);
+}
+
+/* ── UTILS ── */
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--purple); z-index: 1000; width: 0%; }
+.home-fab {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 200;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 999px;
+  color: var(--text2);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.home-fab.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
+.home-fab:hover {
+  background: var(--bg4);
+  border-color: var(--blue);
+  color: var(--blue);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+.home-fab-icon {
+  font-size: 14px;
+}
+
+/* IT Hub button styling */
+.it-hub-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--purple-dim);
+  border: 1px solid var(--purple);
+  border-radius: 20px;
+  color: var(--purple);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  margin-right: 12px;
+}
+
+.it-hub-btn:hover {
+  background: var(--purple);
+  color: var(--bg);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(147,51,234,0.3);
+}
+
+/* Permalink button styling */
+.permalink-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--text2);
+}
+.card:hover .permalink-btn {
+  opacity: 1;
+}
+.permalink-btn:hover {
+  color: var(--purple);
+  background: var(--purple-dim);
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav class="sidebar">
+  <div class="sidebar-logo"><div class="brand">IT<em>Hub</em> Playbook</div></div>
+
+  <div class="sidebar-status" id="sidebarStatus">
+    <span class="status-dot"></span>
+    <span class="status-text" id="statusText">carregando...</span>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">AD360</div>
+    <a class="nav-item" href="./ad360-runbook-main.html">📖 Runbook (Erros)</a>
+    <a class="nav-item active" href="#">📋 Playbook (Casos)</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Cenários</div>
+    <a href="#users" class="nav-item">👥 Usuários</a>
+    <a href="#groups" class="nav-item">👥 Grupos</a>
+    <a href="#computers" class="nav-item">🖥️ Computadores</a>
+    <a href="#reports" class="nav-item">📊 Relatórios</a>
+    <a href="#alerts" class="nav-item">🔔 Alertas</a>
+    <a href="#automation" class="nav-item">⚙️ Automação</a>
+    <a href="#security" class="nav-item">🔒 Segurança</a>
+    <a href="#integration" class="nav-item">🔗 Integração</a>
+  </div>
+</nav>
+
+<main class="main">
+  <header class="hero">
+    <div class="hero-badge" style="color:var(--purple); border:1px solid var(--purple-dim); padding: 2px 10px; border-radius: 20px; font-size: 10px; font-weight: 800;">PLAYBOOK OPERACIONAL</div>
+    <h1>AD360 <span class="accent">Use Cases</span></h1>
+    <p class="hero-desc">Guia de execução para tarefas recorrentes e procedimentos de rotina. Do reset de senhas à automação de workflows e configuração de alertas.</p>
+  </header>
+
+  <div class="toolbar">
+    <a href="../index.html" class="it-hub-btn">🏠 IT Hub</a>
+    <button class="filter-btn active" data-filter="all">Todos</button>
+    <button class="filter-btn" data-filter="users">Usuários</button>
+    <button class="filter-btn" data-filter="groups">Grupos</button>
+    <button class="filter-btn" data-filter="computers">Computadores</button>
+    <button class="filter-btn" data-filter="reports">Relatórios</button>
+    <button class="filter-btn" data-filter="alerts">Alertas</button>
+    <button class="filter-btn" data-filter="automation">Automação</button>
+    <button class="filter-btn" data-filter="security">Segurança</button>
+    <button class="filter-btn" data-filter="integration">Integração</button>
+  </div>
+
+  <section class="content">
+    <div class="playbook-grid" id="playbookContainer">
+      <!-- Os cards serão gerados pelo JS -->
+    </div>
+  </section>
+</main>
+
+<script>
+const PLAYBOOK_DATA = [
+  // CATEGORIA: USUÁRIOS
+  {
+    title: "Reset de Senha Individual com Notificação",
+    cat: "users", badge: "USUÁRIOS",
+    context: "Usuário não consegue logar e solicitou reset via chamado.",
+    action: [
+      "Acesse AD360 > User Management > Users.",
+      "Busque o usuário pelo nome ou e-mail.",
+      "Clique em 'Reset Password'.",
+      "Defina a nova senha conforme a política de complexidade.",
+      "Marque 'Notify user via email' antes de confirmar.",
+      "Marque 'Must change password at next logon' se exigido pela política."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Reset de Senha em Massa via CSV",
+    cat: "users", badge: "USUÁRIOS",
+    context: "Múltiplos usuários de um departamento precisam de reset simultâneo.",
+    action: [
+      "Prepare um CSV com coluna 'sAMAccountName' dos usuários.",
+      "Acesse AD360 > User Management > Bulk User Modification.",
+      "Selecione a operação 'Reset Password'.",
+      "Importe o CSV e defina a senha padrão temporária.",
+      "Marque 'Must change password at next logon'.",
+      "Execute e verifique o relatório de resultados."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Desbloqueio de Conta com Auditoria",
+    cat: "users", badge: "USUÁRIOS",
+    context: "Conta bloqueada por excesso de tentativas de senha incorreta.",
+    action: [
+      "Acesse AD360 > User Management > Users.",
+      "Filtre por 'Locked Out Accounts'.",
+      "Selecione o usuário e clique em 'Unlock Account'.",
+      "Verifique o histórico de logons falhados antes de desbloquear.",
+      "Registre o desbloqueio no chamado com timestamp.",
+      "Oriente o usuário sobre a política de senha para evitar recorrência."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Criação de Usuário com Template de Departamento",
+    cat: "users", badge: "USUÁRIOS",
+    context: "Novo colaborador precisa de conta AD com atributos padrão do departamento.",
+    action: [
+      "Acesse AD360 > User Management > Create User.",
+      "Selecione o template do departamento correspondente.",
+      "Preencha: nome, sobrenome, sAMAccountName, UPN e e-mail.",
+      "Confirme a OU de destino definida no template.",
+      "Defina senha temporária e marque 'Must change at next logon'.",
+      "Adicione o usuário aos grupos padrão do departamento.",
+      "Clique em 'Create' e envie as credenciais ao gestor."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Criação de Usuários em Massa via CSV",
+    cat: "users", badge: "USUÁRIOS",
+    context: "Onboarding de múltiplos colaboradores simultaneamente.",
+    action: [
+      "Baixe o template CSV em AD360 > Bulk User Creation.",
+      "Preencha: FirstName, LastName, sAMAccountName, OU, Department, Password.",
+      "Valide o CSV com a função 'Validate' antes de importar.",
+      "Corrija eventuais erros apontados na validação.",
+      "Execute a importação e aguarde o relatório de criação.",
+      "Exporte o relatório de contas criadas para o RH."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Desativação de Conta (Offboarding)",
+    cat: "users", badge: "USUÁRIOS",
+    context: "Colaborador desligado — conta deve ser desativada e movida.",
+    action: [
+      "Acesse AD360 > User Management > Users, localize o usuário.",
+      "Clique em 'Disable Account'.",
+      "Mova a conta para a OU de 'Desativados' ou 'Ex-Funcionários'.",
+      "Remova o usuário de todos os grupos de segurança.",
+      "Defina data de expiração da conta para 24h após o desligamento.",
+      "Registre a ação no chamado com aprovação do gestor."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Reativação de Conta de Usuário Desligado",
+    cat: "users", badge: "USUÁRIOS",
+    context: "Colaborador retornou à empresa e precisa da conta reativada.",
+    action: [
+      "Localize a conta na OU de desativados.",
+      "Clique em 'Enable Account'.",
+      "Mova a conta para a OU correta do departamento atual.",
+      "Redefina a senha e marque 'Must change at next logon'.",
+      "Adicione o usuário aos grupos necessários para o novo cargo.",
+      "Remova a data de expiração da conta se houver."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Modificação de Atributos em Lote",
+    cat: "users", badge: "USUÁRIOS",
+    context: "Reestruturação de departamento exige atualização de cargo e telefone em massa.",
+    action: [
+      "Acesse AD360 > Bulk User Modification.",
+      "Selecione os usuários via filtro de OU ou grupo.",
+      "Escolha os atributos a modificar: Title, Department, Phone, Manager.",
+      "Informe os novos valores.",
+      "Visualize o preview antes de aplicar.",
+      "Execute e exporte o relatório de alterações."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Mover Usuário entre Organizational Units",
+    cat: "users", badge: "USUÁRIOS",
+    context: "Transferência de departamento exige mudança de OU para herdar novas GPOs.",
+    action: [
+      "Acesse AD360 > User Management > Users.",
+      "Localize o usuário e clique em 'Move'.",
+      "Selecione a OU de destino na árvore do AD.",
+      "Confirme a operação.",
+      "Oriente o usuário a fazer logoff/logon para aplicar as novas GPOs.",
+      "Verifique se os grupos do novo departamento foram adicionados."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Forçar Troca de Senha no Próximo Logon",
+    cat: "users", badge: "USUÁRIOS",
+    context: "Política de segurança exige reset forçado após incidente ou suspeita de comprometimento.",
+    action: [
+      "Acesse AD360 > User Management > Users.",
+      "Localize o usuário e abra as propriedades.",
+      "Marque a opção 'User must change password at next logon'.",
+      "Salve as alterações.",
+      "Notifique o usuário via e-mail ou chamado.",
+      "Monitore o próximo logon para confirmar a troca."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+
+  // CATEGORIA: GRUPOS
+  {
+    title: "Adicionar Membros a Grupo de Segurança",
+    cat: "groups", badge: "GRUPOS",
+    context: "Novo colaborador ou transferência exige acesso a recursos via grupo.",
+    action: [
+      "Acesse AD360 > Group Management > Groups.",
+      "Localize o grupo de destino.",
+      "Clique em 'Add Members'.",
+      "Busque e selecione os usuários a adicionar.",
+      "Confirme a operação.",
+      "Verifique se o acesso foi propagado (pode levar até 15 min)."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Remover Membros de Grupo com Auditoria",
+    cat: "groups", badge: "GRUPOS",
+    context: "Offboarding ou mudança de função exige remoção de acessos.",
+    action: [
+      "Acesse AD360 > Group Management > Groups.",
+      "Localize o grupo e acesse 'Members'.",
+      "Selecione os usuários a remover.",
+      "Clique em 'Remove Members'.",
+      "Confirme e registre a ação com justificativa no chamado.",
+      "Exporte o relatório de membros atual para histórico."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Criar Grupo de Segurança",
+    cat: "groups", badge: "GRUPOS",
+    context: "Nova aplicação ou recurso exige grupo de acesso dedicado.",
+    action: [
+      "Acesse AD360 > Group Management > Create Group.",
+      "Defina o nome seguindo a convenção: GRP_[DEPT]_[RECURSO].",
+      "Selecione o tipo: Security.",
+      "Selecione o escopo: Global (mesmo domínio) ou Universal (multidomain).",
+      "Defina a OU de destino para o grupo.",
+      "Adicione os membros iniciais e salve."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Sincronizar Grupo AD com Grupo M365",
+    cat: "groups", badge: "GRUPOS",
+    context: "Grupo de segurança AD precisa refletir no Teams ou SharePoint.",
+    action: [
+      "Confirme que o Azure AD Connect está sincronizando o grupo.",
+      "Verifique se o grupo tem 'Email' habilitado se necessário.",
+      "No AD360, confirme os membros do grupo AD.",
+      "Aguarde o ciclo de sync (padrão: 30 min) ou force delta sync.",
+      "Confirme no portal M365 que o grupo aparece com os membros corretos.",
+      "Se não sincronizar, verifique o escopo de sincronização no AD Connect."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Auditoria de Grupo Privilegiado",
+    cat: "groups", badge: "GRUPOS",
+    context: "Revisão periódica de segurança exige validar membros de Domain Admins e similares.",
+    action: [
+      "Acesse AD360 > Reports > Group Reports > Privileged Group Members.",
+      "Selecione os grupos: Domain Admins, Enterprise Admins, Schema Admins.",
+      "Exporte o relatório em CSV.",
+      "Compare com a lista aprovada pelo time de segurança.",
+      "Abra chamado para remover qualquer membro não autorizado.",
+      "Agende revisão recorrente (mensal recomendado)."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Listar Grupos de um Usuário",
+    cat: "groups", badge: "GRUPOS",
+    context: "Auditoria de acesso exige visibilidade de todos os grupos do usuário.",
+    action: [
+      "Acesse AD360 > User Management > Users.",
+      "Localize o usuário e abra as propriedades.",
+      "Acesse a aba 'Member Of'.",
+      "Visualize todos os grupos diretos e aninhados.",
+      "Exporte a lista para o chamado de auditoria.",
+      "Identifique grupos desnecessários para remoção."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Detectar Grupos Aninhados sem Membros",
+    cat: "groups", badge: "GRUPOS",
+    context: "Limpeza do AD exige identificar grupos vazios ou redundantes.",
+    action: [
+      "Acesse AD360 > Reports > Group Reports > Empty Groups.",
+      "Filtre por grupos sem membros diretos.",
+      "Verifique se são grupos aninhados com membros indiretos.",
+      "Para grupos realmente vazios, abra processo de aprovação para exclusão.",
+      "Documente os grupos excluídos com data e responsável.",
+      "Execute a exclusão após aprovação do gestor de TI."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+
+  // CATEGORIA: COMPUTADORES
+  {
+    title: "Mover Computador entre OUs",
+    cat: "computers", badge: "COMPUTADORES",
+    context: "Computador precisa herdar GPOs de outra OU após mudança de departamento.",
+    action: [
+      "Acesse AD360 > Computer Management > Computers.",
+      "Localize o computador pelo nome.",
+      "Clique em 'Move'.",
+      "Selecione a OU de destino.",
+      "Confirme a operação.",
+      "Solicite ao usuário reiniciar o computador para aplicar as GPOs."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Desativar Conta de Computador Obsoleto",
+    cat: "computers", badge: "COMPUTADORES",
+    context: "Computador substituído ou descartado deve ser desativado no AD.",
+    action: [
+      "Acesse AD360 > Computer Management > Computers.",
+      "Filtre por computadores sem logon há mais de 60 dias.",
+      "Confirme com o inventário físico se o equipamento foi descartado.",
+      "Clique em 'Disable Computer Account'.",
+      "Mova para OU de 'Computadores Desativados'.",
+      "Registre no chamado com número de patrimônio e data."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Listar Computadores Inativos",
+    cat: "computers", badge: "COMPUTADORES",
+    context: "Limpeza periódica do AD exige identificar computadores sem uso.",
+    action: [
+      "Acesse AD360 > Reports > Computer Reports > Inactive Computers.",
+      "Defina o critério: sem logon há mais de 60 dias.",
+      "Exporte o relatório em CSV.",
+      "Cruze com o inventário de ativos para confirmar obsolescência.",
+      "Encaminhe lista para aprovação antes de desativar.",
+      "Agende limpeza trimestral recorrente."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Forçar Atualização de GPO Remota",
+    cat: "computers", badge: "COMPUTADORES",
+    context: "Nova política de grupo precisa ser aplicada imediatamente sem aguardar o ciclo.",
+    action: [
+      "Acesse AD360 > Computer Management > Computers.",
+      "Selecione o(s) computador(es) alvo.",
+      "Clique em 'Remote GPUpdate'.",
+      "Aguarde a confirmação de execução.",
+      "Solicite ao usuário fazer logoff/logon se a GPO for de usuário.",
+      "Verifique a aplicação com 'gpresult /r' no computador."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+
+  // CATEGORIA: RELATÓRIOS
+  {
+    title: "Relatório de Contas Inativas",
+    cat: "reports", badge: "RELATÓRIOS",
+    context: "Auditoria de segurança exige identificar contas sem uso há mais de 90 dias.",
+    action: [
+      "Acesse AD360 > Reports > User Reports > Inactive Users.",
+      "Defina o critério: Last Logon > 90 dias.",
+      "Filtre por OU se necessário (excluir contas de serviço).",
+      "Exporte o relatório em CSV ou PDF.",
+      "Encaminhe para aprovação do gestor antes de desativar.",
+      "Agende execução mensal automática via Report Scheduler."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Relatório de Senhas Próximas ao Vencimento",
+    cat: "reports", badge: "RELATÓRIOS",
+    context: "Usuários precisam ser avisados antes que a senha expire para evitar bloqueios.",
+    action: [
+      "Acesse AD360 > Reports > User Reports > Password Expiry.",
+      "Defina o intervalo: próximos 7, 15 ou 30 dias.",
+      "Exporte e revise a lista.",
+      "Configure notificação automática por e-mail via AD360 Alerts.",
+      "Verifique se usuários em home office estão incluídos.",
+      "Agende relatório semanal automático."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Relatório de Contas com Senha que Nunca Expira",
+    cat: "reports", badge: "RELATÓRIOS",
+    context: "Política de segurança exige identificar exceções de expiração de senha.",
+    action: [
+      "Acesse AD360 > Reports > User Reports > Password Never Expires.",
+      "Exporte a lista completa.",
+      "Separe contas de serviço legítimas das contas de usuário.",
+      "Para contas de usuário: abra chamado para remoção da exceção.",
+      "Para contas de serviço: valide com o responsável técnico.",
+      "Documente as exceções aprovadas com justificativa."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Auditoria de Logons Falhados",
+    cat: "reports", badge: "RELATÓRIOS",
+    context: "Investigação de possível ataque de força bruta ou tentativa de acesso indevido.",
+    action: [
+      "Acesse AD360 > Reports > Logon Reports > Failed Logons.",
+      "Filtre por período (últimas 24h ou período do incidente).",
+      "Identifique usuários com alto volume de falhas.",
+      "Verifique o IP de origem das tentativas.",
+      "Se suspeito, escale para N2/N3 com o relatório exportado.",
+      "Bloqueie o IP de origem se confirmado ataque."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Histórico de Alterações em Objeto AD",
+    cat: "reports", badge: "RELATÓRIOS",
+    context: "Investigação exige saber quem alterou um objeto AD e quando.",
+    action: [
+      "Acesse AD360 > Reports > Audit Reports > Object Modification.",
+      "Busque pelo nome do objeto (usuário, grupo ou computador).",
+      "Defina o período de investigação.",
+      "Visualize: quem alterou, qual atributo, valor anterior e novo.",
+      "Exporte o relatório para o chamado de auditoria.",
+      "Se alteração não autorizada, escale para segurança."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Usuários Criados nos Últimos 30 Dias",
+    cat: "reports", badge: "RELATÓRIOS",
+    context: "Auditoria de onboarding e controle de criações não autorizadas.",
+    action: [
+      "Acesse AD360 > Reports > User Reports > Recently Created Users.",
+      "Defina o período: últimos 30 dias.",
+      "Exporte e compare com as solicitações de onboarding registradas.",
+      "Identifique contas criadas sem chamado de solicitação.",
+      "Escale contas suspeitas para revisão do time de segurança.",
+      "Agende relatório mensal automático."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Relatório de Membros de Grupo Privilegiado",
+    cat: "reports", badge: "RELATÓRIOS",
+    context: "Revisão de conformidade exige lista atualizada de administradores.",
+    action: [
+      "Acesse AD360 > Reports > Group Reports > Privileged Group Members.",
+      "Selecione: Domain Admins, Enterprise Admins, Schema Admins, Backup Operators.",
+      "Exporte o relatório.",
+      "Compare com a lista de administradores aprovados.",
+      "Abra chamado para remover qualquer membro não autorizado.",
+      "Arquive o relatório para evidência de auditoria."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+
+  // CATEGORIA: ALERTAS
+  {
+    title: "Configurar Alerta de Conta Bloqueada",
+    cat: "alerts", badge: "ALERTAS",
+    context: "Help desk precisa ser notificado em tempo real quando uma conta for bloqueada.",
+    action: [
+      "Acesse AD360 > Alerts > Configure Alerts.",
+      "Clique em 'New Alert'.",
+      "Selecione o evento: 'Account Lockout'.",
+      "Defina os destinatários: fila de e-mail do help desk.",
+      "Configure o threshold: notificar a cada ocorrência.",
+      "Salve e teste com um bloqueio manual em conta de teste."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Alerta de Senha Expirada para Usuário e Gestor",
+    cat: "alerts", badge: "ALERTAS",
+    context: "Reduzir chamados de bloqueio por senha expirada com notificação preventiva.",
+    action: [
+      "Acesse AD360 > Alerts > Password Expiry Notification.",
+      "Configure: notificar 7 dias, 3 dias e 1 dia antes do vencimento.",
+      "Defina destinatários: usuário + manager (atributo Manager do AD).",
+      "Personalize o template do e-mail com link do self-service portal.",
+      "Ative e aguarde o próximo ciclo de verificação.",
+      "Monitore a redução de chamados de senha nas semanas seguintes."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Alerta de Logon Fora do Horário Comercial",
+    cat: "alerts", badge: "ALERTAS",
+    context: "Detectar acessos suspeitos fora do horário de expediente.",
+    action: [
+      "Acesse AD360 > Alerts > Configure Alerts > New Alert.",
+      "Selecione o evento: 'User Logon'.",
+      "Defina a condição: horário fora de 08:00–18:00 e dias úteis.",
+      "Exclua contas de serviço e administradores com acesso 24h.",
+      "Defina destinatários: time de segurança.",
+      "Salve e valide com logon de teste fora do horário."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Alerta de Alteração em Grupo Privilegiado",
+    cat: "alerts", badge: "ALERTAS",
+    context: "Qualquer mudança em Domain Admins deve gerar alerta imediato.",
+    action: [
+      "Acesse AD360 > Alerts > Configure Alerts > New Alert.",
+      "Selecione o evento: 'Group Membership Change'.",
+      "Filtre pelos grupos: Domain Admins, Enterprise Admins, Schema Admins.",
+      "Defina destinatários: CISO e time de segurança.",
+      "Configure prioridade: Alta.",
+      "Teste adicionando e removendo um usuário de teste do grupo."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Alerta de Criação de Usuário Fora do Workflow",
+    cat: "alerts", badge: "ALERTAS",
+    context: "Detectar criações de conta feitas diretamente no AD sem passar pelo processo aprovado.",
+    action: [
+      "Acesse AD360 > Alerts > Configure Alerts > New Alert.",
+      "Selecione o evento: 'User Created'.",
+      "Configure para notificar sempre que uma conta for criada.",
+      "Defina destinatários: gestor de TI e time de segurança.",
+      "Cruze as notificações com os chamados de onboarding.",
+      "Investigue criações sem chamado correspondente."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+
+  // CATEGORIA: AUTOMAÇÃO
+  {
+    title: "Workflow de Aprovação para Criação de Usuário",
+    cat: "automation", badge: "AUTOMAÇÃO",
+    context: "Processo de onboarding exige aprovação do gestor antes de criar a conta.",
+    action: [
+      "Acesse AD360 > Automation > Workflows > New Workflow.",
+      "Selecione o gatilho: 'Create User Request'.",
+      "Adicione etapa de aprovação: definir aprovador (gestor direto ou TI).",
+      "Configure notificação por e-mail ao aprovador com link de aprovação.",
+      "Defina SLA de aprovação (ex: 24h).",
+      "Publique o workflow e teste com solicitação de usuário de teste."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Workflow de Aprovação para Reset de Senha Self-Service",
+    cat: "automation", badge: "AUTOMAÇÃO",
+    context: "Usuários podem resetar a própria senha sem passar pelo help desk.",
+    action: [
+      "Acesse AD360 > Self-Service > Configure Self-Service.",
+      "Habilite 'Password Reset' para os usuários.",
+      "Configure os métodos de verificação: perguntas secretas, e-mail alternativo ou SMS.",
+      "Defina quais OUs terão acesso ao self-service.",
+      "Comunique o link do portal aos usuários.",
+      "Monitore o volume de resets self-service vs chamados."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Agendar Relatório Automático por E-mail",
+    cat: "automation", badge: "AUTOMAÇÃO",
+    context: "Gestor precisa receber relatório semanal de contas sem acesso manual.",
+    action: [
+      "Acesse AD360 > Reports, gere o relatório desejado.",
+      "Clique em 'Schedule Report'.",
+      "Defina a frequência: diária, semanal ou mensal.",
+      "Defina horário de envio e destinatários.",
+      "Selecione o formato: PDF ou CSV.",
+      "Salve e confirme o recebimento do próximo envio."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Regra de Automação: Desativar Conta Inativa",
+    cat: "automation", badge: "AUTOMAÇÃO",
+    context: "Contas sem logon por X dias devem ser desativadas automaticamente.",
+    action: [
+      "Acesse AD360 > Automation > Rules > New Rule.",
+      "Defina o gatilho: 'Last Logon > 90 days'.",
+      "Exclua contas de serviço e administradores da regra.",
+      "Defina a ação: 'Disable Account' + 'Move to OU Desativados'.",
+      "Configure notificação ao gestor antes de executar (ex: aviso 7 dias antes).",
+      "Ative a regra e monitore as primeiras execuções."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Regra de Automação: Mover Usuário ao Trocar Departamento",
+    cat: "automation", badge: "AUTOMAÇÃO",
+    context: "Mudança do atributo Department deve mover o usuário para a OU correta automaticamente.",
+    action: [
+      "Acesse AD360 > Automation > Rules > New Rule.",
+      "Defina o gatilho: 'Attribute Change — Department'.",
+      "Mapeie cada valor de Department para a OU correspondente.",
+      "Adicione ação secundária: atualizar grupos de segurança.",
+      "Teste com alteração de departamento em usuário de teste.",
+      "Ative após validação e documente o mapeamento."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Configurar Self-Service Portal para Reset de Senha",
+    cat: "automation", badge: "AUTOMAÇÃO",
+    context: "Reduzir volume de chamados de reset publicando portal self-service.",
+    action: [
+      "Acesse AD360 > Self-Service > Portal Settings.",
+      "Configure a URL pública de acesso ao portal.",
+      "Defina os métodos de autenticação permitidos.",
+      "Personalize o logo e as cores com a identidade da empresa.",
+      "Publique e envie o link para todos os usuários via e-mail.",
+      "Monitore a taxa de adoção nas primeiras semanas."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Delegar Reset de Senha para Help Desk",
+    cat: "automation", badge: "AUTOMAÇÃO",
+    context: "Help desk precisa resetar senhas sem ter acesso total ao AD.",
+    action: [
+      "Acesse AD360 > Admin > Delegation > New Delegation.",
+      "Selecione o grupo do help desk.",
+      "Conceda permissão apenas para: 'Reset Password' e 'Unlock Account'.",
+      "Restrinja o escopo às OUs de usuários finais (excluir OUs de admins).",
+      "Salve e teste com usuário do help desk.",
+      "Documente a delegação no registro de acessos privilegiados."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+
+  // CATEGORIA: SEGURANÇA
+  {
+    title: "Auditar Alterações em GPOs Críticas",
+    cat: "security", badge: "SEGURANÇA",
+    context: "Investigação de incidente exige rastrear mudanças em políticas de grupo.",
+    action: [
+      "Acesse AD360 > Reports > Audit Reports > GPO Changes.",
+      "Defina o período de investigação.",
+      "Filtre pelas GPOs críticas: Default Domain Policy, Password Policy.",
+      "Visualize: quem alterou, quando e qual configuração foi modificada.",
+      "Exporte o relatório para o chamado de segurança.",
+      "Se alteração não autorizada, reverta a GPO e escale."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Detectar Contas com Privilégio Não Documentado",
+    cat: "security", badge: "SEGURANÇA",
+    context: "Auditoria exige identificar contas com permissões administrativas sem aprovação.",
+    action: [
+      "Acesse AD360 > Reports > User Reports > Admin Users.",
+      "Liste todos os membros de grupos com privilégio elevado.",
+      "Compare com a lista de administradores aprovados pela gestão.",
+      "Para cada conta não documentada, abra chamado de revisão.",
+      "Remova privilégios não autorizados após confirmação.",
+      "Implemente alerta para futuras adições a grupos privilegiados."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Revisão Periódica de Domain Admins",
+    cat: "security", badge: "SEGURANÇA",
+    context: "Conformidade exige revisão mensal dos membros do grupo mais privilegiado.",
+    action: [
+      "Acesse AD360 > Reports > Group Reports > Domain Admins Members.",
+      "Exporte a lista atual de membros.",
+      "Envie para aprovação do CISO ou responsável de segurança.",
+      "Remova contas de usuários que não necessitam mais do acesso.",
+      "Mantenha o histórico de revisões para auditoria.",
+      "Agende revisão mensal automática via Report Scheduler."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Relatório de Conformidade de Senha",
+    cat: "security", badge: "SEGURANÇA",
+    context: "Auditoria de segurança exige evidência de conformidade com a política de senha.",
+    action: [
+      "Acesse AD360 > Reports > Password Reports.",
+      "Gere os relatórios: Password Never Expires, Password Not Required, Weak Password.",
+      "Exporte todos em PDF para evidência.",
+      "Abra chamados para corrigir cada não conformidade encontrada.",
+      "Após correção, regenere os relatórios para evidenciar a remediação.",
+      "Inclua nos relatórios de auditoria trimestral."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Verificar Contas de Serviço com Senha que Nunca Expira",
+    cat: "security", badge: "SEGURANÇA",
+    context: "Contas de serviço são alvos de ataque — exigem controle especial.",
+    action: [
+      "Acesse AD360 > Reports > User Reports > Service Accounts.",
+      "Filtre por 'Password Never Expires = True'.",
+      "Para cada conta, valide com o responsável técnico se a exceção é necessária.",
+      "Implemente rotação de senha semestral para contas de serviço críticas.",
+      "Considere migrar para gMSA (Group Managed Service Accounts) quando possível.",
+      "Documente todas as exceções aprovadas."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Detectar Logons com Conta Administrador Genérica",
+    cat: "security", badge: "SEGURANÇA",
+    context: "O uso da conta 'Administrator' padrão dificulta auditoria e é risco de segurança.",
+    action: [
+      "Acesse AD360 > Reports > Logon Reports.",
+      "Filtre pelo usuário 'Administrator' ou conta RID 500.",
+      "Identifique quem e quando usou a conta.",
+      "Oriente os administradores a usar suas contas pessoais com privilégio.",
+      "Considere renomear ou desativar a conta Administrator padrão.",
+      "Implemente alerta para qualquer logon com essa conta."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+
+  // CATEGORIA: INTEGRAÇÃO
+  {
+    title: "Configurar Sincronização AD → Azure AD (Entra ID)",
+    cat: "integration", badge: "INTEGRAÇÃO",
+    context: "Novos objetos AD não estão aparecendo no Azure AD / M365.",
+    action: [
+      "Verifique o status do Azure AD Connect no servidor de sync.",
+      "Acesse AD360 > Admin > Azure AD Integration.",
+      "Confirme as credenciais de sincronização estão válidas.",
+      "Verifique o escopo: a OU do novo objeto está incluída no filtro de sync.",
+      "Force um delta sync: Start-ADSyncSyncCycle -PolicyType Delta.",
+      "Aguarde 5-10 min e confirme o objeto no portal Azure AD."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Resolver Conflito de Sincronização de Atributo",
+    cat: "integration", badge: "INTEGRAÇÃO",
+    context: "Atributo do usuário no Azure AD está divergindo do valor no AD local.",
+    action: [
+      "Identifique o atributo em conflito via Azure AD Connect Health.",
+      "No AD360, verifique o valor atual do atributo no AD local.",
+      "Corrija o valor no AD local (fonte autoritativa).",
+      "Force um delta sync.",
+      "Confirme a propagação no Azure AD após o sync.",
+      "Se persistir, verifique regras de transformação no AD Connect."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Forçar Delta Sync com Azure AD Connect",
+    cat: "integration", badge: "INTEGRAÇÃO",
+    context: "Mudança urgente no AD precisa refletir no M365 sem aguardar o ciclo de 30 min.",
+    action: [
+      "Acesse o servidor onde o Azure AD Connect está instalado.",
+      "Abra o PowerShell como administrador.",
+      "Execute: Import-Module ADSync",
+      "Execute: Start-ADSyncSyncCycle -PolicyType Delta",
+      "Aguarde a conclusão (1-5 minutos).",
+      "Confirme a mudança no portal Azure AD ou no AD360 Azure AD tab."
+    ],
+    ref: "./ad360-runbook-main.html"
+  },
+  {
+    title: "Mapear Atributo Customizado AD para Campo M365",
+    cat: "integration", badge: "INTEGRAÇÃO",
+    context: "Campo customizado do AD (ex: matrícula) precisa aparecer no perfil M365.",
+    action: [
+      "Identifique o atributo AD de origem (ex: extensionAttribute1).",
+      "No Azure AD Connect, acesse Synchronization Rules Editor.",
+      "Crie uma regra de transformação: AD atributo → Azure AD atributo.",
+      "Defina o atributo de destino no Azure AD (ex: onPremisesExtensionAttributes).",
+      "Execute um Full Sync para aplicar a nova regra: Start-ADSyncSyncCycle -PolicyType Initial.",
+      "Valide o mapeamento no perfil do usuário no portal M365."
+    ],
+    ref: "./ad360-runbook-main.html"
+  }
+];
+
+function renderPlaybook(filter = 'all') {
+  const container = document.getElementById('playbookContainer');
+  container.innerHTML = '';
+  
+  const filtered = filter === 'all' ? PLAYBOOK_DATA : PLAYBOOK_DATA.filter(d => d.cat === filter);
+  
+  filtered.forEach(d => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    
+    // Generate ID from anchor or title
+    if (d.ref && d.ref.includes('#')) {
+      card.id = d.ref.split('#')[1];
+    } else {
+      card.id = d.title.toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
+    }
+    
+    // Map category to badge class
+    const badgeClassMap = {
+      'users': 'badge-users',
+      'groups': 'badge-groups', 
+      'computers': 'badge-computers',
+      'reports': 'badge-reports',
+      'alerts': 'badge-alerts',
+      'automation': 'badge-automation',
+      'security': 'badge-security',
+      'integration': 'badge-integration'
+    };
+    
+    card.innerHTML = `
+      <div class="card-header">
+        <h3 class="card-title">${d.title}</h3>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="card-badge ${badgeClassMap[d.cat]}">${d.badge}</span>
+          <button class="permalink-btn" title="Copiar link direto">🔗</button>
+        </div>
+      </div>
+      <div>
+        <span class="card-section-h">Contexto</span>
+        <p class="card-text">${d.context}</p>
+      </div>
+      <div class="action-box">
+        <span class="card-section-h">Ações do Analista</span>
+        <ul class="step-list">
+          ${d.action.map(step => `<li>${step}</li>`).join('')}
+        </ul>
+      </div>
+      <a href="${d.ref}" class="ref-link">📖 Consultar Runbook Técnico →</a>
+      <div class="escalate-bar">
+        <button class="escalate-btn"
+          data-title="${d.title}"
+          data-code=""
+          data-module="AD360"
+          data-severity="N/A">
+          ⬆ Escalar para N2
+        </button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+  
+  // Add permalink functionality
+  document.querySelectorAll('.permalink-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const card = btn.closest('[id]');
+      if (!card) return;
+      const url = window.location.href.split('#')[0] + '#' + card.id;
+      navigator.clipboard.writeText(url).then(() => {
+        btn.textContent = '✓';
+        btn.style.opacity = '1';
+        btn.style.color = 'var(--purple)';
+        setTimeout(() => {
+          btn.textContent = '🔗';
+          btn.style.color = '';
+          btn.style.opacity = '';
+        }, 2000);
+      });
+    });
+  });
+  
+  // Add escalate functionality
+  document.querySelectorAll('.escalate-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const card = btn.closest('.card');
+      const title = card.querySelector('.card-title').textContent;
+      const escalateText = `Escalar para N2: ${title}\n\nContexto: ${card.querySelector('.card-text').textContent}`;
+      
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(escalateText).then(() => {
+          btn.textContent = '✓ Copiado';
+          setTimeout(() => {
+            btn.textContent = '⬆ Escalar para N2';
+          }, 2000);
+        });
+      }
+    });
+  });
+}
+
+// Filtros
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderPlaybook(btn.dataset.filter);
+  };
+});
+
+window.onscroll = () => {
+  const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById("progressBar").style.width = scrolled + "%";
+  
+  // Home FAB button visibility
+  const homeFab = document.getElementById('homeFab');
+  if (homeFab) {
+    homeFab.classList.toggle('visible', window.scrollY > 200);
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderPlaybook();
+  
+  // Handle hash scroll and highlight
+  const hash = window.location.hash?.slice(1);
+  if (hash) {
+    setTimeout(() => {
+      const target = document.getElementById(hash);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target.style.borderColor = 'var(--purple)';
+        target.style.transition = 'border-color 0.3s';
+        setTimeout(() => {
+          target.style.borderColor = '';
+        }, 2500);
+      }
+    }, 300);
+  }
+
+  // ── ESCALATE BUTTON FUNCTIONALITY ───────────────────────
+  document.querySelectorAll('.escalate-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+
+      const title    = btn.dataset.title    || 'Não identificado';
+      const code     = btn.dataset.code     || 'N/A';
+      const module   = btn.dataset.module   || 'Runbook';
+      const severity = btn.dataset.severity || 'N/A';
+      const pageUrl  = window.location.href;
+      const now      = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+
+      const template = `
+🔺 ESCALONAMENTO N1 → N2
+━━━━━━━━━━━━━━━━━━━━━━━
+📋 Chamado: [INSERIR ID DO CHAMADO]
+🕐 Horário: ${now}
+📦 Módulo: ${module}
+🔑 Código: ${code}
+⚠️  Severidade: ${severity}
+📌 Cenário: ${title}
+
+🔗 Referência: ${pageUrl}
+
+📝 O que foi feito no N1:
+- [ ] Verificado status do serviço
+- [ ] Consultado runbook (link acima)
+- [ ] [DESCREVER AÇÕES TOMADAS]
+
+❓ Motivo do escalonamento:
+[DESCREVER POR QUE NÃO FOI RESOLVIDO NO N1]
+
+👤 Analista N1: [SEU NOME]
+      `.trim();
+
+      navigator.clipboard.writeText(template).then(() => {
+        const original = btn.textContent;
+        btn.textContent = '✓ Template copiado!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('copied');
+        }, 3000);
+      });
+    });
+  });
+
+  // GitHub API — última atualização do repositório
+  fetch('https://api.github.com/repos/dejotta1/IT_Hub/commits?per_page=1')
+    .then(r => r.json())
+    .then(data => {
+      const statusText = document.getElementById('statusText');
+      if (!statusText || !data[0]) return;
+
+      const commitDate = new Date(data[0].commit.author.date);
+      const now = new Date();
+      const diffDays = Math.floor((now - commitDate) / (1000 * 60 * 60 * 24));
+
+      let label = '';
+      if (diffDays === 0) label = 'atualizado hoje';
+      else if (diffDays === 1) label = 'atualizado ontem';
+      else if (diffDays <= 7) label = `atualizado há ${diffDays} dias`;
+      else if (diffDays <= 30) label = `atualizado há ${Math.floor(diffDays/7)} sem.`;
+      else label = `atualizado há ${Math.floor(diffDays/30)} meses`;
+
+      statusText.textContent = label;
+
+      // Aviso visual se desatualizado (> 30 dias)
+      if (diffDays > 30) {
+        statusText.classList.add('status-stale');
+        document.querySelector('.status-dot').style.background = 'var(--amber)';
+      }
+    })
+    .catch(() => {
+      const statusText = document.getElementById('statusText');
+      if (statusText) statusText.textContent = 'GitHub Pages · online';
+    });
+});
+</script>
+
+<a id="homeFab" href="../index.html" class="home-fab">
+  <span class="home-fab-icon">←</span> IT Hub
+</a>
+
+</body>
+</html>

@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ServiceDesk Plus — Master N3 Troubleshooting Runbook</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Local variables not in shared tokens */
+  --accent:  #5af0a0;
+  --accent-dim: rgba(90,240,160,.09);
+  --radius:  8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.6; min-height: 100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar { position: fixed; top: 0; left: 0; width: var(--sidebar-w); height: 100vh; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 100; overflow-y: auto; }
+.sidebar-logo { padding: 22px 18px; border-bottom: 1px solid var(--border); position: relative; }
+.sidebar-logo::after { content: ''; position: absolute; bottom: -1px; left: 18px; right: 18px; height: 1px; background: linear-gradient(90deg, var(--green), transparent); }
+.sidebar-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+}
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+  animation: pulse 2.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.status-text {
+  color: var(--text3);
+}
+.status-stale {
+  color: var(--amber) !important;
+}
+.escalate-bar {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.escalate-btn {
+  background: none;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  color: var(--text2);
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.escalate-btn:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+  background: var(--amber-dim);
+}
+.escalate-btn.copied {
+  border-color: var(--green);
+  color: var(--green);
+  background: var(--green-dim);
+}
+.product-label { font-family: var(--mono); font-size: 9px; color: var(--green); text-transform: uppercase; letter-spacing: 2px; font-weight: 600; }
+.brand { font-family: var(--display); font-size: 18px; font-weight: 800; color: var(--text); }
+
+.nav-section { padding: 10px 0; }
+.nav-label { padding: 5px 18px; font-family: var(--mono); font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: 1.5px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 18px; font-size: 12.5px; color: var(--text2); text-decoration: none; transition: 0.2s; border-left: 3px solid transparent; }
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active { background: var(--bg3); color: var(--text); border-left-color: var(--green); }
+
+.main { margin-left: var(--sidebar-w); }
+.hero { padding: 48px; border-bottom: 1px solid var(--border); background: linear-gradient(135deg, #07080b 0%, #0a1f14 100%); }
+.hero h1 { font-family: var(--display); font-size: 36px; font-weight: 800; letter-spacing: -1px; }
+.hero h1 span { color: var(--green); }
+.hero-desc { color: var(--text2); max-width: 650px; margin-top: 12px; font-size: 15px; }
+
+/* Botão Playbook no Hero */
+.playbook-btn { margin-top: 20px; display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: var(--green-dim); border: 1px solid var(--green); border-radius: 30px; color: var(--green); text-decoration: none; font-weight: 700; font-size: 12px; transition: 0.2s; }
+.playbook-btn:hover { background: var(--green); color: var(--bg); }
+
+/* ── BENTO GRID ── */
+.content { padding: 40px 48px; }
+.section-title { font-family: var(--display); font-size: 22px; font-weight: 800; margin-bottom: 24px; margin-top: 60px; display: flex; align-items: center; gap: 12px; }
+.bento-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1px; background: var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 40px; }
+.bento-cell { background: var(--bg2); padding: 24px; transition: 0.2s; display: flex; flex-direction: column; }
+.bento-cell:hover { background: var(--bg3); }
+.bento-id { font-family: var(--mono); font-size: 10px; color: var(--green); font-weight: 700; margin-bottom: 8px; display: block; }
+.bento-title { font-family: var(--display); font-size: 15px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+.bento-desc { font-size: 12.5px; color: var(--text2); line-height: 1.5; flex-grow: 1; }
+
+/* ── TABLES ── */
+.simple-table { width: 100%; border-collapse: collapse; margin: 12px 0; background: var(--bg2); border-radius: 8px; overflow: hidden; }
+.simple-table th { background: var(--bg3); padding: 12px 14px; font-size: 10px; font-weight: 700; text-align: left; color: var(--text3); border-bottom: 1px solid var(--border); text-transform: uppercase; }
+.simple-table td { padding: 12px 14px; font-size: 13px; border-bottom: 1px solid var(--border); color: var(--text2); }
+.mono-cell { font-family: var(--mono); font-size: 12px; color: var(--green); font-weight: 600; }
+
+.checklist { list-style: none; font-size: 12px; color: var(--text2); margin-top: 10px; }
+.checklist li { margin-bottom: 6px; padding-left: 18px; position: relative; }
+.checklist li::before { content: '→'; position: absolute; left: 0; color: var(--green); }
+
+/* ── ERROR CATALOG ── */
+.err-table { width: 100%; border-collapse: collapse; margin-top: 10px; background: var(--bg2); border-radius: 8px; overflow: hidden; }
+.err-table th { background: var(--bg3); padding: 12px; text-align: left; font-size: 10px; text-transform: uppercase; color: var(--text3); border-bottom: 1px solid var(--border); }
+.err-row { border-bottom: 1px solid var(--border); cursor: pointer; }
+.err-row:hover { background: var(--bg3); }
+.err-row td { padding: 14px 12px; vertical-align: top; }
+
+.detail-row { display: none; background: #090a0f; border-bottom: 1px solid var(--border); }
+.detail-row.open { display: table-row; }
+.detail-content { padding: 24px 24px 24px 50px; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; }
+.detail-h { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--green); margin-bottom: 8px; display: block; letter-spacing: 1px; }
+
+.step-list { list-style: none; padding: 0; }
+.step-list li { position: relative; padding-left: 25px; margin-bottom: 12px; font-size: 13px; color: var(--text); line-height: 1.5; }
+.step-list li::before { content: counter(step-counter); counter-increment: step-counter; position: absolute; left: 0; top: 0; width: 18px; height: 18px; background: var(--green-dim); color: var(--green); border-radius: 4px; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(90,240,160,0.3); }
+.step-list { counter-reset: step-counter; }
+
+.client-script { background: var(--bg3); border-left: 3px solid var(--green); padding: 16px; font-size: 13px; font-style: italic; color: var(--text2); border-radius: 4px; line-height: 1.6; }
+.code-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--green);
+  margin: 4px 0;
+}
+.code-content {
+  flex: 1;
+  word-break: break-all;
+  color: var(--green);
+}
+.copy-code-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.copy-code-btn:hover {
+  color: var(--green);
+  background: var(--green-dim);
+}
+.copy-code-btn.copied {
+  color: var(--green);
+}
+
+/* ── UTILS ── */
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--green); z-index: 1000; width: 0%; }
+.home-fab, .tab-fab, .back-top { position: fixed; bottom: 24px; background: var(--bg3); border: 1px solid var(--border2); border-radius: 999px; padding: 8px 12px; font-size: 12px; font-weight: 700; color: var(--text); text-decoration: none; z-index: 200; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s; opacity: 1; pointer-events: all; }
+.back-top { right: 24px; }
+.home-fab { right: 85px; }
+.tab-fab { right: 175px; }
+
+.cat-header { display: flex; align-items: center; gap: 10px; margin: 24px 0 10px; cursor: pointer; padding: 12px 16px; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; transition: 0.2s; }
+.cat-header:hover { background: var(--bg3); border-color: var(--green); }
+.home-fab {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 200;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 999px;
+  color: var(--text2);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.home-fab.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
+.home-fab:hover {
+  background: var(--bg4);
+  border-color: var(--blue);
+  color: var(--blue);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+.home-fab-icon {
+  font-size: 14px;
+}
+
+/* IT Hub button styling */
+.it-hub-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--green-dim);
+  border: 1px solid var(--green);
+  border-radius: 20px;
+  color: var(--green);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  margin-top: 12px;
+  width: fit-content;
+}
+
+.it-hub-btn:hover {
+  background: var(--green);
+  color: var(--bg);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(90,240,160,0.3);
+}
+
+/* Permalink button styling */
+.permalink-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 11px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--text2);
+  margin-left: 8px;
+}
+.section-title:hover .permalink-btn,
+.bento-cell:hover .permalink-btn {
+  opacity: 1;
+}
+.permalink-btn:hover {
+  color: var(--green);
+  background: var(--green-dim);
+}
+
+/* Highlight animation */
+.highlight-target {
+  animation: highlightPulse 2.5s ease-in-out;
+}
+@keyframes highlightPulse {
+  0% { border-color: var(--green); box-shadow: 0 0 0 3px var(--green-dim); }
+  100% { border-color: var(--border); box-shadow: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <span class="product-label">MANAGEENGINE · ITSM</span>
+    <div class="brand">ServiceDesk Plus</div>
+  </div>
+
+  <div class="sidebar-status" id="sidebarStatus">
+    <span class="status-dot"></span>
+    <span class="status-text" id="statusText">carregando...</span>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Fundação</div>
+    <a href="#comparison" class="nav-item active">☁️ Cloud vs On-Prem</a>
+    <a href="#ports" class="nav-item">🔌 Matriz de Portas</a>
+    <a href="#logs" class="nav-item">📋 Central de Logs</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Módulos & Add-ons</div>
+    <a href="#modules" class="nav-item">🧩 Módulos do Ecossistema</a>
+    <a href="#logic-sop" class="nav-item">⚙️ Lógica & Templates</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">N3 Operations</div>
+    <a href="#scripts" class="nav-item">💻 Scripts de Engenharia</a>
+    <a href="#troubleshooting" class="nav-item">📚 Catálogo Master</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Recursos</div>
+    <a href="./sdp-playbook-operational.html" class="nav-item" style="color:var(--green)">📋 Playbook de Casos</a>
+  </div>
+</nav>
+
+<main class="main">
+  <header class="hero">
+    <div class="hero-badge"><span class="hero-badge-dot"></span> Master N3 Runbook</div>
+    <h1>ServiceDesk Plus <span>Advanced Operations</span></h1>
+    <p class="hero-desc">Guia Operacional Padrão (SOP) para analistas. Procedimentos detalhados para resolução de conflitos de arquitetura, mensageria, ativos e regras de negócio em larga escala.</p>
+    
+    <a href="./sdp-playbook-operational.html" class="playbook-btn">
+      📋 Acessar Playbook de Casos de Uso
+    </a>
+
+    <div class="search-unified" id="searchUnified">
+      <div class="search-mode-toggle">
+        <button class="search-mode-btn active" id="modeLocal">PÁGINA</button>
+        <button class="search-mode-btn" id="modeGlobal">GLOBAL</button>
+      </div>
+      <input class="search-input-unified" id="searchUnifiedInput" type="text" placeholder="Buscar erro, comando ou log..." />
+    </div>
+    <a href="../index.html" class="it-hub-btn">🏠 IT Hub</a>
+  </header>
+
+  <section class="content">
+
+    <!-- COMPARAÇÃO CLOUD VS ON-PREM -->
+    <div id="comparison">
+      <h2 class="section-title">☁️ Cloud vs 🏢 On-Premise: Diferenças Técnicas N3</h2>
+      <div class="bento-grid">
+        <div class="bento-cell">
+          <span class="bento-id">MODELO-CLOUD</span>
+          <h3 class="bento-title">ServiceDesk Cloud (SaaS)</h3>
+          <p class="bento-desc">Hospedado pela ManageEngine. Zero manutenção de infraestrutura, mas acesso limitado ao backend.</p>
+          <ul class="checklist">
+            <li><strong>OAuth2:</strong> Único método para Mail Fetching.</li>
+            <li><strong>ZSO Sync:</strong> Sincronização de usuários via 'Zoho Directory Sync'.</li>
+            <li><strong>API-First:</strong> Customizações dependem 100% de Webhooks e REST API.</li>
+          </ul>
+        </div>
+        <div class="bento-cell">
+          <span class="bento-id">MODELO-PREM</span>
+          <h3 class="bento-title">ServiceDesk On-Premise</h3>
+          <p class="bento-desc">Controle total. Acesso direto ao banco PostgreSQL/MSSQL e arquivos de configuração.</p>
+          <ul class="checklist">
+            <li><strong>Custom Scripts:</strong> Suporte a scripts Python/Batch locais.</li>
+            <li><strong>AD Nativo:</strong> Integração direta via protocolo LDAP na rede interna.</li>
+            <li><strong>DB Access:</strong> Possibilidade de queries diretas via PGAdmin.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- MATRIZ DE PORTAS -->
+    <div id="ports">
+      <h2 class="section-title">🔌 Matriz de Portas & Conectividade</h2>
+      <table class="simple-table">
+        <thead>
+          <tr><th>Serviço</th><th>Porta</th><th>Protocolo</th><th>Finalidade</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="mono-cell">Web Server</td><td>8080 / 8443</td><td>TCP/HTTPS</td><td>Acesso principal ao portal e API REST</td></tr>
+          <tr><td class="mono-cell">Mail Fetching</td><td>993 / 995</td><td>IMAP/POP</td><td>Busca de e-mails (SSL Mandatório)</td></tr>
+          <tr><td class="mono-cell">Mail Sending</td><td>465 / 587</td><td>SMTP</td><td>Envio de notificações e respostas</td></tr>
+          <tr><td class="mono-cell">Asset Scan</td><td>135 / 445</td><td>RPC/SMB</td><td>Scan Agentless WMI (Somente On-Prem)</td></tr>
+          <tr><td class="mono-cell">Discovery Agent</td><td>9000</td><td>TCP</td><td>Comunicação reversa do agente local</td></tr>
+          <tr><td class="mono-cell">AD Sync</td><td>389 / 636</td><td>LDAP/S</td><td>Sincronização de usuários e autenticação</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- MÓDULOS E ADD-ONS -->
+    <div id="modules">
+      <h2 class="section-title">🧩 Módulos e Add-ons do Ecossistema</h2>
+      <div class="bento-grid">
+        <div class="bento-cell">
+          <span class="bento-id">MOD-ITAM</span>
+          <h3 class="bento-title">🖥️ IT Asset & Inventory</h3>
+          <p class="bento-desc">Descoberta de hardware e software. Integração com Endpoint Central para deploy de patches via ticket.</p>
+        </div>
+        <div class="bento-cell">
+          <span class="bento-id">MOD-CMDB</span>
+          <h3 class="bento-title">🧠 CMDB & Análise de Impacto</h3>
+          <p class="bento-desc">Mapeamento de CIs (Servidor → App → Banco). Relacionamento e análise de falhas em cascata.</p>
+        </div>
+        <div class="bento-cell">
+          <span class="bento-id">MOD-AUTH</span>
+          <h3 class="bento-title">🔐 Identity & Access (IAM)</h3>
+          <p class="bento-desc">SSO/SAML integrado ao Azure AD ou Okta. Provisionamento via Grupos do AD.</p>
+        </div>
+        <div class="bento-cell">
+          <span class="bento-id">MOD-AUTO</span>
+          <h3 class="bento-title">⚙️ Automação (IA Zia)</h3>
+          <p class="bento-desc">Chatbot e sugestão automática de soluções via Machine Learning.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOGS -->
+    <div id="logs">
+      <h2 class="section-title">📋 Central de Logs N3</h2>
+      <div class="bento-grid">
+        <div class="bento-cell" style="border-left: 3px solid var(--green)">
+          <span class="bento-id">LOG-SERVER</span>
+          <h3 class="bento-title">serverOut0.log</h3>
+          <p style="font-size:11px; color:var(--text3)">Local: <code style="color:var(--green)">SDP_Home/logs/</code></p>
+          <p class="bento-desc">Erros de inicialização, banco de dados e performance.</p>
+        </div>
+        <div class="bento-cell" style="border-left: 3px solid var(--amber)">
+          <span class="bento-id">LOG-MAIL</span>
+          <h3 class="bento-title">mail-fetching.log</h3>
+          <p style="font-size:11px; color:var(--text3)">Local: <code style="color:var(--green)">SDP_Home/logs/</code></p>
+          <p class="bento-desc">Falhas OAuth2 e handshakes TLS.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- LÓGICA E TEMPLATES SOP -->
+    <div id="logic-sop">
+      <h2 class="section-title" style="color:var(--purple)">⚙️ SOP: Lógica de Negócio e Templates</h2>
+      <div class="bento-grid">
+        <div class="bento-cell" style="background:var(--bg3); border-top: 4px solid var(--purple)">
+          <span class="bento-id" style="color:var(--purple)">SOP-BIZ-01</span>
+          <h3 class="bento-title">Field & Form Rules (Scripts)</h3>
+          <p class="bento-desc">Scripts JS que controlam a interface do ticket.</p>
+          <div class="code-block"><span class="code-content" style="color:var(--purple)">// Ocultar campo base no valor de outro
+if($CS.getValue("PRIORITY") == "High") {
+    $CS.showField("REASON_FOR_PRIORITY");
+}</span><button class="copy-code-btn" title="Copiar comando">⎘</button></div>
+        </div>
+        <div class="bento-cell" style="background:var(--bg3); border-top: 4px solid var(--purple)">
+          <span class="bento-id" style="color:var(--purple)">SOP-BIZ-02</span>
+          <h3 class="bento-title">Business Rules (Cascading)</h3>
+          <p class="bento-desc">Processamento pós-criação. A ordem é vital para o resultado final.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCRIPTS ENGENHARIA -->
+    <div id="scripts">
+      <h2 class="section-title" style="color:var(--cyan)">💻 Console de Engenharia (Scripts N3)</h2>
+      <div class="bento-grid">
+        <div class="bento-cell">
+          <span class="bento-id">CMD-01</span>
+          <h3 class="bento-title">Reindexação Lucene</h3>
+          <div class="code-block"><span class="code-content">cd C:\ManageEngine\ServiceDesk\bin<br>reIndexData.bat</span><button class="copy-code-btn" title="Copiar comando">⎘</button></div>
+        </div>
+        <div class="bento-cell">
+          <span class="bento-id">SQL-01</span>
+          <h3 class="bento-title">Reset Senha Local Admin</h3>
+          <div class="code-block"><span class="code-content">UPDATE AaaPassword SET PASSWORD = 'admin' WHERE USER_ID = 1;</span><button class="copy-code-btn" title="Copiar comando">⎘</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TROUBLESHOOTING DENSIDADE N3 -->
+    <div id="troubleshooting">
+      <h2 class="section-title" style="color:var(--red)">📚 Catálogo Master de Troubleshooting</h2>
+      <div id="cat-container"></div>
+    </div>
+
+  </section>
+</main>
+
+<button class="tab-fab" onclick="window.history.back()">↩ Voltar</button>
+
+<script>
+const SOP_DATA = [
+  // LOGIC
+  { id: "SDP-LOGIC-001", cat: "LOGIC", title: "Regras e Templates", desc: "Template inconsistente (Campos somem)", symp: "Campos obrigatórios somem ao salvar ou erro ao abrir ticket.", sev: "MÉDIO",
+    proc: ["Acesse Admin > Service Catalog > Template.","Verifique 'Field & Form Rules' > 'On Form Load' se há regras ocultando o campo.","Verifique se o campo está marcado como 'Technical Field'.","Limpar cache do browser."],
+    client: "Identificamos uma regra de visibilidade que ocultava os campos. O formulário foi ajustado."
+  },
+  { id: "SDP-LOGIC-002", cat: "LOGIC", title: "Regras e Templates", desc: "Business Rule não executa", symp: "Automação de grupo/técnico ignorada na criação.", sev: "ALTA",
+    proc: ["Vá em Admin > Business Rules.","Verifique a 'Execution Order' (Posição 1 tem prioridade).","Confirme se 'Stop processing subsequent rules' não está marcado na regra anterior."],
+    client: "Ajustamos a prioridade das regras de automação para garantir a correta atribuição do chamado."
+  },
+  { id: "SDP-LOGIC-003", cat: "LOGIC", title: "Regras e Templates", desc: "Campo customizado corrompido", symp: "Erro 'Internal Error' ao abrir ticket.", sev: "ALTA",
+    proc: ["Validar tabela 'ColumnDetails' no banco.","Recriar campo no editor de formulário.","Executar 'reIndexData.bat' na pasta /bin."],
+    client: "Campo restaurado após correção de sincronização no banco de dados."
+  },
+  { id: "SDP-LOGIC-004", cat: "LOGIC", title: "Regras e Templates", desc: "Formulário dependente quebra", symp: "Dropdown não carrega valores baseados em outro campo.", sev: "MÉDIO",
+    proc: ["Verificar se há dependência circular entre regras.","Validar scripts JS no console F12 do browser.","Testar com usuário padrão sem restrições."],
+    client: "Corrigimos a lógica de dependência do formulário para garantir o carregamento dos valores."
+  },
+  
+  // MAIL
+  { id: "SDP-MAIL-101", cat: "MAIL", title: "E-mail (CORE)", desc: "Loop de e-mail detectado", symp: "Tickets infinitos criados em minutos.", sev: "CRÍTICO",
+    proc: ["STOP no Mail Fetching em Admin > Mail Settings.","Adicionar e-mail do SDP no Spam Filter > Exclude Sender.","Limpar fila no servidor de e-mail.","Revisar Notification Rules."],
+    client: "Loop de e-mail mitigado via filtro de spam preventivo."
+  },
+  { id: "SDP-MAIL-103", cat: "MAIL", title: "E-mail (CORE)", desc: "Fetch travado (Thread Stuck)", symp: "Configurações OK, mas e-mails não entram.", sev: "ALTA",
+    proc: ["Verificar log 'mail-fetching.log' por 'Folder locked'.","Reiniciar serviço do SDP.","DB: DELETE FROM Task_Input WHERE TASK_NAME='MailFetchingTask';"],
+    client: "O módulo de leitura de e-mails foi reiniciado para destravar o processamento."
+  },
+
+  // AUTOMATION
+  { id: "SDP-AUTO-305", cat: "AUTO", title: "Automação & Workflow", desc: "Regra em loop", symp: "Ticket muda status infinitamente no histórico.", sev: "CRÍTICO",
+    proc: ["Identificar regras que alteram status reciprocamente.","Desativar regras temporariamente.","Ajustar critério de trigger para evitar reciprocidade."],
+    client: "Conflito entre automações resolvido; o status do chamado foi estabilizado."
+  },
+
+  // INFRA
+  { id: "SDP-INFRA-201", cat: "INFRA", title: "Infra & DB", desc: "DB Connection Failed", symp: "SDP não inicia.", sev: "CRÍTICO",
+    proc: ["Validar serviço PostgreSQL/MSSQL.","Checar disco (100% uso?).","Revisar database_params.conf.","Aumentar max_connections no config do DB."],
+    client: "Conexão com o banco de dados restabelecida e performance otimizada."
+  },
+  { id: "SDP-INFRA-202", cat: "INFRA", title: "Infra & DB", desc: "Heap insuficiente", symp: "Sistema lento ou travando.", sev: "CRÍTICO",
+    proc: ["Abrir wrapper.conf.","Ajustar wrapper.java.maxmemory para 50% da RAM física.","Reiniciar serviço."],
+    client: "Ajuste de memória JVM aplicado para suportar a carga de usuários."
+  },
+  { id: "SDP-INFRA-206", cat: "INFRA", title: "Infra & DB", desc: "Disco saturado", symp: "Logs param e sistema trava.", sev: "CRÍTICO",
+    proc: ["Mover logs antigos de /logs para backup.","Limpar pasta /tmp.","Verificar diretório de anexos por arquivos gigantes."],
+    client: "Limpeza técnica realizada para liberar espaço em disco no servidor."
+  },
+
+  // AUTH
+  { id: "SDP-AUTH-401", cat: "AUTH", title: "Identidade & SSO", desc: "LDAP indisponível", symp: "Falha de login massiva.", sev: "CRÍTICO",
+    proc: ["Testar telnet porta 389/636 para o DC.","Verificar conta de Bind no AD.","Validar FQDN do Domain Controller."],
+    client: "Acesso normalizado após restauração da conexão com o servidor de diretórios."
+  },
+
+  // INTEG
+  { id: "SDP-INTEG-502", cat: "INTEG", title: "Integração & API", desc: "Webhook falha", symp: "Status 401 ou 500 na integração.", sev: "ALTA",
+    proc: ["Validar API Key (Technician Key).","Checar acessibilidade da URL de destino.","Inspecionar log integration.log."],
+    client: "Integração restabelecida após renovação do token de acesso."
+  },
+
+  // UI
+  { id: "SDP-UI-601", cat: "UI", title: "Interface & Portal", desc: "Tela Branca", symp: "Página não carrega nada.", sev: "ALTA",
+    proc: ["F12 console por erros JS.","Limpar cache browser.","Delete pasta /work no servidor e reinicie."],
+    client: "Interface restaurada após limpeza de cache do Tomcat no servidor."
+  },
+
+  // REPORT
+  { id: "SDP-REP-703", cat: "REPORT", title: "Relatórios", desc: "Query Pesada Trava Sistema", symp: "Lentidão extrema ao gerar report.", sev: "ALTA",
+    proc: ["Identificar PID no banco consumindo CPU.","Mate sessão: SELECT pg_terminate_backend(pid).","Otimize filtros de data."],
+    client: "Processamento de relatório encerrado para preservar a performance do sistema."
+  },
+
+  // JOB
+  { id: "SDP-JOB-801", cat: "JOB", title: "Jobs & Schedulers", desc: "Scheduler Parado", symp: "SLA não roda, e-mails não entram.", sev: "CRÍTICO",
+    proc: ["Check Help > System Health.","Reinicie o serviço.","Limpar tabela Task_Input no DB."],
+    client: "Agendador interno reiniciado para processamento de tarefas pendentes."
+  },
+
+  // CROSS
+  { id: "SDP-X-901", cat: "CROSS", title: "Problemas Híbridos", desc: "Cache inconsistente", symp: "Erro intermitente por usuário.", sev: "MÉDIA",
+    proc: ["Limpar cache do browser.","Limpar pasta /work no servidor.","Validar persistência no balanceador de carga (L7)."],
+    client: "Inconsistência de sessão resolvida via limpeza de cache."
+  }
+];
+
+function renderMaster() {
+  const container = document.getElementById('cat-container');
+  const cats = [...new Set(SOP_DATA.map(d => d.cat))];
+
+  cats.forEach(cat => {
+    const header = document.createElement('div');
+    header.className = 'cat-header';
+    header.innerHTML = `<span class="cat-code">SDP-${cat}</span><span class="cat-name">${SOP_DATA.find(d => d.cat === cat).title}</span><span>▼</span>`;
+    
+    const table = document.createElement('table');
+    table.className = 'err-table';
+    table.innerHTML = `<thead><tr><th style="width:140px">ID</th><th>Cenário</th><th>Sintoma</th><th style="width:100px">Sev.</th></tr></thead><tbody id="tbody-${cat}"></tbody>`;
+    
+    container.append(header, table);
+    header.onclick = () => table.style.display = table.style.display === 'none' ? 'table' : 'none';
+
+    const tbody = document.getElementById(`tbody-${cat}`);
+    SOP_DATA.filter(d => d.cat === cat).forEach(d => {
+      const tr = document.createElement('tr');
+      tr.className = 'err-row';
+      tr.id = d.id; // Add ID to row
+      const sClass = d.sev === 'CRÍTICO' ? 'sev-c' : (d.sev === 'ALTA' ? 'sev-a' : 'sev-m');
+      // Add data-severity for auto-expand
+      if (['CRÍTICO','CRITICAL','HIGH'].includes(d.sev?.toUpperCase())) {
+        tr.setAttribute('data-severity', 'critical');
+      }
+      tr.innerHTML = `<td>${d.id}<button class="permalink-btn" title="Copiar link direto">🔗</button></td><td style="font-weight:600">${d.desc}</td><td style="color:var(--text3)">${d.symp}</td><td><span class="sev ${sClass}">${d.sev}</span></td>`;
+      
+      const det = document.createElement('tr');
+      det.className = 'detail-row';
+      det.innerHTML = `<td colspan="4"><div class="detail-content"><div><span class="detail-h">📋 Procedimento N3 (SOP)</span><ul class="step-list">${d.proc.map(s => `<li>${s}</li>`).join('')}</ul></div><div><span class="detail-h">💬 Script MSS</span><div class="client-script">${d.client}</div></div><div class="escalate-bar"><button class="escalate-btn" data-title="${d.desc}" data-code="${d.id}" data-module="ServiceDesk Plus" data-severity="${d.sev}">⬆ Escalar para N2</button></div></div></td>`;
+      
+      tr.onclick = () => det.classList.toggle('open');
+      tbody.append(tr, det);
+    });
+  });
+  
+  // Add permalink functionality for error rows
+  document.querySelectorAll('.err-row .permalink-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const row = btn.closest('.err-row');
+      if (!row) return;
+      const url = window.location.href.split('#')[0] + '#' + row.id;
+      navigator.clipboard.writeText(url).then(() => {
+        btn.textContent = '✓';
+        btn.style.opacity = '1';
+        btn.style.color = 'var(--green)';
+        setTimeout(() => {
+          btn.textContent = '🔗';
+          btn.style.color = '';
+          btn.style.opacity = '';
+        }, 2000);
+      });
+    });
+  });
+}
+
+window.onscroll = () => {
+  const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById("progressBar").style.width = scrolled + "%";
+  const show = window.scrollY > 300;
+  document.getElementById('backTop').classList.toggle('visible', show);
+  document.getElementById('homeFab').classList.toggle('visible', window.scrollY > 200);
+  document.getElementById('tabFab').classList.toggle('visible', show);
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderMaster();
+
+  // Copy button functionality for code blocks
+  document.querySelectorAll('.copy-code-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const code = btn.previousElementSibling?.textContent || '';
+      navigator.clipboard.writeText(code.trim()).then(() => {
+        btn.textContent = '✓';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = '⎘';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    });
+  });
+
+  // Wrap existing static code blocks
+  document.querySelectorAll('code, pre, .cmd-text, .command').forEach(el => {
+    if (el.closest('.code-block')) return;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'code-block';
+    const content = document.createElement('span');
+    content.className = 'code-content';
+    content.textContent = el.textContent;
+    const btn = document.createElement('button');
+    btn.className = 'copy-code-btn';
+    btn.title = 'Copiar comando';
+    btn.textContent = '⎘';
+    wrapper.appendChild(content);
+    wrapper.appendChild(btn);
+    el.replaceWith(wrapper);
+  });
+
+  // Auto-expand seções críticas
+  document.querySelectorAll('[data-severity="critical"]').forEach(el => {
+    const detail = el.nextElementSibling;
+    if (detail && detail.classList.contains('detail-row')) {
+      detail.classList.add('open');
+    }
+  });
+  
+  // Add permalink buttons to section titles
+  document.querySelectorAll('.section-title[id]').forEach(title => {
+    const btn = document.createElement('button');
+    btn.className = 'permalink-btn';
+    btn.title = 'Copiar link direto';
+    btn.textContent = '🔗';
+    btn.style.marginLeft = '8px';
+    title.appendChild(btn);
+    
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const url = window.location.href.split('#')[0] + '#' + title.id;
+      navigator.clipboard.writeText(url).then(() => {
+        btn.textContent = '✓';
+        btn.style.opacity = '1';
+        btn.style.color = 'var(--green)';
+        setTimeout(() => {
+          btn.textContent = '🔗';
+          btn.style.color = '';
+          btn.style.opacity = '';
+        }, 2000);
+      });
+    });
+  });
+  
+  // Handle hash scroll and highlight
+  const hash = window.location.hash?.slice(1);
+  if (hash) {
+    setTimeout(() => {
+      const target = document.getElementById(hash);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        // Add highlight animation
+        if (target.classList.contains('err-row')) {
+          target.style.backgroundColor = 'var(--green-dim)';
+          target.style.transition = 'background-color 0.3s';
+          setTimeout(() => {
+            target.style.backgroundColor = '';
+          }, 2500);
+        } else {
+          target.classList.add('highlight-target');
+          setTimeout(() => {
+            target.classList.remove('highlight-target');
+          }, 2500);
+        }
+      }
+    }, 300);
+  }
+
+  // GitHub API — última atualização do repositório
+  fetch('https://api.github.com/repos/dejotta1/IT_Hub/commits?per_page=1')
+    .then(r => r.json())
+    .then(data => {
+      const statusText = document.getElementById('statusText');
+      if (!statusText || !data[0]) return;
+
+      const commitDate = new Date(data[0].commit.author.date);
+      const now = new Date();
+      const diffDays = Math.floor((now - commitDate) / (1000 * 60 * 60 * 24));
+
+      let label = '';
+      if (diffDays === 0) label = 'atualizado hoje';
+      else if (diffDays === 1) label = 'atualizado ontem';
+      else if (diffDays <= 7) label = `atualizado há ${diffDays} dias`;
+      else if (diffDays <= 30) label = `atualizado há ${Math.floor(diffDays/7)} sem.`;
+      else label = `atualizado há ${Math.floor(diffDays/30)} meses`;
+
+      statusText.textContent = label;
+
+      // Aviso visual se desatualizado (> 30 dias)
+      if (diffDays > 30) {
+        statusText.classList.add('status-stale');
+        document.querySelector('.status-dot').style.background = 'var(--amber)';
+      }
+    })
+    .catch(() => {
+      const statusText = document.getElementById('statusText');
+      if (statusText) statusText.textContent = 'GitHub Pages · online';
+    });
+
+  // ── ESCALATE BUTTON FUNCTIONALITY ───────────────────────
+  document.querySelectorAll('.escalate-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+
+      const title    = btn.dataset.title    || 'Não identificado';
+      const code     = btn.dataset.code     || 'N/A';
+      const module   = btn.dataset.module   || 'Runbook';
+      const severity = btn.dataset.severity || 'N/A';
+      const pageUrl  = window.location.href;
+      const now      = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+
+      const template = `
+🔺 ESCALONAMENTO N1 → N2
+━━━━━━━━━━━━━━━━━━━━━━━
+📋 Chamado: [INSERIR ID DO CHAMADO]
+🕐 Horário: ${now}
+📦 Módulo: ${module}
+🔑 Código: ${code}
+⚠️  Severidade: ${severity}
+📌 Cenário: ${title}
+
+🔗 Referência: ${pageUrl}
+
+📝 O que foi feito no N1:
+- [ ] Verificado status do serviço
+- [ ] Consultado runbook (link acima)
+- [ ] [DESCREVER AÇÕES TOMADAS]
+
+❓ Motivo do escalonamento:
+[DESCREVER POR QUE NÃO FOI RESOLVIDO NO N1]
+
+👤 Analista N1: [SEU NOME]
+      `.trim();
+
+      navigator.clipboard.writeText(template).then(() => {
+        const original = btn.textContent;
+        btn.textContent = '✓ Template copiado!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('copied');
+        }, 3000);
+      });
+    });
+  });
+});
+</script>
+
+<a id="homeFab" href="../index.html" class="home-fab">
+  <span class="home-fab-icon">←</span> IT Hub
+</a>
+
+</body>
+</html>

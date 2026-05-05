@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAM360 — Master N3 Troubleshooting Runbook</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Local variables not in shared tokens */
+  --accent:  #3d8ef0;
+  --accent-dim: rgba(61,142,240,.09);
+  --radius:  8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.6; min-height: 100vh; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+/* ── SIDEBAR ───────────────────────────── */
+.sidebar {
+  position: fixed; top: 0; left: 0;
+  width: var(--sidebar-w); height: 100vh;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  z-index: 100; overflow-y: auto;
+  transition: transform .3s ease;
+}
+.sidebar-logo {
+  padding: 22px 18px 18px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.sidebar-logo::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 18px; right: 18px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--blue), transparent);
+}
+.sidebar-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+}
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+  animation: pulse 2.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.status-text {
+  color: var(--text3);
+}
+.status-stale {
+  color: var(--amber) !important;
+}
+.escalate-bar {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.escalate-btn {
+  background: none;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  color: var(--text2);
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.escalate-btn:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+  background: var(--amber-dim);
+}
+.escalate-btn.copied {
+  border-color: var(--green);
+  color: var(--green);
+  background: var(--green-dim);
+}
+.sidebar-logo .product { 
+  font-family: var(--mono); 
+  font-size: 9px; 
+  color: var(--blue); 
+  text-transform: uppercase; 
+  letter-spacing: 2px; 
+  font-weight: 600;
+}
+.sidebar-logo .title { 
+  font-family: var(--display); 
+  font-size: 17px; 
+  font-weight: 800; 
+  color: var(--text); 
+  line-height: 1.2; 
+  margin-top: 2px; 
+}
+.sidebar-logo .sub { 
+  font-family: var(--mono);
+  font-size: 10.5px; 
+  color: var(--text3); 
+  margin-top: 4px; 
+  letter-spacing: .3px;
+}
+
+.nav-section { padding: 10px 0 2px; }
+.nav-label {
+  padding: 5px 18px;
+  font-family: var(--mono); font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 1.8px; color: var(--text3);
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 18px; font-size: 12.5px; font-weight: 500;
+  color: var(--text2); text-decoration: none;
+  transition: all .15s ease; position: relative;
+  border-left: 2px solid transparent;
+}
+.nav-item:hover { color: var(--text); background: var(--bg3); border-left-color: var(--border2); }
+.nav-item.active { 
+  color: var(--text); 
+  background: var(--bg3); 
+  border-left-color: var(--blue);
+}
+.nav-item.active .nav-dot { 
+  background: var(--blue);
+  box-shadow: 0 0 4px var(--blue);
+}
+.nav-dot { 
+  width: 6px; height: 6px; border-radius: 50%; 
+  flex-shrink: 0;
+  background: var(--text3);
+  transition: all .15s ease;
+}
+.nav-item-arrow {
+  font-size: 11px; color: var(--text3);
+  opacity: 0; transform: translateX(-4px); transition: all .15s ease;
+}
+.nav-item:hover .nav-item-arrow { opacity: 1; transform: translateX(0); }
+
+.nav-sep { height: 1px; background: var(--border); margin: 6px 18px; }
+
+.sidebar-footer {
+  margin-top: auto; padding: 14px 18px;
+  border-top: 1px solid var(--border);
+}
+.status-row {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--text3);
+}
+.status-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--blue); box-shadow: 0 0 5px var(--blue); flex-shrink: 0;
+}
+
+/* Mobile hamburger */
+.hamburger {
+  display: none;
+  position: fixed; top: 14px; left: 14px;
+  z-index: 300; background: var(--bg3);
+  border: 1px solid var(--border2); border-radius: 8px;
+  padding: 8px 10px; cursor: pointer; color: var(--text2);
+  font-size: 16px;
+}
+.sidebar-overlay {
+  display: none;
+  position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  z-index: 150; backdrop-filter: blur(2px);
+}
+
+.main { margin-left: var(--sidebar-w); min-height: 100vh; }
+
+/* ── HERO ─────────────────────────────── */
+.hero {
+  padding: 40px 48px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--blue-dim); border: 1px solid rgba(61,142,240,.25);
+  border-radius: 999px; padding: 3px 11px 3px 7px;
+  font-family: var(--mono); font-size: 10px;
+  color: var(--blue); font-weight: 500; letter-spacing: .4px;
+  margin-bottom: 16px;
+}
+.hero-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--blue); }
+.hero h1 { 
+  font-family: var(--display); font-size: 32px; font-weight: 800;
+  color: var(--text); line-height: 1.08; letter-spacing: -1.5px;
+  margin-bottom: 12px;
+}
+.hero h1 span { color: var(--blue); }
+.hero-desc {
+  color: var(--text2); max-width: 560px;
+  font-size: 14px; line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+/* ── CONTENT ──────────────────────────── */
+.content { padding: 40px 48px 60px; }
+
+/* ── BENTO GRID SECTIONS ───────────────── */
+.bento-section {
+  margin-bottom: 48px;
+}
+.bento-section:last-child {
+  margin-bottom: 0;
+}
+
+.bento-section-header {
+  background: var(--bg);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+}
+
+.bento-section-eyebrow {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text3);
+  flex: 1;
+}
+
+.bento-section-title {
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.bento-section-count {
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--text3);
+  background: var(--bg3);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.bento-grid {
+  background: var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: grid;
+  gap: 1px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.bento-cell {
+  background: var(--bg2);
+  padding: 18px 20px;
+  transition: background-color .15s ease;
+  border-radius: 0;
+}
+
+.bento-cell:hover {
+  background: var(--bg3);
+}
+
+.bento-cell-id {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--blue);
+  margin-bottom: 8px;
+}
+
+.bento-cell-title {
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.bento-cell-content {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--text2);
+  line-height: 1.45;
+}
+
+.bento-cell-steps {
+  margin-top: 12px;
+}
+
+.bento-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.bento-step:last-child {
+  margin-bottom: 0;
+}
+
+.bento-step-number {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--blue);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.bento-step-text {
+  font-family: var(--sans);
+  font-size: 10px;
+  color: var(--text3);
+  line-height: 1.4;
+}
+
+.bento-cell-footer {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.bento-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.bento-badge {
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bento-badge.critical {
+  background: var(--red-dim);
+  color: var(--red);
+  border: 1px solid rgba(240,79,94,.3);
+}
+
+.bento-badge.warning {
+  background: var(--amber-dim);
+  color: var(--amber);
+  border: 1px solid rgba(245,166,35,.3);
+}
+
+.bento-badge.info {
+  background: var(--blue-dim);
+  color: var(--blue);
+  border: 1px solid rgba(61,142,240,.3);
+}
+
+.bento-links {
+  display: flex;
+  gap: 8px;
+}
+
+.bento-link {
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--blue);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .15s ease;
+}
+
+.bento-link:hover {
+  border-bottom-color: var(--blue);
+}
+
+/* Checklist styling */
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0 0;
+}
+
+.checklist li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 6px;
+  font-family: var(--sans);
+  font-size: 10px;
+  color: var(--text3);
+  line-height: 1.4;
+}
+
+.checklist li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+/* Table styling */
+.bento-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 10px;
+}
+
+.bento-table th,
+.bento-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.bento-table th {
+  background: var(--bg3);
+  font-family: var(--mono);
+  font-weight: 600;
+  color: var(--text);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bento-table td {
+  font-family: var(--sans);
+  color: var(--text2);
+}
+
+.bento-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── RESPONSIVE ─────────────────────────── */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+  .hamburger { display: flex; align-items: center; justify-content: center; }
+  .main { margin-left: 0; }
+  .hero { padding: 56px 20px 28px; }
+  .content { padding: 24px 16px 60px; }
+  .bento-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .hero h1 { font-size: 24px; }
+  .bento-cell { padding: 14px 16px; }
+}
+
+/* ── LEGACY COMPONENTS (mantidos para compatibilidade) ── */
+.section { margin-bottom: 100px; padding: 40px 48px; position: relative; display: none; }
+.section::before { content: ''; display: block; height: 2px; margin-bottom: 24px; background: linear-gradient(90deg, var(--section-accent, var(--border2)), transparent 70%); }
+.section[data-section="infra"] { --section-accent: var(--teal); }
+.section[data-section="vault"] { --section-accent: var(--purple); }
+.section[data-section="rotation"] { --section-accent: var(--blue); }
+.section[data-section="gateway"] { --section-accent: var(--indigo); }
+.section[data-section="diag"] { --section-accent: var(--yellow); }
+
+.section-header { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 25px; }
+.section-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; background: var(--bg2); border: 1px solid var(--border); }
+.section-title { font-family: var(--display); font-size: 22px; font-weight: 800; }
+
+.ov-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; }
+.ov-card h4 { font-family: var(--display); margin-bottom: 12px; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+
+.port-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
+.port-table th { text-align: left; padding: 8px; color: var(--text3); border-bottom: 1px solid var(--border); background: var(--bg3); }
+.port-table td { padding: 8px; border-bottom: 1px solid var(--border); }
+.mono { font-family: var(--mono); color: var(--cyan); }
+
+.err-table { width: 100%; border-collapse: collapse; background: var(--bg2); border-radius: var(--radius); overflow: hidden; margin-top: 15px; }
+.err-table th { background: var(--bg3); padding: 12px; text-align: left; font-size: 11px; text-transform: uppercase; color: var(--text3); }
+.err-row { border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.1s; }
+.err-row:hover { background: var(--bg3); }
+.err-row td { padding: 14px 12px; vertical-align: top; }
+
+.err-detail { display: none; background: #1c2128; }
+.err-detail.open { display: table-row; }
+.detail-inner { padding: 20px 20px 20px 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+.detail-h { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text3); margin-bottom: 8px; display: block; }
+
+.code-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--green);
+  margin: 4px 0;
+}
+.code-content {
+  flex: 1;
+  word-break: break-all;
+  color: var(--green);
+}
+.copy-code-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.copy-code-btn:hover {
+  color: var(--green);
+  background: var(--green-dim);
+}
+.copy-code-btn.copied {
+  color: var(--green);
+}
+
+/* ── READING PROGRESS BAR ─────────────────────── */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: var(--blue);
+  z-index: 1000;
+  transition: width 0.1s ease-out;
+}
+
+/* ── UNIFIED SEARCH COMPONENT ───────────────────────── */
+.search-container {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: rgba(13, 17, 23, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+}
+
+.search-mode-toggle {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+  background: var(--bg3);
+  border-radius: var(--radius);
+  padding: 2px;
+}
+
+.mode-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: none;
+  background: transparent;
+  color: var(--text2);
+  border-radius: calc(var(--radius) - 2px);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.mode-btn.active {
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.mode-icon {
+  font-size: 11px;
+}
+
+.search-input-wrapper {
+  position: relative;
+  max-width: 100%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.search-input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 12px 8px 36px;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(56, 139, 253, 0.1);
+}
+
+.search-input.global-mode:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(88, 209, 255, 0.1);
+}
+
+.search-input::placeholder {
+  color: var(--text3);
+}
+
+.search-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-top: 4px;
+  max-height: 400px;
+  overflow-y: auto;
+  display: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.search-dropdown.open {
+  display: block;
+}
+
+.search-group {
+  border-bottom: 1px solid var(--border);
+}
+
+.search-group:last-child {
+  border-bottom: none;
+}
+
+.search-group-header {
+  padding: 8px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+}
+
+.search-result {
+  display: block;
+  padding: 10px 14px;
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  transition: background-color 0.15s;
+}
+
+.search-result:last-child {
+  border-bottom: none;
+}
+
+.search-result:hover {
+  background: var(--bg3);
+}
+
+.search-result-title {
+  font-weight: 500;
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.search-result-excerpt {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.4;
+}
+
+.search-result-badge {
+  display: inline-block;
+  background: var(--blue-dim);
+  color: var(--blue);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.search-no-results {
+  padding: 16px 14px;
+  text-align: center;
+  color: var(--text3);
+  font-style: italic;
+  font-size: 13px;
+}
+
+.search-highlight {
+  background: transparent;
+  color: var(--blue);
+  font-weight: 600;
+}
+
+/* ── RESPONSIVE ─────────────────────── */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .main { margin-left: 0; }
+  .section { padding: 20px 24px; }
+  .search-container { padding: 12px 12px; }
+}
+
+/* ── SIDEBAR SEARCH RESULTS ───────────────────── */
+.no-results {
+  padding: 12px 16px;
+  font-size: 12px;
+  color: var(--text3);
+  font-style: italic;
+  text-align: center;
+}
+.nav-item.hidden {
+  display: none;
+}
+.nav-label.hidden {
+  display: none;
+}
+.client-script { background: var(--purple-d); border-left: 4px solid var(--purple); padding: 12px; font-style: italic; font-size: 12.5px; color: var(--text); }
+.ext-link { color: var(--purple); text-decoration: none; font-size: 11px; font-weight: bold; }
+
+.hero { padding: 60px 40px; background: linear-gradient(135deg, #0d1117 0%, #1e1035 100%); border-bottom: 1px solid var(--border); }
+.hero h1 { font-family: var(--display); font-size: 42px; font-weight: 800; }
+.hero h1 span { color: var(--purple); }
+
+.sev { padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 800; }
+.sev-c { background: var(--red-l); color: var(--red); border: 1px solid var(--red); }
+.sev-a { background: var(--orange-l); color: var(--orange); border: 1px solid var(--orange); }
+
+.log-path { background: var(--bg3); padding: 6px 10px; border-radius: 4px; font-family: var(--mono); font-size: 11px; color: var(--orange); margin: 4px 0; }
+
+/* ── BACK TO TOP / HOME / VOLTAR ─────── */
+.back-top {
+  position: fixed; bottom: 24px; right: 24px;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--bg3); border: 1px solid var(--border2);
+  color: var(--text2); font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity .2s; z-index: 200;
+}
+.back-top.visible { opacity: 1; }
+.back-top:hover { background: var(--bg4); color: var(--text); }
+
+.home-fab,
+.tab-fab{
+  position: fixed; bottom: 24px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 12px; font-weight: 700;
+  color: var(--text2);
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+  cursor: pointer;
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s, background .15s, border-color .15s, color .15s;
+  z-index: 200;
+}
+.home-fab:hover,
+.tab-fab:hover { background: var(--bg4); border-color: var(--border2); color: var(--text); }
+.home-fab.visible,
+.tab-fab.visible { opacity: 1; pointer-events: all; }
+.home-fab { right: 70px; }
+.tab-fab  { right: 150px; }
+
+/* ── UNIFIED SEARCH ── */
+.search-unified {
+  display: flex; align-items: center;
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: var(--radius); max-width: 560px;
+  overflow: visible; position: relative;
+  margin-top: 20px;
+}
+.search-unified:focus-within {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-dim);
+}
+.search-mode-toggle {
+  display: flex; flex-shrink: 0;
+  border-right: 1px solid var(--border2);
+}
+.search-mode-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 9px 12px;
+  font-family: var(--mono); font-size: 9px; font-weight: 600;
+  letter-spacing: .8px; text-transform: uppercase;
+  color: var(--text3); background: none; border: none; cursor: pointer;
+  transition: all .15s; white-space: nowrap;
+}
+.search-mode-btn.active { color: var(--blue); background: var(--blue-dim); }
+.search-mode-btn:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+.search-icon-wrap {
+  padding: 0 10px 0 14px; color: var(--text3); font-size: 14px;
+  display: flex; align-items: center; flex-shrink: 0;
+}
+.search-input-unified {
+  flex: 1; background: none; border: none; outline: none;
+  color: var(--text); font-family: var(--sans); font-size: 13px;
+  padding: 10px 14px 10px 0;
+}
+.search-input-unified::placeholder { color: var(--text3); }
+.global-search-dropdown {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: var(--radius); max-height: 360px; overflow-y: auto;
+  z-index: 1000; display: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,.4);
+}
+.global-search-dropdown.open { display: block; }
+.search-group { border-bottom: 1px solid var(--border); }
+.search-group:last-child { border-bottom: none; }
+.search-group-header {
+  padding: 8px 14px; font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .5px;
+  color: var(--text3); background: var(--bg3);
+  border-bottom: 1px solid var(--border); font-family: var(--mono);
+}
+.search-result {
+  display: block; padding: 10px 14px;
+  color: var(--text); text-decoration: none;
+  border-bottom: 1px solid var(--border); transition: background .15s;
+}
+.search-result:last-child { border-bottom: none; }
+.search-result:hover { background: var(--bg3); }
+.search-result-title { font-weight: 500; margin-bottom: 4px; line-height: 1.3; }
+.search-result-excerpt { font-size: 12px; color: var(--text2); line-height: 1.4; }
+.search-result-badge {
+  display: inline-block; background: var(--blue-dim); color: var(--blue);
+  font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px;
+  margin-top: 4px; font-family: var(--mono);
+}
+.search-no-results {
+  padding: 16px 14px; text-align: center; color: var(--text3); font-size: 13px;
+}
+.search-highlight { background: transparent; color: var(--blue); font-weight: 600; }
+
+/* IT Hub button styling */
+.it-hub-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--blue-dim);
+  border: 1px solid var(--blue);
+  border-radius: 20px;
+  color: var(--blue);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  margin-top: 12px;
+  width: fit-content;
+}
+
+.it-hub-btn:hover {
+  background: var(--blue);
+  color: var(--bg);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(77,159,255,0.3);
+}
+</style>
+</head>
+<body>
+
+<!-- BARRA DE PROGRESSO DE LEITURA -->
+<div class="progress-bar" id="progressBar"></div>
+
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <span class="product-label">MANAGEENGINE · SECURITY</span>
+    <div class="brand">PAM360</div>
+  </div>
+
+  <div class="sidebar-status" id="sidebarStatus">
+    <span class="status-dot"></span>
+    <span class="status-text" id="statusText">carregando...</span>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Fundação</div>
+    <a href="#overview" class="nav-item active">🔐 Visão Geral</a>
+    <a href="#ports" class="nav-item">🔌 Matriz de Portas</a>
+    <a href="#logs" class="nav-item">📋 Central de Logs</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Módulos & Segurança</div>
+    <a href="#accounts" class="nav-item">👥 Gerenciamento de Contas</a>
+    <a href="#password" class="nav-item">🔑 Password Manager</a>
+    <a href="#session" class="nav-item">⏱️ Session Management</a>
+    <a href="#remote" class="nav-item">🖥️ Remote Access</a>
+    <a href="#audit" class="nav-item">📊 Auditoria & Logs</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">N3 Operations</div>
+    <a href="#scripts" class="nav-item">💻 Scripts de Engenharia</a>
+    <a href="#troubleshooting" class="nav-item">📚 Catálogo Master</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Recursos</div>
+    <a href="./pam360-playbook-operational.html" class="nav-item" style="color:var(--accent)">📋 Playbook de Casos</a>
+  </div>
+  
+  <div class="nav-sep"></div>
+  
+  <div class="nav-section">
+    <div class="nav-label">Update Procedures</div>
+    <a class="nav-item" href="pam360-update-checklist.html">
+      <span class="nav-item-icon" style="background:rgba(255,159,77,.1);border:1px solid rgba(255,159,77,.2);">✅</span>
+      <span class="nav-item-text">PAM360 Update Checklist</span>
+    </a>
+  </div>
+</nav>
+
+<main class="main">
+  <header class="hero">
+    <div class="hero-badge"><span class="hero-badge-dot"></span> Master N3 Runbook</div>
+    <h1>PAM360 <span>Advanced Operations</span></h1>
+    <p class="hero-desc">Guia Operacional Padrão (SOP) para analistas. Procedimentos detalhados para resolução de conflitos de vault, rotação de senhas, sessões remotas e auditoria de privilégios em larga escala.</p>
+    
+    <a href="./pam360-playbook-operational.html" class="playbook-btn">
+      📋 Acessar Playbook de Casos de Uso
+    </a>
+  </header>
+    
+    <!-- Search Unified -->
+<div class="search-unified" id="searchUnified">
+  <div class="search-mode-toggle">
+    <button class="search-mode-btn active" id="modeLocal" title="Buscar nesta página">
+      <span>🔍</span><span>Página</span>
+    </button>
+    <button class="search-mode-btn" id="modeGlobal" title="Buscar em todos os guias">
+      <span>🌐</span><span>Global</span>
+    </button>
+  </div>
+  <span class="search-icon-wrap">🔍</span>
+  <input class="search-input-unified" id="searchUnifiedInput" type="text" placeholder="Buscar nesta página…" autocomplete="off" />
+  <div class="global-search-dropdown" id="globalSearchDropdown"></div>
+</div>
+<a href="../index.html" class="it-hub-btn">🏠 IT Hub</a>
+  </header>
+
+  <!-- ══════════════════════════════════
+       SEÇÃO: SAÚDE DO AMBIENTE
+       ══════════════════════════════════ -->
+  <section class="section" id="env-health" data-section="infra">
+    <div class="section-header">
+      <div class="section-icon">🩺</div>
+      <div class="section-title" style="color:var(--teal)">Saúde do Cofre & Readiness (N3)</div>
+    </div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div class="ov-card" style="border-top: 3px solid var(--purple);">
+        <h4>🔐 On-Premise: Segurança do Cofre</h4>
+        <ul class="checklist">
+          <li><strong>Encryption Key:</strong> Validar presença do arquivo <code class="mono">p360_key.dat</code> (sem ele, o PAM não inicia).</li>
+          <li><strong>JVM Heap:</strong> PAM360 requer alto processamento para criptografia. Recomendado 8GB-16GB RAM.</li>
+          <li><strong>Database Health:</strong> PostgreSQL local exige latência zero. Validar locks de arquivo pelo antivírus.</li>
+          <li><strong>HA Cluster:</strong> Verificar se o nó Secundário está em 'Standby' e sincronizado.</li>
+        </ul>
+      </div>
+      <div class="ov-card" style="border-top: 3px solid var(--indigo);">
+        <h4>🛰️ Connectivity: Remote Access</h4>
+        <ul class="checklist">
+          <li><strong>Gateway 7272:</strong> O túnel de sessão RDP/SSH exige a porta 7272 aberta para o mundo ou VPN.</li>
+          <li><strong>SSL Trust:</strong> Se usar CA interna, o certificado deve estar no <code class="mono">cacerts</code> do Java do PAM.</li>
+          <li><strong>Target Reach:</strong> Servidor PAM deve alcançar os alvos nas portas 3389, 22 e 445.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════
+       SEÇÃO: INFRA & PORTAS
+       ══════════════════════════════════ -->
+  <section class="section" id="infra" data-section="infra">
+    <div class="section-header">
+      <div class="section-icon">🌐</div>
+      <div class="section-title" style="color:var(--green)">Matriz de Comunicação PAM360</div>
+    </div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">
+      <div class="ov-card">
+        <h4>Acesso & Gestão</h4>
+        <table class="port-table">
+          <tr><th>Porta</th><th>Serviço</th><th>Função</th></tr>
+          <tr><td class="mono">8282</td><td>HTTPS</td><td>Console Web (Default)</td></tr>
+          <tr><td class="mono">7272</td><td>TCP</td><td>PAM Gateway (Sessões)</td></tr>
+          <tr><td class="mono">443</td><td>HTTPS</td><td>AD Sync / Cloud Auth</td></tr>
+        </table>
+      </div>
+      <div class="ov-card">
+        <h4>Rotação de Senhas</h4>
+        <table class="port-table">
+          <tr><th>Porta</th><th>Protocolo</th><th>Alvo</th></tr>
+          <tr><td class="mono">445</td><td>SMB/RPC</td><td>Windows / AD</td></tr>
+          <tr><td class="mono">22</td><td>SSH</td><td>Linux / Network</td></tr>
+          <tr><td class="mono">1433</td><td>TCP</td><td>MS SQL Server</td></tr>
+        </table>
+      </div>
+      <div class="ov-card">
+        <h4>Alta Disponibilidade</h4>
+        <table class="port-table">
+          <tr><td class="mono">5432</td><td>PostgreSQL</td><td>Replicação DB</td></tr>
+          <tr><td class="mono">8443</td><td>HTTPS</td><td>HA File Sync</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════
+       MÓDULOS TÉCNICOS
+       ══════════════════════════════════ -->
+  <section class="section" id="vault" data-section="vault">
+    <div class="section-header"><div class="section-icon">🔑</div><div class="section-title">Cofre, Criptografia & Inicialização</div></div>
+    <table class="err-table"><tbody id="tbody-vault-init"></tbody></table>
+  </section>
+
+  <section class="section" id="rotation" data-section="rotation">
+    <div class="section-header"><div class="section-icon">🔄</div><div class="section-title">Rotação de Senhas & Discovery</div></div>
+    <table class="err-table"><tbody id="tbody-pam-rotation"></tbody></table>
+  </section>
+
+  <section class="section" id="gateway" data-section="gateway">
+    <div class="section-header"><div class="section-icon">📺</div><div class="section-title">Gateway de Sessão (RDP/SSH via Browser)</div></div>
+    <table class="err-table"><tbody id="tbody-pam-gateway"></tbody></table>
+  </section>
+
+  <!-- ══════════════════════════════════
+       CENTRAL DE DIAGNÓSTICO
+       ══════════════════════════════════ -->
+  <section class="section" id="diag" data-section="diag">
+    <div class="section-header"><div class="section-icon">🔍</div><div class="section-title" style="color:var(--yellow)">Suíte de Diagnóstico PAM360</div></div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+      <div class="ov-card" style="border-left: 4px solid var(--purple);">
+        <h4>🖥️ Core Server Logs</h4>
+        <div class="log-path">PAM360\logs\pam360_0.log (Geral)</div>
+        <div class="log-path">PAM360\logs\wrapper.log (Saúde JVM)</div>
+        <div class="log-path">PAM360\logs\access_log.txt (Audit Web)</div>
+      </div>
+      <div class="ov-card" style="border-left: 4px solid var(--indigo);">
+        <h4>📺 Session Gateway Logs</h4>
+        <div class="log-path">PAM360\logs\pam360_gateway_err.txt</div>
+        <div class="log-path">PAM360\logs\rdp_session_debug.txt</div>
+      </div>
+      <div class="ov-card" style="border-left: 4px solid var(--blue);">
+        <h4>🔄 Rotation & DB Logs</h4>
+        <div class="log-path">PAM360\logs\password_rotation.log</div>
+        <div class="log-path">PAM360\pgsql\data\pg_log\ (Postgres)</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 30px; background: var(--bg2); border-radius: var(--radius-lg); padding: 20px; border: 1px solid var(--border);">
+        <h3 style="font-family: var(--display); color: var(--yellow); margin-bottom: 20px;">🔍 Dicionário de Erros PAM360</h3>
+        <table class="port-table">
+          <thead><tr><th>Termo no Log</th><th>Causa</th><th>Ação N3</th></tr></thead>
+          <tbody>
+            <tr><td style="color:var(--red); font-weight:bold;">Encryption key file missing</td><td>p360_key.dat não encontrado</td><td>Restaurar do backup físico (Obrigatório)</td></tr>
+            <tr><td style="color:var(--red); font-weight:bold;">Failed to establish session (7272)</td><td>Gateway offline ou porta bloqueada</td><td>Restart PAM360 Gateway Service</td></tr>
+            <tr><td style="color:var(--orange); font-weight:bold;">Account restricted / Password expired</td><td>Conta de reset sem permissão no AD</td><td>Conceder permissão de Reset Password</td></tr>
+            <tr><td style="color:var(--orange); font-weight:bold;">Handshake_failure (SSL)</td><td>Certificado do alvo não confiável</td><td>Importar Root CA no cacerts do PAM</td></tr>
+          </tbody>
+        </table>
+    </div>
+  </section>
+
+  <section class="section" id="scripts" data-section="diag">
+    <div class="section-header"><div class="section-icon">⚙️</div><div class="section-title">Console de Engenharia PAM360</div></div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div class="ov-card">
+        <h4>🧪 Teste de Rotação (Windows/AD)</h4>
+        <div class="code-block"><span class="code-content"># Testar se o servidor PAM alcança o RPC do alvo
+Test-NetConnection -ComputerName ALVO_AD -Port 445
+# Verificar se o serviço Remote Registry está ativo no alvo
+Get-Service -ComputerName ALVO_AD -Name RemoteRegistry</span><button class="copy-code-btn" title="Copiar comando">⎘</button></div>
+      </div>
+      <div class="ov-card">
+        <h4>🧹 Manutenção de Gateway</h4>
+        <div class="code-block"><span class="code-content"># Reiniciar apenas o túnel de vídeo sem derrubar o console
+Stop-Service PAM360_Gateway
+Start-Service PAM360_Gateway</span><button class="copy-code-btn" title="Copiar comando">⎘</button></div>
+        <p style="font-size:11px; color:var(--text3); margin-top:8px;">Útil quando o console web abre, mas o RDP/SSH dá timeout.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<button class="tab-fab" id="tabFab" type="button" title="Voltar para a página anterior">↩ Voltar</button>
+
+<script>
+// ══════════════════════════════════════
+// COPY BUTTON FOR CODE BLOCKS
+// ══════════════════════════════════════
+function addCopyButtons() {
+  // Copy button functionality for code blocks
+  document.querySelectorAll('.copy-code-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const code = btn.previousElementSibling?.textContent || '';
+      navigator.clipboard.writeText(code.trim()).then(() => {
+        btn.textContent = '✓';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = '⎘';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    });
+  });
+
+  // Wrap existing static code blocks
+  document.querySelectorAll('code, pre, .cmd-text, .command').forEach(el => {
+    if (el.closest('.code-block')) return;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'code-block';
+    const content = document.createElement('span');
+    content.className = 'code-content';
+    content.textContent = el.textContent;
+    const btn = document.createElement('button');
+    btn.className = 'copy-code-btn';
+    btn.title = 'Copiar comando';
+    btn.textContent = '⎘';
+    wrapper.appendChild(content);
+    wrapper.appendChild(btn);
+    el.replaceWith(wrapper);
+  });
+}
+
+// ════════════════════════════════════════
+// READING PROGRESS BAR
+// ══════════════════════════════════════
+function updateProgressBar() {
+  const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrolled = (winScroll / height) * 100;
+  
+  document.getElementById('progressBar').style.width = scrolled + '%';
+}
+
+// ════════════════════════════════════════
+// SCROLLSPY ON SIDEBAR
+// ══════════════════════════════════════
+function initScrollSpy() {
+  const sections = document.querySelectorAll('section[id]');
+  const navItems = document.querySelectorAll('.nav-item[href^="#"]');
+  
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.3
+  };
+  
+  const observerCallback = (entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Remove active from all nav items
+        navItems.forEach(item => item.classList.remove('active'));
+        
+        // Add active to matching nav item
+        const targetId = '#' + entry.target.id;
+        const matchingNavItem = document.querySelector(`.nav-item[href="${targetId}"]`);
+        if (matchingNavItem) {
+          matchingNavItem.classList.add('active');
+        }
+      }
+    });
+  };
+  
+  const observer = new IntersectionObserver(observerCallback, observerOptions);
+  sections.forEach(section => observer.observe(section));
+}
+
+// ══════════════════════════════════════════
+// UNIFIED SEARCH
+// ══════════════════════════════════════════
+let searchIndex = [];
+let currentSearchMode = 'page';
+let unifiedSearchInput = document.getElementById('unifiedSearch');
+let searchDropdown = document.getElementById('searchDropdown');
+let pageModeBtn = document.getElementById('pageModeBtn');
+let globalModeBtn = document.getElementById('globalModeBtn');
+let searchIcon = document.getElementById('searchIcon');
+
+// Load search index
+async function loadSearchIndex() {
+  try {
+    const response = await fetch('./search-index.json');
+    searchIndex = await response.json();
+  } catch (error) {
+    console.error('Failed to load search index:', error);
+  }
+}
+
+// Highlight matching text
+function highlightText(text, query) {
+  const regex = new RegExp(`(${query})`, 'gi');
+  return text.replace(regex, '<mark class="search-highlight">$1</mark>');
+}
+
+// Page search functionality
+function performPageSearch(query) {
+  const lowerQuery = query.toLowerCase();
+  const sections = document.querySelectorAll('.section');
+  const navItems = document.querySelectorAll('.nav-item');
+  
+  sections.forEach(section => {
+    const text = section.textContent.toLowerCase();
+    const matches = text.includes(lowerQuery);
+    section.style.display = matches ? '' : 'none';
+  });
+  
+  navItems.forEach(item => {
+    const text = item.textContent.toLowerCase();
+    const matches = text.includes(lowerQuery);
+    item.style.display = matches ? '' : 'none';
+  });
+}
+
+// Global search functionality
+function performGlobalSearch(query) {
+  if (query.length < 2) {
+    searchDropdown.classList.remove('open');
+    return;
+  }
+
+  const lowerQuery = query.toLowerCase();
+  const results = searchIndex.filter(item => {
+    return item.section.toLowerCase().includes(lowerQuery) ||
+           item.tags.some(tag => tag.toLowerCase().includes(lowerQuery)) ||
+           item.excerpt.toLowerCase().includes(lowerQuery);
+  });
+
+  // Group results by guide
+  const groupedResults = {};
+  results.forEach(item => {
+    if (!groupedResults[item.guide]) {
+      groupedResults[item.guide] = [];
+    }
+    groupedResults[item.guide].push(item);
+  });
+
+  // Render dropdown
+  renderGlobalSearchResults(groupedResults, query);
+}
+
+// Render search results
+function renderGlobalSearchResults(groupedResults, query) {
+  searchDropdown.innerHTML = '';
+  
+  if (Object.keys(groupedResults).length === 0) {
+    searchDropdown.innerHTML = '<div class="search-no-results">Nenhum resultado encontrado</div>';
+  } else {
+    Object.entries(groupedResults).forEach(([guide, items]) => {
+      const group = document.createElement('div');
+      group.className = 'search-group';
+      
+      const header = document.createElement('div');
+      header.className = 'search-group-header';
+      header.textContent = guide;
+      group.appendChild(header);
+      
+      items.forEach(item => {
+        const result = document.createElement('a');
+        result.className = 'search-result';
+        result.href = item.file + item.anchor;
+        result.innerHTML = `
+          <div class="search-result-title">${highlightText(item.section, query)}</div>
+          <div class="search-result-excerpt">${highlightText(item.excerpt, query)}</div>
+          <div class="search-result-badge">${guide}</div>
+        `;
+        group.appendChild(result);
+      });
+      
+      searchDropdown.appendChild(group);
+    });
+  }
+  
+  searchDropdown.classList.add('open');
+}
+
+// Mode toggle functionality
+function switchSearchMode(mode) {
+  currentSearchMode = mode;
+  
+  // Update button states
+  pageModeBtn.classList.toggle('active', mode === 'page');
+  globalModeBtn.classList.toggle('active', mode === 'global');
+  
+  // Update icon and placeholder
+  if (mode === 'page') {
+    searchIcon.textContent = '🔍';
+    unifiedSearchInput.placeholder = 'Buscar nesta página…';
+    unifiedSearchInput.classList.remove('global-mode');
+  } else {
+    searchIcon.textContent = '🔎';
+    unifiedSearchInput.placeholder = 'Buscar em todos os guias…';
+    unifiedSearchInput.classList.add('global-mode');
+  }
+  
+  // Clear search and close dropdown
+  unifiedSearchInput.value = '';
+  searchDropdown.classList.remove('open');
+  
+  // Reset page visibility
+  document.querySelectorAll('.section, .nav-item').forEach(element => {
+    element.style.display = '';
+  });
+}
+
+// Event listeners
+pageModeBtn.addEventListener('click', () => switchSearchMode('page'));
+globalModeBtn.addEventListener('click', () => switchSearchMode('global'));
+
+unifiedSearchInput.addEventListener('input', (e) => {
+  const query = e.target.value.trim();
+  
+  if (currentSearchMode === 'page') {
+    performPageSearch(query);
+    searchDropdown.classList.remove('open');
+  } else {
+    performGlobalSearch(query);
+  }
+});
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.search-input-wrapper')) {
+    searchDropdown.classList.remove('open');
+  }
+});
+
+// Initialize
+loadSearchIndex();
+
+// ════════════════════════════════════════
+// BACK TO TOP BUTTON
+// ════════════════════════════════════════
+function initBackToTop() {
+  const backToTop = document.getElementById('backToTop');
+  
+  window.addEventListener('scroll', () => {
+    backToTop.classList.toggle('visible', window.scrollY > 300);
+  });
+  
+  backToTop.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+}
+
+// ══════════════════════════════════════
+// DATA
+// ══════════════════════════════════════
+const ERRORS = [
+  // COFRE & INICIALIZAÇÃO
+  {id:"PAM-ENC-101", cat:"vault-init", mod:"vault", desc:"Serviço não inicia: Encryption Key Missing", err:"Arquivo p360_key.dat não localizado em PAM360\\conf", sev:"CRÍTICO", fix:"Localizar a chave de criptografia gerada na instalação e restaurar no diretório", steps:["Verificar se a chave está em um drive mapeado ou USB","Sem este arquivo, os dados no banco são ilegíveis","Certificar que a conta de serviço tem permissão de leitura no arquivo"], codes:[], client:"O serviço do cofre está temporariamente offline por falta de acesso à chave de criptografia mestre.", link:"https://pitstop.manageengine.com/portal/en/kb/articles/recovery-of-pam360-encryption-key"},
+  {id:"PAM-DB-102", cat:"vault-init", mod:"vault", desc:"Database Connection Timeout (MS SQL)", err:"Instância SQL Server inacessível ou conta de serviço bloqueada", sev:"CRÍTICO", fix:"Validar porta 1433 e permissão db_owner para a conta do PAM", steps:["Testar: telnet SQL_SERVER 1433","Revisar arquivo database_params.conf","Verificar se o SQL Server permite autenticação mista (SQL e Windows)"], codes:["Test-NetConnection SQL_SERVER -Port 1433"], client:"Falha crítica de conexão com o banco de dados. Investigando latência de rede e permissões SQL.", link:"https://pitstop.manageengine.com/portal/en/kb/articles/moving-pam360-database-to-ms-sql-server"},
+
+  // ROTAÇÃO DE SENHAS
+  {id:"PAM-ROT-201", cat:"pam-rotation", mod:"rotation", desc:"Password Rotation Failure: Access Denied", err:"A 'Reset Account' não possui privilégios para alterar a senha do recurso", sev:"ALTO", fix:"Conceder permissão de Reset Password no AD ou Sudoers no Linux", steps:["Abrir o recurso no PAM > Edit > Account Settings","Verificar qual conta está definida como 'Password Reset Account'","No AD: Conceder 'Reset Password' para esta conta sobre a OU do alvo"], codes:[], client:"A tentativa de rotação automática de senha falhou por permissão insuficiente da conta administrativa.", link:"https://www.manageengine.com/privileged-access-management/help/password_rotation.html"},
+  {id:"PAM-ROT-202", cat:"pam-rotation", mod:"rotation", desc:"SSH Rotation: Connection Timeout (Port 22)", err:"Servidor PAM bloqueado pelo Firewall do alvo ou IPTables", sev:"ALTO", fix:"Liberar porta 22 (SSH) do IP do servidor PAM para o alvo", steps:["Testar conexão SSH manual a partir do servidor PAM","Verificar se o arquivo 'sshd_config' no alvo permite login por senha (se usado)","Validar se há limite de sessões SSH simultâneas no alvo"], codes:["ssh -v user@target_ip"], client:"Falha de rede impedindo a rotação de senha no servidor Linux afetado."},
+
+  // GATEWAY & SESSÕES
+  {id:"PAM-GW-301", cat:"pam-gateway", mod:"gateway", desc:"RDP/SSH Session: Gateway Timeout", err:"Serviço PAM360 Gateway travado ou porta 7272 bloqueada", sev:"CRÍTICO", fix:"Reiniciar o serviço do Gateway e validar conectividade externa",steps:["Reiniciar: services.msc > PAM360 Gateway","Verificar se a porta 7272 está em listening: netstat -ano","Garantir que o FQDN do Gateway resolve corretamente para o IP público"], codes:["netstat -ano | findstr :7272"], client:"O serviço de túnel de sessões administrativas está instável. Realizando o restart do módulo de Gateway.", link:"https://www.manageengine.com/privileged-access-management/help/configure_rdp_ssh_gateway.html"},
+  {id:"PAM-GW-302", cat:"pam-gateway", mod:"gateway", desc:"RDP Session: Protocol Error (0x112f)", err:"Recursos de memória insuficientes no alvo ou falha de renderização", sev:"MÉDIO", fix:"Desabilitar recursos de interface (Wallpaper/Themes) no template de conexão", steps:["PAM360 > Settings > Remote Session > Performance","Desmarcar Wallpaper, Menu Animation e Themes","Tentar reconectar"], codes:[], client:"Falha de renderização na sessão remota. Ajustamos a performance para garantir estabilidade.", link:"https://pitstop.manageengine.com/portal/en/kb/articles/rdp-session-issues-and-fixes"}
+];
+
+function buildRow(e) {
+  const tr = document.createElement('tr');
+  tr.className = 'err-row';
+  // Add data-severity for auto-expand
+  if (['CRÍTICO','CRITICAL','HIGH'].includes(e.sev?.toUpperCase())) {
+    tr.setAttribute('data-severity', 'critical');
+  }
+  tr.innerHTML = `
+    <td style="font-family:var(--mono); color:var(--purple); font-weight:bold; width:130px;">${e.id}</td>
+    <td style="font-weight:bold; width:250px;">${e.desc}</td>
+    <td style="color:var(--text2);">${e.err}</td>
+    <td style="width:100px;"><span class="sev ${e.sev === 'CRÍTICO' ? 'sev-c' : 'sev-a'}">${e.sev}</span></td>
+  `;
+  
+  const detail = document.createElement('tr');
+  detail.className = 'err-detail';
+  const stepsHTML = e.steps.map(s => `<li>${s}</li>`).join('');
+  const codesHTML = e.codes && e.codes.length ? `<div class="code-block"><span class="code-content">${e.codes.join('\n')}</span><button class="copy-code-btn" title="Copiar comando">⎘</button></div>` : '';
+  
+  detail.innerHTML = `
+    <td colspan="4">
+      <div class="detail-inner">
+        <div>
+          <span class="detail-h">📋 Resolução & Comandos</span>
+          <ul style="padding-left:15px; font-size:12.5px;">${stepsHTML}</ul>
+          ${codesHTML}
+        </div>
+        <div>
+          <span class="detail-h">💬 Script MSS & Suporte</span>
+          <div class="client-script">${e.client}</div>
+          <div style="margin-top:15px;"><a class="ext-link" href="${e.link}" target="_blank">🔗 Abrir Documentação Oficial (Pitstop)</a></div>
+        </div>
+        <div class="escalate-bar">
+          <button class="escalate-btn" 
+            data-title="${e.desc}"
+            data-code="${e.id}"
+            data-module="PAM360"
+            data-severity="${e.sev}">
+            ⬆ Escalar para N2
+          </button>
+        </div>
+      </div>
+    </td>
+  `;
+  
+  tr.onclick = () => detail.classList.toggle('open');
+  return [tr, detail];
+}
+
+function renderAll() {
+  ERRORS.forEach(e => {
+    const tbody = document.getElementById(`tbody-${e.cat}`);
+    if (tbody) {
+      const [tr, det] = buildRow(e);
+      tbody.appendChild(tr);
+      tbody.appendChild(det);
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  addCopyButtons();
+  initScrollSpy();
+  initBackToTop();
+  
+  // Update progress bar on scroll
+  window.addEventListener('scroll', updateProgressBar);
+  
+  // Initial progress bar update
+  updateProgressBar();
+  
+  // Auto-expand seções críticas
+  document.querySelectorAll('[data-severity="critical"]').forEach(el => {
+    const detail = el.nextElementSibling;
+    if (detail && detail.classList.contains('err-detail')) {
+      el.classList.add('expanded');
+      detail.classList.add('open');
+    }
+  });
+  
+  // Existing renderAll
+  renderAll();
+
+  // GitHub API — última atualização do repositório
+  fetch('https://api.github.com/repos/dejotta1/IT_Hub/commits?per_page=1')
+    .then(r => r.json())
+    .then(data => {
+      const statusText = document.getElementById('statusText');
+      if (!statusText || !data[0]) return;
+
+      const commitDate = new Date(data[0].commit.author.date);
+      const now = new Date();
+      const diffDays = Math.floor((now - commitDate) / (1000 * 60 * 60 * 24));
+
+      let label = '';
+      if (diffDays === 0) label = 'atualizado hoje';
+      else if (diffDays === 1) label = 'atualizado ontem';
+      else if (diffDays <= 7) label = `atualizado há ${diffDays} dias`;
+      else if (diffDays <= 30) label = `atualizado há ${Math.floor(diffDays/7)} sem.`;
+      else label = `atualizado há ${Math.floor(diffDays/30)} meses`;
+
+      statusText.textContent = label;
+
+      // Aviso visual se desatualizado (> 30 dias)
+      if (diffDays > 30) {
+        statusText.classList.add('status-stale');
+        document.querySelector('.status-dot').style.background = 'var(--amber)';
+      }
+    })
+    .catch(() => {
+      const statusText = document.getElementById('statusText');
+      if (statusText) statusText.textContent = 'GitHub Pages · online';
+    });
+
+  // ── ESCALATE BUTTON FUNCTIONALITY ───────────────────────
+  document.querySelectorAll('.escalate-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+
+      const title    = btn.dataset.title    || 'Não identificado';
+      const code     = btn.dataset.code     || 'N/A';
+      const module   = btn.dataset.module   || 'Runbook';
+      const severity = btn.dataset.severity || 'N/A';
+      const pageUrl  = window.location.href;
+      const now      = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+
+      const template = `
+🔺 ESCALONAMENTO N1 → N2
+━━━━━━━━━━━━━━━━━━━━━━━
+📋 Chamado: [INSERIR ID DO CHAMADO]
+🕐 Horário: ${now}
+📦 Módulo: ${module}
+🔑 Código: ${code}
+⚠️  Severidade: ${severity}
+📌 Cenário: ${title}
+
+🔗 Referência: ${pageUrl}
+
+📝 O que foi feito no N1:
+- [ ] Verificado status do serviço
+- [ ] Consultado runbook (link acima)
+- [ ] [DESCREVER AÇÕES TOMADAS]
+
+❓ Motivo do escalonamento:
+[DESCREVER POR QUE NÃO FOI RESOLVIDO NO N1]
+
+👤 Analista N1: [SEU NOME]
+      `.trim();
+
+      navigator.clipboard.writeText(template).then(() => {
+        const original = btn.textContent;
+        btn.textContent = '✓ Template copiado!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('copied');
+        }, 3000);
+      });
+    });
+  });
+});
+
+// ═══════════════════════════════════════════
+// BACK TO TOP / HOME / VOLTAR
+// ═══════════════════════════════════════════
+window.addEventListener('scroll', ()=>{
+  document.getElementById('backTop').classList.toggle('visible', window.scrollY > 400);
+  document.getElementById('homeFab').classList.toggle('visible', window.scrollY > 400);
+  document.getElementById('tabFab').classList.toggle('visible', window.scrollY > 400);
+});
+
+document.getElementById('tabFab').addEventListener('click', ()=>{
+  // Prefer voltar para a navegação anterior; se não houver, vai para Home.
+  try{
+    if(window.history.length > 1) window.history.back();
+    else window.location.href = './index.html';
+  } catch {
+    window.location.href = './index.html';
+  }
+});
+
+// ── UNIFIED SEARCH ──────────────────────────────
+(function() {
+  let currentSearchMode = 'page';
+  let searchIndex = [];
+  const unifiedInput = document.getElementById('searchUnifiedInput');
+  const searchDropdown = document.getElementById('globalSearchDropdown');
+  const pageModeBtn = document.getElementById('modeLocal');
+  const globalModeBtn = document.getElementById('modeGlobal');
+
+  if (!unifiedInput) return;
+
+  async function loadSearchIndex() {
+    try {
+      const r = await fetch('./search-index.json');
+      searchIndex = await r.json();
+    } catch(e) { console.warn('search-index.json não carregado', e); }
+  }
+
+  function highlightText(text, query) {
+    return text.replace(
+      new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'),
+      '<mark class="search-highlight">$1</mark>'
+    );
+  }
+
+  function performPageSearch(query) {
+    const q = query.toLowerCase();
+    const rows = document.querySelectorAll('.err-row, .bento-cell, [data-searchable], .card');
+    rows.forEach(row => {
+      const text = (row.dataset.text || row.textContent || '').toLowerCase();
+      row.classList.toggle('hidden', !!q && !text.includes(q));
+    });
+  }
+
+  function performGlobalSearch(query) {
+    if (query.length < 2) { searchDropdown.classList.remove('open'); return; }
+    const q = query.toLowerCase();
+    const results = searchIndex.filter(i =>
+      i.section.toLowerCase().includes(q) ||
+      (i.tags || []).some(t => t.toLowerCase().includes(q)) ||
+      i.excerpt.toLowerCase().includes(q)
+    );
+    const grouped = {};
+    results.forEach(i => {
+      if (!grouped[i.guide]) grouped[i.guide] = [];
+      grouped[i.guide].push(i);
+    });
+    if (!Object.keys(grouped).length) {
+      searchDropdown.innerHTML = '<div class="search-no-results">Nenhum resultado encontrado</div>';
+    } else {
+      let html = '';
+      Object.keys(grouped).forEach(guide => {
+        html += `<div class="search-group"><div class="search-group-header">${guide}</div>`;
+        grouped[guide].forEach(item => {
+          html += `<a href="${item.file}${item.anchor}" class="search-result">
+            <div class="search-result-title">${highlightText(item.section, query)}</div>
+            <div class="search-result-excerpt">${highlightText(item.excerpt, query)}</div>
+            <span class="search-result-badge">${guide}</span>
+          </a>`;
+        });
+        html += '</div>';
+      });
+      searchDropdown.innerHTML = html;
+    }
+    searchDropdown.classList.add('open');
+  }
+
+  function switchMode(mode) {
+    currentSearchMode = mode;
+    pageModeBtn.classList.toggle('active', mode === 'page');
+    globalModeBtn.classList.toggle('active', mode === 'global');
+    unifiedInput.placeholder = mode === 'page' ? 'Buscar nesta página…' : 'Buscar em todos os guias…';
+    unifiedInput.value = '';
+    searchDropdown.classList.remove('open');
+  }
+
+  pageModeBtn.addEventListener('click', () => switchMode('page'));
+  globalModeBtn.addEventListener('click', () => switchMode('global'));
+
+  unifiedInput.addEventListener('input', e => {
+    const val = e.target.value.trim();
+    if (currentSearchMode === 'page') {
+      performPageSearch(val);
+      searchDropdown.classList.remove('open');
+    } else {
+      performGlobalSearch(val);
+    }
+  });
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#searchUnified')) searchDropdown.classList.remove('open');
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { searchDropdown.classList.remove('open'); unifiedInput.blur(); }
+  });
+
+  loadSearchIndex();
+})();
+
+// Home FAB button visibility
+window.onscroll = () => {
+  const homeFab = document.getElementById('homeFab');
+  if (homeFab) {
+    homeFab.classList.toggle('visible', window.scrollY > 200);
+  }
+};
+</script>
+
+<a id="homeFab" href="../index.html" class="home-fab">
+  <span class="home-fab-icon">←</span> IT Hub
+</a>
+
+</body>
+</html>

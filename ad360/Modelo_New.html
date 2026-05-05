@@ -1,0 +1,2084 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Produto — Runbook Técnico (MSS N1/N2/N3)</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:         #0f1117;
+  --bg2:        #181c27;
+  --bg3:        #1e2333;
+  --bg4:        #252b3d;
+  --border:     #252b3d;
+  --border2:    #303750;
+  --text:       #f0f4ff;
+  --text2:      #a0aabf;
+  --text3:      #5a6480;
+  --accent:     #4d9fff;
+  --accent-dim: rgba(77,159,255,.1);
+  --accent-glow: rgba(77,159,255,.2);
+  --red:        #ff5c6e;
+  --red-dim:    rgba(255,92,110,.1);
+  --amber:      #ffb340;
+  --amber-dim:  rgba(255,179,64,.1);
+  --purple:     #a97ff5;
+  --purple-dim: rgba(169,127,245,.1);
+  --green:      #5af0a0;
+  --green-dim:  rgba(90,240,160,.1);
+  --mono:    'JetBrains Mono', monospace;
+  --sans:    'DM Sans', sans-serif;
+  --display: 'Syne', sans-serif;
+  --r:       10px;
+  --r-lg:    14px;
+  --sidebar-w: 260px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
+
+/* ── SIDEBAR ───────────────────────────── */
+.sidebar {
+  position: fixed; top: 0; left: 0;
+  width: var(--sidebar-w); height: 100vh;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  z-index: 200; overflow-y: auto;
+  transition: transform .3s ease;
+}
+
+.sidebar-logo {
+  padding: 22px 18px 18px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.sidebar-logo::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 18px; right: 18px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+}
+.logo-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(77,159,255,.2);
+  border-radius: 5px;
+  padding: 2px 9px 2px 7px;
+  margin-bottom: 10px;
+}
+.logo-badge-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent);
+  animation: pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+.logo-badge span {
+  font-family: var(--mono); font-size: 9.5px;
+  color: var(--accent); letter-spacing: .8px; font-weight: 500;
+}
+.brand {
+  font-family: var(--display); font-size: 20px; font-weight: 800;
+  color: var(--text); letter-spacing: -.5px; line-height: 1.15;
+}
+.brand em { color: var(--accent); font-style: normal; }
+.brand-sub {
+  font-family: var(--mono); font-size: 10.5px; color: var(--text3);
+  margin-top: 5px; letter-spacing: .3px;
+}
+
+.nav-section { padding: 10px 0 2px; }
+.nav-label {
+  padding: 5px 18px;
+  font-family: var(--mono); font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 1.8px; color: var(--text3);
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 18px; font-size: 12.5px; font-weight: 500;
+  color: var(--text2); text-decoration: none;
+  transition: all .15s ease; position: relative;
+}
+.nav-item:hover { color: var(--text); background: var(--bg3); }
+.nav-item.active { color: var(--text); background: var(--bg3); }
+.nav-item-icon {
+  width: 26px; height: 26px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; flex-shrink: 0;
+}
+.nav-item-icon img { width: 15px; height: 15px; object-fit: contain; display: block; }
+.nav-item-text { flex: 1; }
+.nav-item-arrow {
+  font-size: 11px; color: var(--text3);
+  opacity: 0; transform: translateX(-4px); transition: all .15s ease;
+}
+.nav-item:hover .nav-item-arrow { opacity: 1; transform: translateX(0); }
+
+.nav-sep { height: 1px; background: var(--border); margin: 6px 18px; }
+
+.sidebar-footer {
+  margin-top: auto; padding: 14px 18px;
+  border-top: 1px solid var(--border);
+}
+.status-row {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--text3);
+}
+.status-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 5px var(--accent); flex-shrink: 0;
+}
+
+/* Mobile hamburger */
+.hamburger {
+  display: none;
+  position: fixed; top: 14px; left: 14px;
+  z-index: 300; background: var(--bg3);
+  border: 1px solid var(--border2); border-radius: 8px;
+  padding: 8px 10px; cursor: pointer; color: var(--text2);
+  font-size: 16px;
+}
+.sidebar-overlay {
+  display: none;
+  position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  z-index: 150; backdrop-filter: blur(2px);
+}
+
+/* ── MAIN ─────────────────────────────── */
+.main { margin-left: var(--sidebar-w); min-height: 100vh; }
+
+/* ── HERO ─────────────────────────────── */
+.hero {
+  padding: 40px 48px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--accent-dim); border: 1px solid rgba(77,159,255,.25);
+  border-radius: 999px; padding: 3px 11px 3px 7px;
+  font-family: var(--mono); font-size: 10px;
+  color: var(--accent); font-weight: 500; letter-spacing: .4px;
+  margin-bottom: 16px;
+}
+.hero-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.hero h1 { 
+  font-family: var(--display); font-size: 32px; font-weight: 800;
+  color: var(--text); line-height: 1.08; letter-spacing: -1.5px;
+  margin-bottom: 12px;
+}
+.hero h1 span { color: var(--accent); }
+.hero-desc {
+  color: var(--text2); max-width: 560px;
+  font-size: 14px; line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+/* ── TOOLBAR ──────────────────────────── */
+.toolbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(13,17,23,.95); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 40px;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.toolbar-label { font-size: 11px; color: var(--text3); margin-right: 4px; }
+.filter-btn {
+  padding: 5px 12px; border-radius: 20px; cursor: pointer;
+  font-size: 12px; font-weight: 600; border: 1px solid;
+  transition: all .15s; background: transparent;
+  font-family: var(--sans);
+}
+.filter-btn.all     { border-color: var(--border2); color: var(--text2); }
+.filter-btn.agt     { border-color: rgba(56,139,253,.4); color: var(--accent); }
+.filter-btn.swd     { border-color: rgba(57,211,83,.4); color: var(--green); }
+.filter-btn.osd     { border-color: rgba(124,131,253,.45); color: var(--purple); }
+.filter-btn.ptch    { border-color: rgba(227,168,84,.4); color: var(--amber); }
+.filter-btn.ds      { border-color: rgba(88,209,255,.4); color: var(--accent); }
+.filter-btn.inv     { border-color: rgba(88,209,255,.45); color: var(--accent); }
+.filter-btn.rem     { border-color: rgba(56,139,253,.45); color: var(--accent); }
+.filter-btn.mdm     { border-color: rgba(188,140,255,.45); color: var(--purple); }
+.filter-btn.sec     { border-color: rgba(248,81,73,.45);  color: var(--red); }
+.filter-btn.linux   { border-color: rgba(255,140,64,.45); color: var(--amber); }
+.filter-btn.logs    { border-color: rgba(240,192,64,.4); color: var(--amber); }
+.filter-btn.configs  { border-color: rgba(169,127,245,.45); color: var(--purple); }
+.filter-btn.critico { border-color: rgba(248,81,73,.4); color: var(--red); }
+.filter-btn.active  { opacity: 1; }
+.filter-btn.all.active     { background: var(--bg3); border-color: var(--text2); color: var(--text); }
+.filter-btn.agt.active     { background: var(--accent-dim); border-color: var(--accent); }
+.filter-btn.swd.active     { background: var(--green-dim); border-color: var(--green); }
+.filter-btn.osd.active     { background: var(--purple-dim); border-color: var(--purple); color: var(--purple); }
+.filter-btn.ptch.active    { background: var(--amber-dim); border-color: var(--amber); }
+.filter-btn.ds.active      { background: var(--accent-dim); border-color: var(--accent); }
+.filter-btn.inv.active     { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.filter-btn.rem.active     { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.filter-btn.mdm.active     { background: var(--purple-dim); border-color: var(--purple); color: var(--purple); }
+.filter-btn.sec.active     { background: var(--red-dim); border-color: var(--red); color: var(--red); }
+.filter-btn.linux.active   { background: var(--amber-dim); border-color: var(--amber); color: var(--amber); }
+.filter-btn.logs.active    { background: var(--amber-dim); border-color: var(--amber); }
+.filter-btn.configs.active  { background: var(--purple-dim); border-color: var(--purple); color: var(--purple); }
+.filter-btn.critico.active { background: var(--red-dim); border-color: var(--red); }
+.filter-btn:not(.active)   { opacity: .6; }
+.filter-btn:hover          { opacity: 1; }
+
+/* Navigation button styling */
+.nav-btn { 
+  border-color: var(--accent) !important; 
+  color: var(--accent) !important; 
+  opacity: 0.8 !important;
+}
+.nav-btn:hover { 
+  background: var(--accent-dim) !important; 
+  opacity: 1 !important;
+}
+
+/* Overview navigation button styling */
+.nav-overview-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent);
+  border-radius: 20px;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--sans);
+  transition: all 0.2s ease;
+  opacity: 0.9;
+}
+.nav-overview-btn:hover {
+  background: var(--accent);
+  color: var(--bg);
+  opacity: 1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(77, 159, 255, 0.2);
+}
+
+/* ── CONTENT ──────────────────────────── */
+.content { padding: 40px 48px 60px; }
+
+/* ── BENTO GRID SECTIONS ───────────────── */
+.bento-section {
+  margin-bottom: 48px;
+}
+.bento-section:last-child {
+  margin-bottom: 0;
+}
+
+.bento-section-header {
+  background: var(--bg);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+}
+
+.bento-section-eyebrow {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text3);
+  flex: 1;
+}
+
+.bento-section-title {
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.bento-section-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+  background: var(--bg3);
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.bento-grid {
+  background: var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: grid;
+  gap: 1px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.bento-cell {
+  background: var(--bg2);
+  padding: 22px 24px;
+  transition: background-color .15s ease;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.bento-cell:hover {
+  background: var(--bg3);
+}
+
+.bento-cell-id {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.8px;
+  margin-bottom: 6px;
+}
+
+.bento-cell-title {
+  font-family: var(--display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+  line-height: 1.35;
+}
+
+.bento-cell-content {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--text2);
+  line-height: 1.5;
+  margin-bottom: 4px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.bento-cell-steps {
+  margin-top: 12px;
+}
+
+.bento-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.bento-step:last-child {
+  margin-bottom: 0;
+}
+
+.bento-step-number {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.bento-step-text {
+  font-family: var(--sans);
+  font-size: 10px;
+  color: var(--text3);
+  line-height: 1.4;
+}
+
+.bento-cell-footer {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.bento-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.bento-badge {
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.bento-badge.critical {
+  background: var(--red-dim);
+  color: var(--red);
+  border: 1px solid rgba(240,79,94,.5);
+  box-shadow: 0 0 6px rgba(240,79,94,.15);
+}
+
+.bento-badge.warning {
+  background: var(--amber-dim);
+  color: var(--amber);
+  border: 1px solid rgba(245,166,35,.4);
+}
+
+.bento-badge.info {
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid rgba(61,142,240,.3);
+}
+
+.bento-links {
+  display: flex;
+  gap: 8px;
+}
+
+.bento-link {
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .15s ease;
+}
+
+.bento-link:hover {
+  border-bottom-color: var(--accent);
+}
+
+/* Checklist styling */
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.checklist li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 8px;
+  font-size: 11px;
+  color: var(--text2);
+  line-height: 1.4;
+}
+
+.checklist li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--accent);
+  font-weight: bold;
+  font-size: 10px;
+}
+
+/* Port table styling */
+.port-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 10px;
+}
+
+.port-table th {
+  background: var(--bg3);
+  color: var(--text3);
+  font-family: var(--mono);
+  font-weight: 600;
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.port-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text2);
+}
+
+.port-table tr:hover {
+  background: var(--bg3);
+}
+
+/* ── SECTION STYLING ───────────────────── */
+.section {
+  margin-bottom: 60px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-title {
+  font-family: var(--display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.section-desc {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+.section-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+  background: var(--bg3);
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+/* ── ERROR TABLE STYLING ───────────────── */
+.err-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+  font-size: 11px;
+  background: var(--bg2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.err-table th {
+  background: var(--bg3);
+  color: var(--text3);
+  font-family: var(--mono);
+  font-weight: 600;
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.err-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text2);
+  vertical-align: top;
+}
+
+.err-row {
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+
+.err-row:hover {
+  background: var(--bg3);
+}
+
+.err-row.expanded {
+  background: var(--bg3);
+}
+
+.err-detail {
+  display: none;
+}
+
+.err-detail.open {
+  display: table-row;
+}
+
+.err-detail-inner {
+  padding: 20px;
+  background: var(--bg);
+  border-radius: 8px;
+  margin: 8px;
+}
+
+.detail-block {
+  margin-bottom: 20px;
+}
+
+.detail-block:last-child {
+  margin-bottom: 0;
+}
+
+.detail-block h5 {
+  font-family: var(--display);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.detail-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.detail-steps li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 8px;
+  font-size: 11px;
+  color: var(--text2);
+  line-height: 1.4;
+}
+
+.detail-steps li::before {
+  content: counter(list-item);
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--accent);
+  font-weight: bold;
+  font-size: 9px;
+  font-family: var(--mono);
+}
+
+.code-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 8px;
+}
+
+.cmd {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--accent);
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.cmd:last-child {
+  margin-bottom: 0;
+}
+
+.client-script {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--text2);
+  line-height: 1.4;
+}
+
+.ext-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-family: var(--mono);
+  font-size: 10px;
+  border-bottom: 1px solid transparent;
+  transition: border-color .15s ease;
+}
+
+.ext-link:hover {
+  border-bottom-color: var(--accent);
+}
+
+.td-code {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 9px;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.td-desc {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.td-err {
+  color: var(--text3);
+  font-size: 10px;
+}
+
+.td-sev {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.td-fix {
+  color: var(--text2);
+  font-size: 10px;
+}
+
+/* Severity styling */
+.sev-critical { color: var(--red); }
+.sev-high { color: var(--amber); }
+.sev-medium { color: var(--accent); }
+.sev-low { color: var(--green); }
+
+/* ── CATEGORY STYLING ───────────────────── */
+.cat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+
+.cat-header:hover {
+  background: var(--bg3);
+  border-color: var(--accent);
+}
+
+.cat-code {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  min-width: 80px;
+}
+
+.cat-name {
+  flex: 1;
+  font-family: var(--display);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.cat-count {
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--text3);
+  background: var(--bg3);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.cat-chevron {
+  font-size: 12px;
+  color: var(--text3);
+  transition: transform .15s ease;
+}
+
+.cat-header.collapsed .cat-chevron {
+  transform: rotate(-90deg);
+}
+
+/* ── LINKS BOX STYLING ─────────────────── */
+.links-box {
+  margin-top: 32px;
+  padding: 20px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.links-box h4 {
+  font-family: var(--display);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.link-item {
+  margin-bottom: 8px;
+}
+
+.link-item:last-child {
+  margin-bottom: 0;
+}
+
+.link-item a {
+  color: var(--accent);
+  text-decoration: none;
+  font-family: var(--mono);
+  font-size: 10px;
+  border-bottom: 1px solid transparent;
+  transition: border-color .15s ease;
+}
+
+.link-item a:hover {
+  border-bottom-color: var(--accent);
+}
+
+/* ── SEARCH UNIFIED STYLING ───────────────── */
+.search-unified {
+  position: relative;
+  width: 320px;
+  flex-shrink: 0;
+}
+
+.search-mode-toggle {
+  display: flex;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px 6px 0 0;
+  overflow: hidden;
+}
+
+.search-mode-btn {
+  flex: 1;
+  padding: 6px 8px;
+  background: transparent;
+  border: none;
+  color: var(--text3);
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all .15s ease;
+}
+
+.search-mode-btn.active {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+.search-mode-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.search-icon-wrap {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text3);
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.search-input-unified {
+  width: 100%;
+  padding: 10px 12px 10px 36px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 12px;
+  outline: none;
+  transition: all .15s ease;
+}
+
+.search-input-unified:focus {
+  border-color: var(--accent);
+  background: var(--bg3);
+}
+
+.search-input-unified::placeholder {
+  color: var(--text3);
+}
+
+.global-search-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 100;
+  display: none;
+}
+
+.global-search-dropdown.open {
+  display: block;
+}
+
+/* ── PROGRESS BAR ───────────────────────── */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--purple));
+  z-index: 1000;
+  transition: width 0.1s ease;
+}
+
+/* ── BACK TO TOP BUTTON ──────────────────── */
+.back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all .15s ease;
+  z-index: 100;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.back-to-top:hover {
+  background: var(--accent);
+  color: var(--bg);
+  transform: translateY(-2px);
+}
+
+/* ── COPY BUTTONS ───────────────────────── */
+.copy-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 600;
+  padding: 4px 8px;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: all .15s ease;
+}
+
+.code-block:hover .copy-button,
+.client-script:hover .copy-button {
+  opacity: 1;
+  visibility: visible;
+}
+
+.copy-button:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.copy-button.copied {
+  background: var(--green-dim);
+  border-color: var(--green);
+  color: var(--green);
+}
+
+/* ── SEARCH NO RESULTS ───────────────────── */
+.search-no-results-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text3);
+  font-family: var(--sans);
+  font-size: 14px;
+  display: none;
+}
+
+.search-no-results-message.show {
+  display: block;
+}
+
+/* ── RESPONSIVE DESIGN ─────────────────── */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .main {
+    margin-left: 0;
+  }
+  
+  .hamburger {
+    display: block;
+  }
+  
+  .sidebar-overlay.open {
+    display: block;
+  }
+  
+  .hero {
+    padding: 20px;
+  }
+  
+  .content {
+    padding: 20px;
+  }
+  
+  .search-unified {
+    width: 100%;
+    margin-top: 16px;
+  }
+  
+  .toolbar {
+    padding: 10px 20px;
+  }
+  
+  .bento-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+
+/* ── HIDDEN STATE ───────────────────────── */
+.hidden {
+  display: none !important;
+}
+
+/* ── HERO TOP LAYOUT ───────────────────── */
+.hero-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.hero-left {
+  flex: 1;
+}
+
+/* ── SCROLLSPY ACTIVE STATE ───────────────── */
+.nav-item.active {
+  color: var(--accent);
+  background: var(--bg3);
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--accent);
+}
+</style>
+</head>
+<body>
+
+<!-- ── Progress Bar & Back to Top ── -->
+<div class="progress-bar" id="progressBar"></div>
+<button class="back-to-top" id="backToTop">↑ Topo</button>
+
+<!-- ── Sidebar ── -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-badge">
+      <span class="logo-badge-dot"></span>
+      <span>Disponível</span>
+    </div>
+    <div class="brand">IT<em>Hub</em></div>
+    <div class="brand-sub">// plataforma de guias técnicos</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Fundação</div>
+    <a class="nav-item active" href="#overview">
+      <span class="nav-item-icon" style="background:rgba(77,159,255,.1);border:1px solid rgba(77,159,255,.2);">🏠</span>
+      <span class="nav-item-text">Visão Geral</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+    <a class="nav-item" href="#readiness">
+      <span class="nav-item-icon" style="background:rgba(90,240,160,.1);border:1px solid rgba(90,240,160,.2);">🛡️</span>
+      <span class="nav-item-text">Infraestrutura & Readiness</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+    <a class="nav-item" href="#ports">
+      <span class="nav-item-icon" style="background:rgba(255,179,64,.1);border:1px solid rgba(255,179,64,.2);">🔌</span>
+      <span class="nav-item-text">Matriz de Portas</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+    <a class="nav-item" href="#logs">
+      <span class="nav-item-icon" style="background:rgba(169,127,245,.1);border:1px solid rgba(169,127,245,.2);">📋</span>
+      <span class="nav-item-text">Central de Logs</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+  </div>
+
+  <div class="nav-sep"></div>
+
+  <div class="nav-section">
+    <div class="nav-label">Módulos & Agentes</div>
+    <a class="nav-item" href="#modulos">
+      <span class="nav-item-icon" style="background:rgba(77,159,255,.1);border:1px solid rgba(77,159,255,.2);">📦</span>
+      <span class="nav-item-text">Módulos do Produto</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+    <a class="nav-item" href="#agentes">
+      <span class="nav-item-icon" style="background:rgba(90,240,160,.1);border:1px solid rgba(90,240,160,.2);">🤖</span>
+      <span class="nav-item-text">Agentes & Comunicação</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+  </div>
+
+  <div class="nav-sep"></div>
+
+  <div class="nav-section">
+    <div class="nav-label">N3 Operations</div>
+    <a class="nav-item" href="#errors">
+      <span class="nav-item-icon" style="background:rgba(255,92,110,.1);border:1px solid rgba(255,92,110,.2);">⚠️</span>
+      <span class="nav-item-text">Catálogo de Erros</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+    <a class="nav-item" href="#scripts">
+      <span class="nav-item-icon" style="background:rgba(240,192,64,.1);border:1px solid rgba(240,192,64,.2);">💻</span>
+      <span class="nav-item-text">Scripts Operacionais</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+    <a class="nav-item" href="#backup">
+      <span class="nav-item-icon" style="background:rgba(169,127,245,.1);border:1px solid rgba(169,127,245,.2);">💾</span>
+      <span class="nav-item-text">Backup & Recovery</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+  </div>
+
+  <div class="nav-sep"></div>
+
+  <div class="nav-section">
+    <div class="nav-label">Recursos</div>
+    <a class="nav-item" href="#scripts">
+      <span class="nav-item-icon" style="background:rgba(240,192,64,.1);border:1px solid rgba(240,192,64,.2);">📖</span>
+      <span class="nav-item-text">Playbook de Casos</span>
+      <span class="nav-item-arrow">›</span>
+    </a>
+    <a class="nav-item" href="https://www.manageengine.com/productdocument.html" target="_blank" rel="noopener">
+      <span class="nav-item-icon" style="background:rgba(90,240,160,.08);border:1px solid rgba(90,240,160,.15);">📄</span>
+      <span class="nav-item-text">Documentação Oficial</span>
+      <span class="nav-item-arrow">↗</span>
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="status-row">
+      <span class="status-dot"></span>
+      <span>Hub ativo · GitHub Pages</span>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile sidebar overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<!-- Mobile hamburger menu -->
+<button class="hamburger" id="hamburger">☰</button>
+
+<!-- ── Main ── -->
+<main class="main">
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-top">
+      <div class="hero-left">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          Produto · Runbook Técnico
+        </div>
+        <h1>Produto <span>Troubleshooting Guide</span></h1>
+        <p class="hero-desc">
+          Guia técnico completo de troubleshooting para EXEMPLO.
+          Fundação, módulos, agentes, scripts de engenharia e playbook de casos.
+        </p>
+      </div>
+
+      <!-- Search Local -->
+      <div class="search-unified" id="searchUnified">
+        <div class="search-mode-toggle">
+          <button class="search-mode-btn active" id="modeLocal" title="Buscar nesta página">
+            <span>🔍</span><span>Página</span>
+          </button>
+          <button class="search-mode-btn" id="modeGlobal" title="Buscar em todos os guias" disabled>
+            <span>🌐</span><span>Global</span>
+          </button>
+        </div>
+        <span class="search-icon-wrap">🔍</span>
+        <input class="search-input-unified" id="searchUnifiedInput" type="text" placeholder="Buscar nesta página…" autocomplete="off" />
+        <div class="global-search-dropdown" id="globalSearchDropdown"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <section class="content">
+
+    <!-- ══════════════════════════════════
+         VISÃO GERAL
+         ══════════════════════════════════ -->
+    <section class="section" id="overview" data-section="overview">
+      <div class="section-header">
+        <div>
+          <div class="section-title" style="color:var(--accent)">Visão Geral Técnica — EXEMPLO</div>
+          <div class="section-desc">Arquitetura · Fluxo Operacional · Portas · Pré-Requisitos · Dependências Críticas</div>
+        </div>
+      </div>
+    
+    <!-- Readiness Section -->
+    <div class="bento-section" id="readiness">
+      <div class="bento-section-header">
+        <div class="bento-section-eyebrow">AMBIENTE · VALIDAÇÃO</div>
+        <div class="bento-section-title">Saúde do Ambiente & Readiness</div>
+        <div class="bento-section-count">2 procedimentos</div>
+      </div>
+      <div class="bento-grid">
+        <div class="bento-cell">
+          <div class="bento-cell-id">RDY-101</div>
+          <div class="bento-cell-title">On-Premise (Deep Infra)</div>
+          <div class="bento-cell-content">EXEMPLO - Validações de infraestrutura local para operação N3</div>
+          <div class="bento-cell-steps">
+            <div class="bento-step">
+              <span class="bento-step-number">1</span>
+              <span class="bento-step-text">EXEMPLO - Validação de portas críticas</span>
+            </div>
+            <div class="bento-step">
+              <span class="bento-step-number">2</span>
+              <span class="bento-step-text">EXEMPLO - Saúde de serviços críticos</span>
+            </div>
+            <div class="bento-step">
+              <span class="bento-step-number">3</span>
+              <span class="bento-step-text">EXEMPLO - Validação de componentes do sistema</span>
+            </div>
+            <div class="bento-step">
+              <span class="bento-step-number">4</span>
+              <span class="bento-step-text">EXEMPLO - Verificação de recursos e storage</span>
+            </div>
+          </div>
+          <div class="bento-cell-footer">
+            <div class="bento-badges">
+              <span class="bento-badge info">INFRA</span>
+              <span class="bento-badge info">ON-PREM</span>
+            </div>
+            <div class="bento-links">
+              <a href="#logs" class="bento-link">Logs →</a>
+            </div>
+          </div>
+        </div>
+        <div class="bento-cell">
+          <div class="bento-cell-id">RDY-102</div>
+          <div class="bento-cell-title">Cloud (SaaS Connectivity)</div>
+          <div class="bento-cell-content">EXEMPLO - Validações de conectividade para ambiente SaaS</div>
+          <div class="bento-cell-steps">
+            <div class="bento-step">
+              <span class="bento-step-number">1</span>
+              <span class="bento-step-text">EXEMPLO - Saída HTTPS para domínios críticos</span>
+            </div>
+            <div class="bento-step">
+              <span class="bento-step-number">2</span>
+              <span class="bento-step-text">EXEMPLO - Validação de APIs e serviços externos</span>
+            </div>
+            <div class="bento-step">
+              <span class="bento-step-number">3</span>
+              <span class="bento-step-text">EXEMPLO - Configuração de proxy e firewalls</span>
+            </div>
+            <div class="bento-step">
+              <span class="bento-step-number">4</span>
+              <span class="bento-step-text">EXEMPLO - Testes de conectividade e latency</span>
+            </div>
+          </div>
+          <div class="bento-cell-footer">
+            <div class="bento-badges">
+              <span class="bento-badge info">CLOUD</span>
+              <span class="bento-badge info">SAAS</span>
+            </div>
+            <div class="bento-links">
+              <a href="#agentes" class="bento-link">Agentes →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ports Matrix Section -->
+    <div class="bento-section" id="ports">
+      <div class="bento-section-header">
+        <div class="bento-section-eyebrow">INFRAESTRUTURA · PORTAS</div>
+        <div class="bento-section-title">Matriz de Portas — EXEMPLO</div>
+        <div class="bento-section-count">Portas críticas para operação</div>
+      </div>
+      <div class="bento-grid">
+        <div class="bento-cell">
+          <div class="bento-cell-id">PORT-101</div>
+          <div class="bento-cell-title">🔌 Portas Principais</div>
+          <div class="bento-cell-content">EXEMPLO - Portas essenciais para comunicação</div>
+          <table class="port-table">
+            <thead>
+              <tr><th>Porta</th><th>Protocolo</th><th>Descrição</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>EXEMPLO</td><td>EXEMPLO</td><td>EXEMPLO</td></tr>
+              <tr><td>EXEMPLO</td><td>EXEMPLO</td><td>EXEMPLO</td></tr>
+              <tr><td>EXEMPLO</td><td>EXEMPLO</td><td>EXEMPLO</td></tr>
+              <tr><td>EXEMPLO</td><td>EXEMPLO</td><td>EXEMPLO</td></tr>
+            </tbody>
+          </table>
+          <div class="bento-cell-footer">
+            <div class="bento-badges">
+              <span class="bento-badge critical">⚠ CRÍTICO</span>
+              <span class="bento-badge info">CORE</span>
+            </div>
+          </div>
+        </div>
+        <div class="bento-cell">
+          <div class="bento-cell-id">PORT-102</div>
+          <div class="bento-cell-title">🔌 Portas de Serviço</div>
+          <div class="bento-cell-content">EXEMPLO - Portas para módulos específicos e integrações</div>
+          <table class="port-table">
+            <thead>
+              <tr><th>Porta</th><th>Protocolo</th><th>Descrição</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>EXEMPLO</td><td>EXEMPLO</td><td>EXEMPLO</td></tr>
+              <tr><td>EXEMPLO</td><td>EXEMPLO</td><td>EXEMPLO</td></tr>
+              <tr><td>EXEMPLO</td><td>EXEMPLO</td><td>EXEMPLO</td></tr>
+              <tr><td>EXEMPLO</td><td>EXEMPLO</td><td>EXEMPLO</td></tr>
+            </tbody>
+          </table>
+          <div class="bento-cell-footer">
+            <div class="bento-badges">
+              <span class="bento-badge info">SERVIÇOS</span>
+              <span class="bento-badge info">INTEGRAÇÃO</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════
+         MÓDULOS DO PRODUTO
+         ══════════════════════════════════ -->
+    <section class="section" id="modulos" data-section="modulos">
+      <div class="section-header">
+        <div>
+          <div class="section-title" style="color:var(--accent)">Módulos do Produto — EXEMPLO</div>
+          <div class="section-desc">Funcionalidades Principais · Configurações · Operações · Troubleshooting</div>
+        </div>
+        <div class="section-count">EXEMPLO módulos</div>
+      </div>
+
+      <div class="bento-section" id="modulo-1">
+        <div class="bento-section-header">
+          <div class="bento-section-eyebrow">MÓDULO · EXEMPLO 1</div>
+          <div class="bento-section-title">EXEMPLO - Módulo Principal</div>
+          <div class="bento-section-count">EXEMPLO funcionalidades</div>
+        </div>
+        <div class="bento-grid">
+          <div class="bento-cell">
+            <div class="bento-cell-id">MOD-101</div>
+            <div class="bento-cell-title">EXEMPLO - Funcionalidade A</div>
+            <div class="bento-cell-content">EXEMPLO - Descrição da funcionalidade principal do módulo</div>
+            <div class="bento-cell-steps">
+              <div class="bento-step">
+                <span class="bento-step-number">1</span>
+                <span class="bento-step-text">EXEMPLO - Passo de configuração</span>
+              </div>
+              <div class="bento-step">
+                <span class="bento-step-number">2</span>
+                <span class="bento-step-text">EXEMPLO - Passo de validação</span>
+              </div>
+            </div>
+            <div class="bento-cell-footer">
+              <div class="bento-badges">
+                <span class="bento-badge info">CONFIG</span>
+              </div>
+            </div>
+          </div>
+          <div class="bento-cell">
+            <div class="bento-cell-id">MOD-102</div>
+            <div class="bento-cell-title">EXEMPLO - Funcionalidade B</div>
+            <div class="bento-cell-content">EXEMPLO - Descrição da funcionalidade secundária do módulo</div>
+            <div class="bento-cell-steps">
+              <div class="bento-step">
+                <span class="bento-step-number">1</span>
+                <span class="bento-step-text">EXEMPLO - Passo de operação</span>
+              </div>
+              <div class="bento-step">
+                <span class="bento-step-number">2</span>
+                <span class="bento-step-text">EXEMPLO - Passo de monitoramento</span>
+              </div>
+            </div>
+            <div class="bento-cell-footer">
+              <div class="bento-badges">
+                <span class="bento-badge info">OPERAÇÃO</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════
+         AGENTES & COMUNICAÇÃO
+         ══════════════════════════════════ -->
+    <section class="section" id="agentes" data-section="agentes">
+      <div class="section-header">
+        <div>
+          <div class="section-title" style="color:var(--accent)">Agentes & Comunicação — EXEMPLO</div>
+          <div class="section-desc">Instalação · Configuração · Comunicação · Troubleshooting · Performance</div>
+        </div>
+        <div class="section-count">EXEMPLO cenários</div>
+      </div>
+
+      <div class="bento-section" id="agent-install">
+        <div class="bento-section-header">
+          <div class="bento-section-eyebrow">AGENTE · INSTALAÇÃO</div>
+          <div class="bento-section-title">EXEMPLO - Instalação e Configuração</div>
+          <div class="bento-section-count">EXEMPLO passos</div>
+        </div>
+        <div class="bento-grid">
+          <div class="bento-cell">
+            <div class="bento-cell-id">AGT-101</div>
+            <div class="bento-cell-title">EXEMPLO - Instalação Windows</div>
+            <div class="bento-cell-content">EXEMPLO - Procedimento de instalação em endpoints Windows</div>
+            <div class="bento-cell-steps">
+              <div class="bento-step">
+                <span class="bento-step-number">1</span>
+                <span class="bento-step-text">EXEMPLO - Download do instalador</span>
+              </div>
+              <div class="bento-step">
+                <span class="bento-step-number">2</span>
+                <span class="bento-step-text">EXEMPLO - Execução com privilégios</span>
+              </div>
+              <div class="bento-step">
+                <span class="bento-step-number">3</span>
+                <span class="bento-step-text">EXEMPLO - Configuração de comunicação</span>
+              </div>
+            </div>
+            <div class="bento-cell-footer">
+              <div class="bento-badges">
+                <span class="bento-badge info">WINDOWS</span>
+              </div>
+            </div>
+          </div>
+          <div class="bento-cell">
+            <div class="bento-cell-id">AGT-102</div>
+            <div class="bento-cell-title">EXEMPLO - Instalação Linux</div>
+            <div class="bento-cell-content">EXEMPLO - Procedimento de instalação em endpoints Linux</div>
+            <div class="bento-cell-steps">
+              <div class="bento-step">
+                <span class="bento-step-number">1</span>
+                <span class="bento-step-text">EXEMPLO - Preparação do ambiente</span>
+              </div>
+              <div class="bento-step">
+                <span class="bento-step-number">2</span>
+                <span class="bento-step-text">EXEMPLO - Instalação via package manager</span>
+              </div>
+              <div class="bento-step">
+                <span class="bento-step-number">3</span>
+                <span class="bento-step-text">EXEMPLO - Configuração de permissões</span>
+              </div>
+            </div>
+            <div class="bento-cell-footer">
+              <div class="bento-badges">
+                <span class="bento-badge info">LINUX</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════
+         CATÁLOGO DE ERROS
+         ══════════════════════════════════ -->
+    <section class="section" id="errors" data-section="errors">
+      <div class="section-header">
+        <div>
+          <div class="section-title" style="color:var(--accent)">Catálogo de Erros — EXEMPLO</div>
+          <div class="section-desc">Troubleshooting · Diagnóstico · Resolução · Scripts · Casos Reais</div>
+        </div>
+        <div class="section-count">EXEMPLO cenários · EXEMPLO categorias</div>
+      </div>
+
+      <!-- Toolbar de filtros -->
+      <div class="toolbar">
+        <span class="toolbar-label">Filtrar por:</span>
+        <button class="filter-btn all active" onclick="setFilter('all')">Todos</button>
+        <button class="filter-btn agt" onclick="setFilter('agt')">Agentes</button>
+        <button class="filter-btn swd" onclick="setFilter('swd')">Software</button>
+        <button class="filter-btn sec" onclick="setFilter('sec')">Segurança</button>
+        <button class="filter-btn logs" onclick="setFilter('logs')">Logs</button>
+      </div>
+
+      <div id="exemplo-comun">
+        <div class="cat-header" onclick="toggleCat(this)">
+          <span class="cat-code" style="color:var(--accent)">EXEMPLO-COM</span>
+          <span class="cat-name">EXEMPLO - Falhas de Comunicação</span>
+          <span class="cat-count">2 cenários</span>
+          <span class="cat-chevron">▼</span>
+        </div>
+        <table class="err-table">
+          <thead><tr><th>Código</th><th>Problema</th><th>Erro/Sintoma</th><th>Sev.</th><th>Resolução Rápida</th></tr></thead>
+          <tbody id="tbody-exemplo-comun"></tbody>
+        </table>
+      </div>
+
+      <div class="links-box">
+        <h4>📚 Referências Oficiais — EXEMPLO</h4>
+        <div class="link-item"><a href="#" target="_blank">EXEMPLO - Documentação Oficial</a></div>
+        <div class="link-item"><a href="#" target="_blank">EXEMPLO - Base de Conhecimento</a></div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         CENTRAL DE LOGS
+         ══════════════════════════════════ -->
+    <section class="section" id="logs" data-section="logs">
+      <div class="section-header">
+        <div>
+          <div class="section-title" style="color:var(--accent)">Central de Logs — EXEMPLO</div>
+          <div class="section-desc">Localização · Formatos · Análise · Troubleshooting · Ferramentas</div>
+        </div>
+        <div class="section-count">EXEMPLO localizações</div>
+      </div>
+
+      <div class="bento-section" id="log-servidor">
+        <div class="bento-section-header">
+          <div class="bento-section-eyebrow">LOGS · SERVIDOR</div>
+          <div class="bento-section-title">EXEMPLO - Logs do Servidor Principal</div>
+          <div class="bento-section-count">EXEMPLO arquivos</div>
+        </div>
+        <div class="bento-grid">
+          <div class="bento-cell">
+            <div class="bento-cell-id">LOG-101</div>
+            <div class="bento-cell-title">EXEMPLO - Log de Aplicação</div>
+            <div class="bento-cell-content">EXEMPLO - Log principal da aplicação servidor</div>
+            <div class="bento-cell-steps">
+              <div class="bento-step">
+                <span class="bento-step-number">1</span>
+                <span class="bento-step-text">EXEMPLO - Localização: /path/to/server.log</span>
+              </div>
+              <div class="bento-step">
+                <span class="bento-step-number">2</span>
+                <span class="bento-step-text">EXEMPLO - Comandos de análise</span>
+              </div>
+            </div>
+            <div class="bento-cell-footer">
+              <div class="bento-badges">
+                <span class="bento-badge info">SERVIDOR</span>
+              </div>
+            </div>
+          </div>
+          <div class="bento-cell">
+            <div class="bento-cell-id">LOG-102</div>
+            <div class="bento-cell-title">EXEMPLO - Log de Erros</div>
+            <div class="bento-cell-content">EXEMPLO - Log específico para erros críticos</div>
+            <div class="bento-cell-steps">
+              <div class="bento-step">
+                <span class="bento-step-number">1</span>
+                <span class="bento-step-text">EXEMPLO - Localização: /path/to/error.log</span>
+              </div>
+              <div class="bento-step">
+                <span class="bento-step-number">2</span>
+                <span class="bento-step-text">EXEMPLO - Filtros e alertas</span>
+              </div>
+            </div>
+            <div class="bento-cell-footer">
+              <div class="bento-badges">
+                <span class="bento-badge warning">ERROS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════
+         SCRIPTS OPERACIONAIS
+         ══════════════════════════════════ -->
+    <section class="section" id="scripts" data-section="scripts">
+      <div class="section-header">
+        <div>
+          <div class="section-title" style="color:var(--accent)">Scripts Operacionais — EXEMPLO</div>
+          <div class="section-desc">Diagnóstico · Manutenção · Automação · Validação · Recovery</div>
+        </div>
+        <div class="section-count">EXEMPLO scripts</div>
+      </div>
+
+      <div class="bento-section" id="script-diag">
+        <div class="bento-section-header">
+          <div class="bento-section-eyebrow">SCRIPTS · DIAGNÓSTICO</div>
+          <div class="bento-section-title">EXEMPLO - Scripts de Diagnóstico</div>
+          <div class="bento-section-count">EXEMPLO utilitários</div>
+        </div>
+        <div class="bento-grid">
+          <div class="bento-cell">
+            <div class="bento-cell-id">SCR-101</div>
+            <div class="bento-cell-title">EXEMPLO - Health Check</div>
+            <div class="bento-cell-content">EXEMPLO - Script para verificação completa da saúde do sistema</div>
+            <div class="bento-cell-steps">
+              <div class="bento-step">
+                <span class="bento-step-number">1</span>
+                <span class="bento-step-text">EXEMPLO - Verificação de serviços</span>
+              </div>
+              <div class="bento-step">
+                <span class="bento-step-number">2</span>
+                <span class="bento-step-text">EXEMPLO - Teste de conectividade</span>
+              </div>
+            </div>
+            <div class="bento-cell-footer">
+              <div class="bento-badges">
+                <span class="bento-badge info">DIAGNÓSTICO</span>
+              </div>
+            </div>
+          </div>
+          <div class="bento-cell">
+            <div class="bento-cell-id">SCR-102</div>
+            <div class="bento-cell-title">EXEMPLO - Performance Check</div>
+            <div class="bento-cell-content">EXEMPLO - Script para análise de performance do sistema</div>
+            <div class="bento-cell-steps">
+              <div class="bento-step">
+                <span class="bento-step-number">1</span>
+                <span class="bento-step-text">EXEMPLO - Coleta de métricas</span>
+              </div>
+              <div class="bento-step">
+                <span class="bento-step-number">2</span>
+                <span class="bento-step-text">EXEMPLO - Análise de resultados</span>
+              </div>
+            </div>
+            <div class="bento-cell-footer">
+              <div class="bento-badges">
+                <span class="bento-badge info">PERFORMANCE</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════
+         BACKUP & RECOVERY
+         ══════════════════════════════════ -->
+    <section class="section" id="backup" data-section="backup">
+      <div class="section-header">
+        <div>
+          <div class="section-title" style="color:var(--accent)">Backup & Recovery — EXEMPLO</div>
+          <div class="section-desc">Estratégias · Procedimentos · Validação · Restore · DR</div>
+        </div>
+        <div class="section-count">EXEMPLO procedimentos</div>
+      </div>
+
+      <div class="bento-section" id="backup-db">
+        <div class="bento-section-header">
+          <div class="bento-section-eyebrow">BACKUP · BANCO DE DADOS</div>
+          <div class="bento-section-title">EXEMPLO - Backup do Banco Principal</div>
+          <div class="bento-section-count">EXEMPLO estratégias</div>
+        </div>
+        <div class="bento-grid">
+          <div class="bento-cell">
+            <div class="bento-cell-id">BAK-101</div>
+            <div class="bento-cell-title">EXEMPLO - Backup Diário</div>
+            <div class="bento-cell-content">EXEMPLO - Procedimento de backup diário automatizado</div>
+            <div class="bento-cell-steps">
+              <div class="bento-step">
+                <span class="bento-step-number">1</span>
+                <span class="bento-step-text">EXEMPLO - Agendamento do backup</span>
+              </div>
+              <div class="bento-step">
+                <span class="bento-step-number">2</span>
+                <span class="bento-step-text">EXEMPLO - Validação da integridade</span>
+              </div>
+            </div>
+            <div class="bento-cell-footer">
+              <div class="bento-badges">
+                <span class="bento-badge info">DIÁRIO</span>
+              </div>
+            </div>
+          </div>
+          <div class="bento-cell">
+            <div class="bento-cell-id">BAK-102</div>
+            <div class="bento-cell-title">EXEMPLO - Backup Semanal</div>
+            <div class="bento-cell-content">EXEMPLO - Procedimento de backup semanal completo</div>
+            <div class="bento-cell-steps">
+              <div class="bento-step">
+                <span class="bento-step-number">1</span>
+                <span class="bento-step-text">EXEMPLO - Backup full mensal</span>
+              </div>
+              <div class="bento-step">
+                <span class="bento-step-number">2</span>
+                <span class="bento-step-text">EXEMPLO - Retenção e cleanup</span>
+              </div>
+            </div>
+            <div class="bento-cell-footer">
+              <div class="bento-badges">
+                <span class="bento-badge info">SEMANAL</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </section>
+</main>
+
+<script>
+// ═══════════════════════════════════════
+// DADOS DE EXEMPLO (ARRAY ERRORS)
+// ════════════════════════════════════════
+const ERRORS = [
+  // Exemplos genéricos para demonstração
+  {id:"EXEMPLO-001",cat:"exemplo-comun",mod:"agt",desc:"EXEMPLO - Falha de comunicação básica",err:"EXEMPLO - Agente não consegue comunicar com servidor",sev:"ALTO",fix:"EXEMPLO - Verificar rede e configurações",steps:["EXEMPLO - Verificar conectividade de rede","EXEMPLO - Validar configurações do agente","EXEMPLO - Testar porta de comunicação"],codes:["EXEMPLO - Comando de teste"],client:"EXEMPLO - Problema resolvido com sucesso.",link:"#"},
+  {id:"EXEMPLO-002",cat:"exemplo-comun",mod:"swd",desc:"EXEMPLO - Falha de instalação de software",err:"EXEMPLO - Software não instala corretamente",sev:"MÉDIO",fix:"EXEMPLO - Verificar permissões e pré-requisitos",steps:["EXEMPLO - Verificar permissões de administrador","EXEMPLO - Validar pré-requisitos do sistema","EXEMPLO - Limpar instalação anterior"],codes:["EXEMPLO - Comando de limpeza"],client:"EXEMPLO - Instalação concluída com sucesso.",link:"#"}
+];
+
+// ═══════════════════════════════════════
+// FUNÇÕES AUXILIARES
+// ════════════════════════════════════════
+function sevHTML(sev){
+  const map = {
+    'CRÍTICO': '<span class="sev-critical">CRÍTICO</span>',
+    'ALTO': '<span class="sev-high">ALTO</span>',
+    'MÉDIO': '<span class="sev-medium">MÉDIO</span>',
+    'BAIXO': '<span class="sev-low">BAIXO</span>'
+  };
+  return map[sev] || sev;
+}
+
+function toggleCat(header){
+  header.classList.toggle('collapsed');
+  const cat = header.parentElement;
+  const table = cat.querySelector('.err-table');
+  if(header.classList.contains('collapsed')){
+    table.style.display = 'none';
+  } else {
+    table.style.display = '';
+  }
+}
+
+function buildRow(e){
+  const tr = document.createElement('tr');
+  tr.className = 'err-row';
+  tr.dataset.mod = e.mod;
+  tr.dataset.sev = e.sev;
+  tr.dataset.text = (e.id+' '+e.desc+' '+e.err+' '+(e.fix||'')).toLowerCase();
+
+  const modColor = {
+    agt:'#388bfd', swd:'#39d353', osd:'#7c83fd',
+    ptch:'#e3a854', ds:'#58d1ff',
+    inv:'#58d1ff', rem:'#388bfd', mdm:'#bc8cff', sec:'#ff7b72',
+    logs:'#f0c040', macos:'#ff8c40'
+  }[e.mod] || '#8b949e';
+
+  tr.innerHTML = `
+    <td class="td-code" style="color:${modColor}">${e.id}</td>
+    <td class="td-desc">${e.desc}</td>
+    <td class="td-err">${e.err}</td>
+    <td class="td-sev">${sevHTML(e.sev)}</td>
+    <td class="td-fix">${e.fix||'—'}</td>`;
+
+  const detail = document.createElement('tr');
+  detail.className = 'err-detail';
+
+  const stepsHTML = (e.steps||[]).map(s=>`<li>${s}</li>`).join('');
+  const codesHTML = (e.codes||[]).length > 0
+    ? `<div class="code-block">${e.codes.map(c=>`<span class="cmd">${c}</span>`).join('\n')}</div>`
+    : '';
+  const clientHTML = e.client
+    ? `<div class="client-script">${e.client}</div>`
+    : '<div style="color:var(--text3);font-size:12px">—</div>';
+
+  const kbHTML = e.link
+    ? `<a class="ext-link" href="${e.link}" target="_blank" rel="noopener noreferrer">Abrir KB/Documentação</a>`
+    : '<span style="color:var(--text3);font-size:12px">—</span>';
+
+  detail.innerHTML = `<td colspan="5"><div class="err-detail-inner">
+    <div class="detail-block"><h5>📋 Passos de Resolução (N2/N3)</h5><ol class="detail-steps">${stepsHTML}</ol></div>
+    <div class="detail-block"><h5>💻 Comandos / Scripts</h5>${codesHTML || '<span style="color:var(--text3);font-size:12px">Ver seção Scripts Operacionais</span>'}</div>
+    <div class="detail-block"><h5>💬 Script para o Cliente</h5>${clientHTML}</div>
+    <div class="detail-block"><h5>🔗 KB / Referência</h5>${kbHTML}</div>
+  </div></td>`;
+
+  tr.addEventListener('click', ()=>{
+    const open = tr.classList.toggle('expanded');
+    detail.classList.toggle('open', open);
+  });
+
+  return [tr, detail];
+}
+
+function renderAll(){
+  ERRORS.forEach(e=>{
+    const tbody = document.getElementById('tbody-'+e.cat);
+    if(!tbody) return;
+    const [tr, det] = buildRow(e);
+    tbody.append(tr, det);
+  });
+}
+
+function setFilter(f){
+  document.querySelectorAll('.filter-btn').forEach(b=>{
+    b.classList.toggle('active', b.classList.contains(f));
+  });
+  const rows = document.querySelectorAll('.err-row, .bento-cell, [data-searchable], .card');
+  rows.forEach(row => {
+    const text = (row.dataset.text || row.textContent || '').toLowerCase();
+    row.classList.toggle('hidden', f !== 'all' && !text.includes(f));
+  });
+}
+
+// ═══════════════════════════════════════
+// FUNÇÕES DE UI
+// ════════════════════════════════════════
+function updateProgressBar() {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrollProgress = (scrollTop / scrollHeight) * 100;
+  document.getElementById('progressBar').style.width = scrollProgress + '%';
+}
+
+function initBackToTop() {
+  const backToTopBtn = document.getElementById('backToTop');
+  
+  window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+      backToTopBtn.classList.add('visible');
+    } else {
+      backToTopBtn.classList.remove('visible');
+    }
+  });
+
+  backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+}
+
+function initScrollSpy() {
+  const sections = document.querySelectorAll('section[data-section]');
+  const navItems = document.querySelectorAll('.nav-item');
+  
+  function updateActiveNav() {
+    let current = '';
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.clientHeight;
+      if (window.pageYOffset >= sectionTop - 100) {
+        current = section.getAttribute('data-section');
+      }
+    });
+
+    navItems.forEach(item => {
+      item.classList.remove('active');
+      if (item.getAttribute('href') === '#' + current) {
+        item.classList.add('active');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', updateActiveNav);
+  updateActiveNav();
+}
+
+function addCopyButtons() {
+  const codeBlocks = document.querySelectorAll('.code-block, .client-script');
+  
+  codeBlocks.forEach(block => {
+    const button = document.createElement('button');
+    button.className = 'copy-button';
+    button.textContent = 'Copiar';
+    
+    button.addEventListener('click', () => {
+      const text = block.textContent || block.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        button.textContent = 'Copiado!';
+        button.classList.add('copied');
+        setTimeout(() => {
+          button.textContent = 'Copiar';
+          button.classList.remove('copied');
+        }, 2000);
+      });
+    });
+    
+    block.style.position = 'relative';
+    block.appendChild(button);
+  });
+}
+
+// Mobile menu functionality
+function initMobileMenu() {
+  const hamburger = document.getElementById('hamburger');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  
+  if (hamburger && sidebar && overlay) {
+    hamburger.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('open');
+    });
+    
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('open');
+    });
+  }
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
+renderAll();
+
+// ── INIT NEW FEATURES ───────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  addCopyButtons();
+  initScrollSpy();
+  initBackToTop();
+  initMobileMenu();
+  
+  // Update progress bar on scroll
+  window.addEventListener('scroll', updateProgressBar);
+  
+  // Initial progress bar update
+  updateProgressBar();
+});
+
+// ── LOCAL SEARCH ──────────────────────────────
+(function() {
+  const unifiedInput = document.getElementById('searchUnifiedInput');
+  const searchDropdown = document.getElementById('globalSearchDropdown');
+  const pageModeBtn = document.getElementById('modeLocal');
+  const globalModeBtn = document.getElementById('modeGlobal');
+  let searchTimeout;
+  let noResultsMessage;
+
+  if (!unifiedInput) return;
+
+  // Create no results message
+  function createNoResultsMessage() {
+    if (!noResultsMessage) {
+      noResultsMessage = document.createElement('div');
+      noResultsMessage.className = 'search-no-results-message';
+      noResultsMessage.textContent = 'Nenhum resultado encontrado';
+      const content = document.querySelector('.content');
+      if (content) {
+        content.appendChild(noResultsMessage);
+      }
+    }
+  }
+
+  function performLocalSearch(query) {
+    const q = query.toLowerCase().trim();
+    const searchableElements = document.querySelectorAll('.err-row, .bento-cell, .section, .card');
+    let hasResults = false;
+    
+    searchableElements.forEach(element => {
+      const text = (element.textContent || '').toLowerCase();
+      const shouldShow = !q || text.includes(q);
+      element.classList.toggle('hidden', !shouldShow);
+      if (shouldShow && q) hasResults = true;
+    });
+
+    // Show/hide no results message
+    if (noResultsMessage) {
+      noResultsMessage.classList.toggle('show', q && !hasResults);
+    }
+  }
+
+  // Debounced search
+  function debouncedSearch(query) {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      performLocalSearch(query);
+    }, 300);
+  }
+
+  // Event listeners
+  unifiedInput.addEventListener('input', e => {
+    const val = e.target.value;
+    debouncedSearch(val);
+    searchDropdown.classList.remove('open');
+  });
+
+  // Global mode disabled - show tooltip
+  globalModeBtn.addEventListener('click', () => {
+    alert('Busca global em breve!');
+  });
+
+  // Close dropdown on outside click
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#searchUnified')) {
+      searchDropdown.classList.remove('open');
+    }
+  });
+
+  // Escape key handling
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      searchDropdown.classList.remove('open');
+      unifiedInput.blur();
+    }
+  });
+
+  // Initialize
+  createNoResultsMessage();
+  performLocalSearch('');
+})();
+</script>
+</body>
+</html>

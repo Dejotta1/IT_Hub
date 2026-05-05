@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EC Update Checklist — IT Hub</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Local variables not in shared tokens */
+  --blue-glow:  rgba(77,159,255,.2);
+  --teal:       #3ddba8;
+  --teal-dim:   rgba(61,219,168,.1);
+  --r:       10px;
+  --r-lg:    14px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
+
+/* ── SIDEBAR ───────────────────────────── */
+.sidebar {
+  position: fixed; top: 0; left: 0;
+  width: var(--sidebar-w); height: 100vh;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  z-index: 200; overflow-y: auto;
+  transition: transform .3s ease;
+}
+
+.sidebar-logo {
+  padding: 22px 18px 18px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.sidebar-logo::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 18px; right: 18px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--blue), transparent);
+}
+.logo-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--blue-dim);
+  border: 1px solid rgba(77,159,255,.2);
+  border-radius: 5px;
+  padding: 2px 9px 2px 7px;
+  margin-bottom: 10px;
+}
+.logo-badge-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 0 6px var(--blue);
+  animation: pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+.logo-badge span {
+  font-family: var(--mono); font-size: 9.5px;
+  color: var(--blue); letter-spacing: .8px; font-weight: 500;
+}
+.brand {
+  font-family: var(--display); font-size: 20px; font-weight: 800;
+  color: var(--text); letter-spacing: -.5px; line-height: 1.15;
+}
+.brand em { color: var(--blue); font-style: normal; }
+.brand-sub {
+  font-family: var(--mono); font-size: 10.5px; color: var(--text3);
+  margin-top: 5px; letter-spacing: .3px;
+}
+
+.nav-section { padding: 10px 0 2px; }
+.nav-label {
+  padding: 5px 18px;
+  font-family: var(--mono); font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 1.8px; color: var(--text3);
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 18px; font-size: 12.5px; font-weight: 500;
+  color: var(--text2); text-decoration: none;
+  transition: all .15s ease; position: relative;
+}
+.nav-item:hover { color: var(--text); background: var(--bg3); }
+.nav-item.active { color: var(--text); background: var(--bg3); }
+.nav-item-icon {
+  width: 26px; height: 26px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; flex-shrink: 0;
+}
+.nav-item-icon img { width: 15px; height: 15px; object-fit: contain; display: block; }
+.nav-item-text { flex: 1; }
+.nav-item-arrow {
+  font-size: 11px; color: var(--text3);
+  opacity: 0; transform: translateX(-4px); transition: all .15s ease;
+}
+.nav-item:hover .nav-item-arrow { opacity: 1; transform: translateX(0); }
+
+.nav-sep { height: 1px; background: var(--border); margin: 6px 18px; }
+
+.sidebar-footer {
+  margin-top: auto; padding: 14px 18px;
+  border-top: 1px solid var(--border);
+}
+.status-row {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--text3);
+}
+.status-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--teal); box-shadow: 0 0 5px var(--teal); flex-shrink: 0;
+}
+
+/* Mobile hamburger */
+.hamburger {
+  display: none;
+  position: fixed; top: 14px; left: 14px;
+  z-index: 300; background: var(--bg3);
+  border: 1px solid var(--border2); border-radius: 8px;
+  padding: 8px 10px; cursor: pointer; color: var(--text2);
+  font-size: 16px;
+}
+.sidebar-overlay {
+  display: none;
+  position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  z-index: 150; backdrop-filter: blur(2px);
+}
+
+/* ── MAIN ─────────────────────────────── */
+.main { margin-left: var(--sidebar-w); min-height: 100vh; }
+
+/* ── HERO ─────────────────────────────── */
+.hero {
+  padding: 40px 48px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.it-hub-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--blue-dim);
+  border: 1px solid var(--blue);
+  border-radius: 20px;
+  color: var(--blue);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  margin-top: 12px;
+  width: fit-content;
+}
+
+.it-hub-btn:hover {
+  background: var(--blue);
+  color: var(--bg);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(77,159,255,0.3);
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--teal-dim); border: 1px solid rgba(46,200,154,.25);
+  border-radius: 999px; padding: 3px 11px 3px 7px;
+  font-family: var(--mono); font-size: 10px;
+  color: var(--teal); font-weight: 500; letter-spacing: .4px;
+  margin-bottom: 16px;
+}
+.hero-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--teal); }
+.hero h1 { 
+  font-family: var(--display); font-size: 32px; font-weight: 800;
+  color: var(--text); line-height: 1.08; letter-spacing: -1.5px;
+  margin-bottom: 12px;
+}
+.hero h1 span { color: var(--teal); }
+.hero-desc {
+  color: var(--text2); max-width: 560px;
+  font-size: 14px; line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+/* ── CONTENT ──────────────────────────── */
+.content { padding: 40px 48px 60px; }
+
+/* ── PROGRESS BAR ─────────────────────── */
+.progress-container {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 32px;
+}
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.progress-title {
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+.progress-count {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--teal);
+  font-weight: 600;
+}
+.progress-bar {
+  background: var(--bg3);
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--teal), var(--cyan));
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  width: 0%;
+}
+.progress-complete {
+  text-align: center;
+  margin-top: 12px;
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--green);
+  font-weight: 600;
+  display: none;
+}
+
+/* ── CHECKLIST STEPS ───────────────────── */
+.checklist-steps {
+  margin-bottom: 32px;
+}
+.step-item {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+  transition: all 0.2s ease;
+}
+.step-item:hover {
+  border-color: var(--border2);
+  background: var(--bg3);
+}
+.step-item.completed {
+  border-color: var(--teal);
+  background: var(--bg3);
+}
+.step-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.step-checkbox {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border2);
+  border-radius: 6px;
+  background: var(--bg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.step-checkbox:hover {
+  border-color: var(--teal);
+  background: var(--bg3);
+}
+.step-checkbox.checked {
+  background: var(--teal);
+  border-color: var(--teal);
+}
+.step-checkbox.checked::after {
+  content: '✓';
+  color: var(--bg);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 14px;
+}
+.step-content {
+  flex: 1;
+}
+.step-number {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--teal);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.step-title {
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.step-description {
+  color: var(--text2);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.step-alert {
+  background: var(--amber-dim);
+  border: 1px solid var(--amber);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.step-alert-icon {
+  color: var(--amber);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.step-alert-text {
+  color: var(--amber);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.code-block {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  position: relative;
+}
+.code-block pre {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.5;
+  margin: 0;
+  overflow-x: auto;
+}
+.copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.copy-btn:hover {
+  background: var(--bg4);
+  color: var(--text);
+  border-color: var(--teal);
+}
+.step-observation {
+  margin-bottom: 16px;
+}
+.step-observation label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+.step-observation textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text);
+  resize: vertical;
+  min-height: 60px;
+  transition: all 0.2s ease;
+}
+.step-observation textarea:focus {
+  outline: none;
+  border-color: var(--teal);
+  background: var(--bg3);
+}
+.step-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.step-status {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+.step-status.pending {
+  background: var(--bg3);
+  color: var(--text3);
+}
+.step-status.completed {
+  background: var(--green-dim);
+  color: var(--green);
+  border: 1px solid rgba(90,240,160,.3);
+}
+
+/* ── VALIDATION SUBCHECKLIST ─────────── */
+.validation-checklist {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+}
+.validation-title {
+  font-family: var(--display);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.validation-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.validation-item:last-child {
+  margin-bottom: 0;
+}
+.validation-checkbox {
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  background: var(--bg2);
+  cursor: pointer;
+}
+.validation-checkbox.checked {
+  background: var(--teal);
+  border-color: var(--teal);
+}
+.validation-label {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text2);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ── COMPROVANTE FORM ─────────────────── */
+.comprovante-form {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px;
+  display: none;
+}
+.comprovante-form.show {
+  display: block;
+}
+.comprovante-title {
+  font-family: var(--display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 24px;
+  text-align: center;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+.form-group label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+.form-group input,
+.form-group textarea {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text);
+  transition: all 0.2s ease;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--teal);
+  background: var(--bg3);
+}
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+.form-group .required {
+  color: var(--red);
+}
+.generate-btn {
+  background: linear-gradient(135deg, var(--teal), var(--cyan));
+  border: none;
+  border-radius: 8px;
+  padding: 14px 24px;
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--bg);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 auto;
+}
+.generate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(61,219,168,.3);
+}
+
+/* ── PRINT STYLES ─────────────────────── */
+@media print {
+  .sidebar,
+  .hamburger,
+  .sidebar-overlay,
+  .hero,
+  .progress-container,
+  .step-checkbox,
+  .copy-btn,
+  .generate-btn,
+  .step-observation textarea,
+  .validation-checkbox {
+    display: none !important;
+  }
+  
+  .main {
+    margin-left: 0 !important;
+  }
+  
+  .content {
+    padding: 0 !important;
+  }
+  
+  .comprovante-print {
+    background: white !important;
+    color: black !important;
+    padding: 40px !important;
+    font-family: 'Courier New', monospace !important;
+  }
+  
+  .comprovante-header {
+    text-align: center !important;
+    border-bottom: 2px solid black !important;
+    padding-bottom: 20px !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .comprovante-row {
+    display: flex !important;
+    margin-bottom: 10px !important;
+  }
+  
+  .comprovante-label {
+    font-weight: bold !important;
+    width: 150px !important;
+  }
+  
+  .comprovante-section {
+    margin-top: 30px !important;
+    border-top: 1px solid black !important;
+    padding-top: 20px !important;
+  }
+  
+  .step-item {
+    break-inside: avoid !important;
+    margin-bottom: 10px !important;
+  }
+}
+
+/* ── RESPONSIVE ───────────────────────── */
+@media (max-width: 768px) {
+  .hamburger, .sidebar-overlay { display: block; }
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .hero, .content { padding: 24px 20px; }
+  .step-header { flex-direction: column; gap: 12px; }
+  .step-checkbox { align-self: flex-start; }
+  .form-grid { grid-template-columns: 1fr; }
+}
+
+/* ── BACK TO TOP ───────────────────────── */
+.back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0;
+  transform: translateY(10px);
+  z-index: 100;
+}
+.back-to-top.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.back-to-top:hover {
+  background: var(--bg4);
+  color: var(--teal);
+  border-color: var(--teal);
+}
+
+/* ── HOME FAB BUTTON ────────────────────────── */
+.home-fab {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 999;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 999px;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.home-fab.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
+.home-fab:hover {
+  background: var(--blue-dim);
+  border-color: var(--blue);
+  color: #4d9fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+.home-fab-icon {
+  font-size: 14px;
+}
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ─────────────────────────── -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-badge">
+      <span class="logo-badge-dot"></span>
+      <span>IT_HUB</span>
+    </div>
+    <div class="brand">IT<em>Hub</em></div>
+    <div class="brand-sub">MSS Knowledge Base</div>
+  </div>
+  
+  <nav class="sidebar-nav">
+    <div class="nav-section">
+      <div class="nav-label">Endpoint Central</div>
+      <a href="ec-runbook-main.html" class="nav-item">
+        <div class="nav-item-icon">📚</div>
+        <div class="nav-item-text">Runbook Principal</div>
+        <div class="nav-item-arrow">→</div>
+      </a>
+      <a href="ec-update-checklist.html" class="nav-item active">
+        <div class="nav-item-icon">✅</div>
+        <div class="nav-item-text">EC Update Checklist</div>
+        <div class="nav-item-arrow">→</div>
+      </a>
+    </div>
+    
+    <div class="nav-sep"></div>
+    
+    <div class="nav-section">
+      <div class="nav-label">Navegação</div>
+      <a href="../index.html" class="nav-item">
+        <div class="nav-item-icon">🏠</div>
+        <div class="nav-item-text">Página Inicial</div>
+        <div class="nav-item-arrow">→</div>
+      </a>
+    </div>
+  </nav>
+  
+  <div class="sidebar-footer">
+    <div class="status-row">
+      <span class="status-dot"></span>
+      <span>Sistema Online</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ── MOBILE OVERLAY ───────────────────── -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<button class="hamburger" id="hamburger">☰</button>
+
+<!-- ── MAIN CONTENT ─────────────────────── -->
+<main class="main">
+  
+  <!-- ── HERO ───────────────────────────── -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      <span>Endpoint Central · Update Procedure</span>
+    </div>
+    <h1>EC Update <span>Checklist</span></h1>
+    <p class="hero-desc">Pré-lista de atualização do Endpoint Central. Siga os passos sequencialmente, marque cada item ao concluir e gere o comprovante ao final.</p>
+  </section>
+  
+  <!-- ── CONTENT ─────────────────────────── -->
+  <div class="content">
+    
+    <!-- ── PROGRESS BAR ───────────────────── -->
+    <div class="progress-container">
+      <div class="progress-header">
+        <div class="progress-title">Progresso do Checklist</div>
+        <div class="progress-count" id="progressCount">0 de 9 passos concluídos</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-complete" id="progressComplete">
+        🎉 Todos os passos concluídos! Preencha o formulário abaixo para gerar o comprovante.
+      </div>
+    </div>
+    
+    <!-- ── CHECKLIST STEPS ─────────────────── -->
+    <div class="checklist-steps">
+      
+      <!-- PASSO 1 -->
+      <div class="step-item" data-step="1">
+        <div class="step-header">
+          <div class="step-checkbox" onclick="toggleStep(1)"></div>
+          <div class="step-content">
+            <div class="step-number">PASSO 01</div>
+            <div class="step-title">Validar Snapshot</div>
+            <div class="step-description">
+              Confirmar em ligação com o cliente se o snapshot da máquina foi realizado antes de iniciar o update.
+            </div>
+            
+            <div class="step-alert">
+              <div class="step-alert-icon">⚠️</div>
+              <div class="step-alert-text">
+                <strong>ALERTA:</strong> Não prossiga sem confirmar o snapshot com o cliente! Em caso de falha no update, o snapshot é a única forma de rollback.
+              </div>
+            </div>
+            
+            <div class="step-observation">
+              <label>Observações (opcional)</label>
+              <textarea id="obs-1" placeholder="Adicione observações sobre este passo..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="step-footer">
+          <div class="step-status pending" id="status-1">Pendente</div>
+        </div>
+      </div>
+      
+      <!-- PASSO 2 -->
+      <div class="step-item" data-step="2">
+        <div class="step-header">
+          <div class="step-checkbox" onclick="toggleStep(2)"></div>
+          <div class="step-content">
+            <div class="step-number">PASSO 02</div>
+            <div class="step-title">Monitorar o Wrapper em Tempo Real</div>
+            <div class="step-description">
+              No PowerShell, navegue até a pasta de logs do Endpoint Central e execute o comando abaixo para monitorar o wrapper.log em tempo real. Mantenha esta janela aberta durante todo o processo.
+            </div>
+            
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+              <pre>cd "C:\Program Files\ManageEngine\EndpointCentral\logs"
+Get-Content -Path wrapper.log -Wait</pre>
+            </div>
+            
+            <div class="step-observation">
+              <label>Observações (opcional)</label>
+              <textarea id="obs-2" placeholder="Adicione observações sobre este passo..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="step-footer">
+          <div class="step-status pending" id="status-2">Pendente</div>
+        </div>
+      </div>
+      
+      <!-- PASSO 3 -->
+      <div class="step-item" data-step="3">
+        <div class="step-header">
+          <div class="step-checkbox" onclick="toggleStep(3)"></div>
+          <div class="step-content">
+            <div class="step-number">PASSO 03</div>
+            <div class="step-title">Stopar o Serviço</div>
+            <div class="step-description">
+              Pare o serviço "ManageEngine Endpoint Central" antes de iniciar a atualização.
+            </div>
+            
+            <div class="step-alert">
+              <div class="step-alert-icon">⚠️</div>
+              <div class="step-alert-text">
+                <strong>ALERTA:</strong> Aguarde o serviço parar COMPLETAMENTE antes de continuar. Verifique no wrapper.log que o serviço foi encerrado.
+              </div>
+            </div>
+            
+            <div class="step-observation">
+              <label>Observações (opcional)</label>
+              <textarea id="obs-3" placeholder="Adicione observações sobre este passo..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="step-footer">
+          <div class="step-status pending" id="status-3">Pendente</div>
+        </div>
+      </div>
+      
+      <!-- PASSO 4 -->
+      <div class="step-item" data-step="4">
+        <div class="step-header">
+          <div class="step-checkbox" onclick="toggleStep(4)"></div>
+          <div class="step-content">
+            <div class="step-number">PASSO 04</div>
+            <div class="step-title">Baixar o PPM da Versão</div>
+            <div class="step-description">
+              Acesse o site oficial da ManageEngine e baixe o arquivo PPM da versão que será aplicada.
+            </div>
+            
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+              <pre>Link: https://www.manageengine.com/products/desktop-central/service-pack.html</pre>
+            </div>
+            
+            <div class="step-observation">
+              <label>Observações (opcional)</label>
+              <textarea id="obs-4" placeholder="Adicione observações sobre este passo..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="step-footer">
+          <div class="step-status pending" id="status-4">Pendente</div>
+        </div>
+      </div>
+      
+      <!-- PASSO 5 -->
+      <div class="step-item" data-step="5">
+        <div class="step-header">
+          <div class="step-checkbox" onclick="toggleStep(5)"></div>
+          <div class="step-content">
+            <div class="step-number">PASSO 05</div>
+            <div class="step-title">Validar Arquivo Baixado</div>
+            <div class="step-description">
+              Verifique se o arquivo PPM baixado não está bloqueado pelo Windows antes de executar.
+            </div>
+            
+            <div class="step-alert">
+              <div class="step-alert-icon">⚠️</div>
+              <div class="step-alert-text">
+                <strong>ALERTA:</strong> Arquivo bloqueado causa falha no update! Clique com botão direito no arquivo > Propriedades > marque "Desbloquear" se a opção aparecer.
+              </div>
+            </div>
+            
+            <div class="step-observation">
+              <label>Observações (opcional)</label>
+              <textarea id="obs-5" placeholder="Adicione observações sobre este passo..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="step-footer">
+          <div class="step-status pending" id="status-5">Pendente</div>
+        </div>
+      </div>
+      
+      <!-- PASSO 6 -->
+      <div class="step-item" data-step="6">
+        <div class="step-header">
+          <div class="step-checkbox" onclick="toggleStep(6)"></div>
+          <div class="step-content">
+            <div class="step-number">PASSO 06</div>
+            <div class="step-title">Executar initPgsql.bat</div>
+            <div class="step-description">
+              Execute o arquivo initPgsql.bat na pasta do Endpoint Central.
+            </div>
+            
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+              <pre>cd "C:\Program Files\ManageEngine\EndpointCentral"
+.\initPgsql.bat</pre>
+            </div>
+            
+            <div class="step-observation">
+              <label>Observações (opcional)</label>
+              <textarea id="obs-6" placeholder="Adicione observações sobre este passo..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="step-footer">
+          <div class="step-status pending" id="status-6">Pendente</div>
+        </div>
+      </div>
+      
+      <!-- PASSO 7 -->
+      <div class="step-item" data-step="7">
+        <div class="step-header">
+          <div class="step-checkbox" onclick="toggleStep(7)"></div>
+          <div class="step-content">
+            <div class="step-number">PASSO 07</div>
+            <div class="step-title">Executar UpdateManager.bat</div>
+            <div class="step-description">
+              Execute o arquivo UpdateManager.bat na pasta do Endpoint Central para abrir a tela de atualização.
+            </div>
+            
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">📋 Copiar</button>
+              <pre>cd "C:\Program Files\ManageEngine\EndpointCentral"
+.\UpdateManager.bat</pre>
+            </div>
+            
+            <div class="step-alert">
+              <div class="step-alert-icon">⚠️</div>
+              <div class="step-alert-text">
+                <strong>ALERTA:</strong> Não feche o UpdateManager durante o processo de atualização! Isso pode corromper a instalação.
+              </div>
+            </div>
+            
+            <div class="step-observation">
+              <label>Observações (opcional)</label>
+              <textarea id="obs-7" placeholder="Adicione observações sobre este passo..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="step-footer">
+          <div class="step-status pending" id="status-7">Pendente</div>
+        </div>
+      </div>
+      
+      <!-- PASSO 8 -->
+      <div class="step-item" data-step="8">
+        <div class="step-header">
+          <div class="step-checkbox" onclick="toggleStep(8)"></div>
+          <div class="step-content">
+            <div class="step-number">PASSO 08</div>
+            <div class="step-title">Adicionar o Arquivo PPM</div>
+            <div class="step-description">
+              Na tela do UpdateManager, clique em "Browse", navegue até o arquivo PPM baixado no Passo 4 e selecione-o para iniciar a atualização.
+            </div>
+            
+            <div class="step-observation">
+              <label>Observações (opcional)</label>
+              <textarea id="obs-8" placeholder="Adicione observações sobre este passo..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="step-footer">
+          <div class="step-status pending" id="status-8">Pendente</div>
+        </div>
+      </div>
+      
+      <!-- PASSO 9 -->
+      <div class="step-item" data-step="9">
+        <div class="step-header">
+          <div class="step-checkbox" onclick="toggleStep(9)"></div>
+          <div class="step-content">
+            <div class="step-number">PASSO 09</div>
+            <div class="step-title">Subir Serviços e Validar</div>
+            <div class="step-description">
+              Após a conclusão do update, suba o serviço "ManageEngine Endpoint Central" e valide a ferramenta.
+            </div>
+            
+            <div class="step-alert">
+              <div class="step-alert-icon">⚠️</div>
+              <div class="step-alert-text">
+                <strong>ALERTA:</strong> Valide os itens abaixo antes de encerrar o chamado!
+              </div>
+            </div>
+            
+            <div class="validation-checklist">
+              <div class="validation-title">Sub-checklist de Validação:</div>
+              <div class="validation-item">
+                <div class="validation-checkbox" id="val-1" onclick="toggleValidation(1)"></div>
+                <div class="validation-label" onclick="toggleValidation(1)">Console acessível via navegador</div>
+              </div>
+              <div class="validation-item">
+                <div class="validation-checkbox" id="val-2" onclick="toggleValidation(2)"></div>
+                <div class="validation-label" onclick="toggleValidation(2)">Versão atualizada confirmada em Admin > About</div>
+              </div>
+              <div class="validation-item">
+                <div class="validation-checkbox" id="val-3" onclick="toggleValidation(3)"></div>
+                <div class="validation-label" onclick="toggleValidation(3)">Agentes comunicando normalmente</div>
+              </div>
+              <div class="validation-item">
+                <div class="validation-checkbox" id="val-4" onclick="toggleValidation(4)"></div>
+                <div class="validation-label" onclick="toggleValidation(4)">Nenhum erro crítico no wrapper.log</div>
+              </div>
+              <div class="validation-item">
+                <div class="validation-checkbox" id="val-5" onclick="toggleValidation(5)"></div>
+                <div class="validation-label" onclick="toggleValidation(5)">Cliente confirmou que está tudo ok</div>
+              </div>
+            </div>
+            
+            <div class="step-observation">
+              <label>Observações (opcional)</label>
+              <textarea id="obs-9" placeholder="Adicione observações sobre este passo..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="step-footer">
+          <div class="step-status pending" id="status-9">Pendente</div>
+        </div>
+      </div>
+      
+    </div>
+    
+    <!-- ── COMPROVANTE FORM ───────────────── -->
+    <div class="comprovante-form" id="comprovanteForm">
+      <div class="comprovante-title">📋 Gerar Comprovante de Update</div>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Nome do analista <span class="required">*</span></label>
+          <input type="text" id="analistaNome" placeholder="Seu nome completo" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Matrícula <span class="required">*</span></label>
+          <input type="text" id="analistaMatricula" placeholder="Sua matrícula" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Versão do update aplicado <span class="required">*</span></label>
+          <input type="text" id="versaoUpdate" placeholder="Ex: 11.3.2401.01" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Data e hora</label>
+          <input type="text" id="dataHora" readonly>
+        </div>
+        
+        <div class="form-group full-width">
+          <label>Observações gerais</label>
+          <textarea id="observacoesGerais" placeholder="Adicione observações gerais sobre o processo de update..."></textarea>
+        </div>
+      </div>
+      
+      <button class="generate-btn" onclick="generateComprovante()">
+        🖨️ Gerar Comprovante PDF
+      </button>
+    </div>
+    
+  </div>
+</main>
+
+<!-- ── BACK TO TOP BUTTON ───────────────── -->
+<button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑ Topo</button>
+
+<!-- ── PRINT COMPROVANTE HIDDEN CONTENT ─── -->
+<div class="comprovante-print" id="comprovantePrint" style="display: none;">
+  <div class="comprovante-header">
+    <h2>🏗️ IT_Hub — Comprovante de Update</h2>
+    <h3>Endpoint Central</h3>
+  </div>
+  
+  <div class="comprovante-row">
+    <span class="comprovante-label">Analista:</span>
+    <span id="printAnalista"></span>
+  </div>
+  <div class="comprovante-row">
+    <span class="comprovante-label">Matrícula:</span>
+    <span id="printMatricula"></span>
+  </div>
+  <div class="comprovante-row">
+    <span class="comprovante-label">Versão aplicada:</span>
+    <span id="printVersao"></span>
+  </div>
+  <div class="comprovante-row">
+    <span class="comprovante-label">Data/Hora:</span>
+    <span id="printDataHora"></span>
+  </div>
+  
+  <div class="comprovante-section">
+    <h4>PASSOS EXECUTADOS:</h4>
+    <div id="printPassos"></div>
+  </div>
+  
+  <div class="comprovante-section">
+    <h4>OBSERVAÇÕES GERAIS:</h4>
+    <div id="printObservacoes"></div>
+  </div>
+  
+  <div class="comprovante-section">
+    <div class="comprovante-row">
+      <span class="comprovante-label">Assinatura:</span>
+      <span>___________________________</span>
+    </div>
+    <div class="comprovante-row">
+      <span class="comprovante-label">Matrícula:</span>
+      <span id="printMatriculaAssinatura"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+// Estado do checklist
+let completedSteps = new Set();
+let validationSteps = new Set();
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', function() {
+  updateDateTime();
+  setInterval(updateDateTime, 1000);
+  updateProgress();
+  setupScrollEvents();
+  setupMobileMenu();
+});
+
+// Atualizar data e hora
+function updateDateTime() {
+  const now = new Date();
+  const dateTimeStr = now.toLocaleString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+  const dataHoraInput = document.getElementById('dataHora');
+  if (dataHoraInput) {
+    dataHoraInput.value = dateTimeStr;
+  }
+}
+
+// Toggle step completion
+function toggleStep(stepNumber) {
+  const checkbox = document.querySelector(`.step-item[data-step="${stepNumber}"] .step-checkbox`);
+  const statusBadge = document.getElementById(`status-${stepNumber}`);
+  const stepItem = document.querySelector(`.step-item[data-step="${stepNumber}"]`);
+  
+  if (completedSteps.has(stepNumber)) {
+    completedSteps.delete(stepNumber);
+    checkbox.classList.remove('checked');
+    statusBadge.classList.remove('completed');
+    statusBadge.classList.add('pending');
+    statusBadge.textContent = 'Pendente';
+    stepItem.classList.remove('completed');
+  } else {
+    completedSteps.add(stepNumber);
+    checkbox.classList.add('checked');
+    statusBadge.classList.remove('pending');
+    statusBadge.classList.add('completed');
+    statusBadge.textContent = 'Concluído';
+    stepItem.classList.add('completed');
+  }
+  
+  updateProgress();
+}
+
+// Toggle validation checkbox
+function toggleValidation(valNumber) {
+  const checkbox = document.getElementById(`val-${valNumber}`);
+  
+  if (validationSteps.has(valNumber)) {
+    validationSteps.delete(valNumber);
+    checkbox.classList.remove('checked');
+  } else {
+    validationSteps.add(valNumber);
+    checkbox.classList.add('checked');
+  }
+}
+
+// Update progress
+function updateProgress() {
+  const totalSteps = 9;
+  const completedCount = completedSteps.size;
+  const percentage = (completedCount / totalSteps) * 100;
+  
+  document.getElementById('progressCount').textContent = `${completedCount} de ${totalSteps} passos concluídos`;
+  document.getElementById('progressFill').style.width = `${percentage}%`;
+  
+  const progressComplete = document.getElementById('progressComplete');
+  const comprovanteForm = document.getElementById('comprovanteForm');
+  
+  if (completedCount === totalSteps) {
+    progressComplete.style.display = 'block';
+    comprovanteForm.classList.add('show');
+  } else {
+    progressComplete.style.display = 'none';
+    comprovanteForm.classList.remove('show');
+  }
+}
+
+// Copy code to clipboard
+function copyCode(button) {
+  const codeBlock = button.parentElement;
+  const code = codeBlock.querySelector('pre').textContent;
+  
+  navigator.clipboard.writeText(code).then(() => {
+    const originalText = button.textContent;
+    button.textContent = '✅ Copiado!';
+    button.style.color = 'var(--green)';
+    
+    setTimeout(() => {
+      button.textContent = originalText;
+      button.style.color = '';
+    }, 2000);
+  });
+}
+
+// Generate comprovante
+function generateComprovante() {
+  const nome = document.getElementById('analistaNome').value.trim();
+  const matricula = document.getElementById('analistaMatricula').value.trim();
+  const versao = document.getElementById('versaoUpdate').value.trim();
+  const observacoes = document.getElementById('observacoesGerais').value.trim();
+  
+  // Validação
+  if (!nome || !matricula || !versao) {
+    alert('Por favor, preencha todos os campos obrigatórios (nome, matrícula e versão).');
+    return;
+  }
+  
+  // Preencher dados do comprovante
+  document.getElementById('printAnalista').textContent = nome;
+  document.getElementById('printMatricula').textContent = matricula;
+  document.getElementById('printMatriculaAssinatura').textContent = matricula;
+  document.getElementById('printVersao').textContent = versao;
+  document.getElementById('printDataHora').textContent = document.getElementById('dataHora').value;
+  document.getElementById('printObservacoes').textContent = observacoes || 'Nenhuma observação geral.';
+  
+  // Gerar lista de passos
+  let passosHTML = '';
+  for (let i = 1; i <= 9; i++) {
+    const stepTitle = document.querySelector(`.step-item[data-step="${i}"] .step-title`).textContent;
+    const stepObs = document.getElementById(`obs-${i}`).value.trim();
+    const isCompleted = completedSteps.has(i);
+    
+    passosHTML += `
+      <div style="margin-bottom: 10px;">
+        <span>${isCompleted ? '✅' : '❌'} Passo ${i} - ${stepTitle}</span>
+        ${stepObs ? `<br><small>${stepObs}</small>` : ''}
+      </div>
+    `;
+  }
+  document.getElementById('printPassos').innerHTML = passosHTML;
+  
+  // Mostrar conteúdo de impressão e ocultar resto
+  document.getElementById('comprovantePrint').style.display = 'block';
+  
+  // Abrir diálogo de impressão
+  window.print();
+  
+  // Ocultar conteúdo de impressão após fechar diálogo
+  setTimeout(() => {
+    document.getElementById('comprovantePrint').style.display = 'none';
+  }, 100);
+}
+
+// Scroll events
+function setupScrollEvents() {
+  const backToTopBtn = document.getElementById('backToTop');
+  
+  window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+      backToTopBtn.classList.add('show');
+    } else {
+      backToTopBtn.classList.remove('show');
+    }
+  });
+}
+
+// Scroll to top
+function scrollToTop() {
+  window.scrollTo({
+    top: 0
+  });
+}
+
+// Mobile menu
+function setupMobileMenu() {
+  const hamburger = document.getElementById('hamburger');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  
+  hamburger.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('open');
+  });
+  
+  overlay.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('open');
+  });
+  
+  // Close menu when clicking on nav items
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('open');
+    });
+  });
+}
+
+// Scroll spy (opcional)
+window.addEventListener('scroll', () => {
+  const sections = document.querySelectorAll('.step-item');
+  const scrollPosition = window.pageYOffset + 100;
+  
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop;
+    const sectionHeight = section.offsetHeight;
+    
+    if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+      // Adicionar lógica de scroll spy aqui se necessário
+    }
+  });
+});
+
+</script>
+
+</body>
+</html>
