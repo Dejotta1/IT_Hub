@@ -598,5 +598,29 @@
     "anchor": "#SDP-MAIL-102",
     "tags": ["oauth", "secret", "azure", "microsoft", "m365", "inbound", "mail"],
     "excerpt": "Renovar Client Secret expirado no Azure portal e reautorizar inbound mail no SDP."
+  },
+  {
+    "guide": "Dicionário",
+    "file": "dicionario/dicionario-arquivos.html",
+    "section": "Dicionário de Arquivos & Configurações",
+    "anchor": "#",
+    "tags": ["dicionario", "arquivos", "configuracao", "conf", "parametros", "referencia", "limite"],
+    "excerpt": "Arquivos e parâmetros que a console não mostra: para que servem, o que pode alterar e até onde ir."
+  },
+  {
+    "guide": "Dicionário",
+    "file": "dicionario/dicionario-arquivos.html",
+    "section": "wrapper-arch.conf — heap da JVM (Endpoint Central)",
+    "anchor": "#DIC-EC-JVM-01",
+    "tags": ["heap", "jvm", "java", "memoria", "ram", "xmx", "maxmemory", "wrapper", "wrapper.conf", "lentidao", "lento", "lenta", "console", "travando", "outofmemory", "gc", "garbage collector", "endpoint central"],
+    "excerpt": "Teto de memória heap da JVM do servidor EC. Padrão observado 4 GB; faixa segura 25–33% da RAM física."
+  },
+  {
+    "guide": "Dicionário",
+    "file": "dicionario/dicionario-arquivos.html",
+    "section": "Limite de sessões paralelas — Remote Control (Endpoint Central)",
+    "anchor": "#DIC-EC-RC-01",
+    "tags": ["remote control", "acesso remoto", "sessoes", "paralelas", "simultaneas", "tela preta", "sem imagem", "gateway", "dc_rds", "serverout", "pico", "endpoint central"],
+    "excerpt": "Remote Control vem limitado a 50 sessões simultâneas. No pico, a sessão conecta ao gateway e a tela fica preta."
   }
 ]
