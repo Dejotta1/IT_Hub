@@ -994,7 +994,7 @@
         html += `<div class="global-search-group"><div class="global-search-group-header">${guide}</div>`;
         grouped[guide].forEach(item => {
           const badgeColor = getGuideColor(item.guide);
-          html += `<a href="./" + item.file + item.anchor class="global-search-result">
+          html += `<a href="./${item.file}${item.anchor && item.anchor !== '#' ? item.anchor : ''}" class="global-search-result">
             <div class="global-search-result-title">${highlightText(item.section, query)}<span class="global-search-result-badge" style="background: ${badgeColor.bg}; color: ${badgeColor.color}; border: 1px solid ${badgeColor.border};">${item.guide}</span></div>
             <div class="global-search-result-excerpt">${highlightText(item.excerpt, query)}</div>
           </a>`;
