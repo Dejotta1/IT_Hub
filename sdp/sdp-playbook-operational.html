@@ -214,6 +214,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); font
   background: var(--green-dim);
 }
 </style>
+<link rel="stylesheet" href="../shared/chrome.css">
 </head>
 <body>
 
@@ -242,14 +243,33 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); font
 </nav>
 
 <main class="main">
-  <header class="hero">
-    <div class="hero-badge" style="color:var(--green); border:1px solid var(--green-dim); padding: 2px 10px; border-radius: 20px; font-size: 10px; font-weight: 800;">PLAYBOOK OPERACIONAL</div>
-    <h1>ServiceDesk Plus <span class="accent">Use Cases</span></h1>
-    <p class="hero-desc">Guia de execução para solicitações recorrentes e procedimentos de rotina. Do setup de templates ao troubleshooting de fluxos de aprovação.</p>
+  <header class="hero ith-hero ith-hero--playbook" style="--ith-accent:var(--green);--ith-accent-dim:var(--green-dim)">
+    <div class="ith-bar">
+      <div class="ith-tags">
+        <span class="ith-cat">Playbook</span>
+        <div class="hero-badge"><span class="hero-badge-dot"></span> ManageEngine · ITSM</div>
+      </div>
+      <div class="ith-actions">
+        <div class="search-unified ith-search" id="searchUnified" data-ith-local="#playbookContainer .card" data-ith-container="#playbookContainer">
+          <div class="search-mode-toggle">
+            <button class="search-mode-btn active" id="modeLocal" type="button" title="Buscar nesta página">Página</button>
+            <button class="search-mode-btn" id="modeGlobal" type="button" title="Buscar em todos os guias (Ctrl+K)">Global</button>
+          </div>
+          <svg class="ith-search-icon" width="15" height="15" viewBox="0 0 20 20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/></g></svg>
+          <input class="search-input-unified" id="searchUnifiedInput" type="search" placeholder="Buscar nesta página…" autocomplete="off" />
+          <kbd class="ith-kbd">Ctrl K</kbd>
+          <div class="global-search-dropdown" id="globalSearchDropdown"></div>
+        </div>
+        <a href="../index.html" class="ith-home" title="Voltar ao IT Hub"><svg width="15" height="15" viewBox="0 0 20 20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"><path d="M3 9.2 10 3.5l7 5.7"/><path d="M5 8v8.5h10V8"/><path d="M8.5 16.5v-4h3v4"/></g></svg><span>IT Hub</span></a>
+      </div>
+    </div>
+    <div class="ith-body">
+      <h1>ServiceDesk Plus <span class="accent">Use Cases</span></h1>
+      <p class="hero-desc">Guia de execução para solicitações recorrentes e procedimentos de rotina. Do setup de templates ao troubleshooting de fluxos de aprovação.</p>
+    </div>
   </header>
 
   <div class="toolbar">
-    <a href="../index.html" class="it-hub-btn">🏠 IT Hub</a>
     <button class="filter-btn active" data-filter="all">Todos</button>
     <button class="filter-btn" data-filter="incident">Incidentes</button>
     <button class="filter-btn" data-filter="service">Serviços</button>
@@ -534,6 +554,7 @@ document.addEventListener('DOMContentLoaded', () => {
   <span class="home-fab-icon">←</span> IT Hub
 </a>
 
+<script src="../shared/chrome.js"></script>
 <script src="../shared/search.js"></script>
 </body>
 </html>
