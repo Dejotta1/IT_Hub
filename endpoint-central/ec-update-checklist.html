@@ -802,7 +802,7 @@ body {
     <div class="checklist-steps">
       
       <!-- PASSO 1 -->
-      <div class="step-item" data-step="1">
+      <div class="step-item" id="step-1" data-step="1">
         <div class="step-header">
           <div class="step-checkbox" onclick="toggleStep(1)"></div>
           <div class="step-content">
@@ -831,7 +831,7 @@ body {
       </div>
       
       <!-- PASSO 2 -->
-      <div class="step-item" data-step="2">
+      <div class="step-item" id="step-2" data-step="2">
         <div class="step-header">
           <div class="step-checkbox" onclick="toggleStep(2)"></div>
           <div class="step-content">
@@ -859,7 +859,7 @@ Get-Content -Path wrapper.log -Wait</pre>
       </div>
       
       <!-- PASSO 3 -->
-      <div class="step-item" data-step="3">
+      <div class="step-item" id="step-3" data-step="3">
         <div class="step-header">
           <div class="step-checkbox" onclick="toggleStep(3)"></div>
           <div class="step-content">
@@ -888,7 +888,7 @@ Get-Content -Path wrapper.log -Wait</pre>
       </div>
       
       <!-- PASSO 4 -->
-      <div class="step-item" data-step="4">
+      <div class="step-item" id="step-4" data-step="4">
         <div class="step-header">
           <div class="step-checkbox" onclick="toggleStep(4)"></div>
           <div class="step-content">
@@ -915,7 +915,7 @@ Get-Content -Path wrapper.log -Wait</pre>
       </div>
       
       <!-- PASSO 5 -->
-      <div class="step-item" data-step="5">
+      <div class="step-item" id="step-5" data-step="5">
         <div class="step-header">
           <div class="step-checkbox" onclick="toggleStep(5)"></div>
           <div class="step-content">
@@ -944,7 +944,7 @@ Get-Content -Path wrapper.log -Wait</pre>
       </div>
       
       <!-- PASSO 6 -->
-      <div class="step-item" data-step="6">
+      <div class="step-item" id="step-6" data-step="6">
         <div class="step-header">
           <div class="step-checkbox" onclick="toggleStep(6)"></div>
           <div class="step-content">
@@ -972,7 +972,7 @@ Get-Content -Path wrapper.log -Wait</pre>
       </div>
       
       <!-- PASSO 7 -->
-      <div class="step-item" data-step="7">
+      <div class="step-item" id="step-7" data-step="7">
         <div class="step-header">
           <div class="step-checkbox" onclick="toggleStep(7)"></div>
           <div class="step-content">
@@ -1007,7 +1007,7 @@ Get-Content -Path wrapper.log -Wait</pre>
       </div>
       
       <!-- PASSO 8 -->
-      <div class="step-item" data-step="8">
+      <div class="step-item" id="step-8" data-step="8">
         <div class="step-header">
           <div class="step-checkbox" onclick="toggleStep(8)"></div>
           <div class="step-content">
@@ -1029,7 +1029,7 @@ Get-Content -Path wrapper.log -Wait</pre>
       </div>
       
       <!-- PASSO 9 -->
-      <div class="step-item" data-step="9">
+      <div class="step-item" id="step-9" data-step="9">
         <div class="step-header">
           <div class="step-checkbox" onclick="toggleStep(9)"></div>
           <div class="step-content">
@@ -1389,5 +1389,16 @@ window.addEventListener('scroll', () => {
 
 </script>
 
+<a id="homeFab" href="../index.html" class="home-fab">
+  <span class="home-fab-icon">←</span> IT Hub
+</a>
+<script>
+// Home FAB: aparece após 200px de scroll (addEventListener para não sobrescrever outros handlers)
+window.addEventListener('scroll', () => {
+  const fab = document.getElementById('homeFab');
+  if (fab) fab.classList.toggle('visible', window.scrollY > 200);
+}, { passive: true });
+</script>
+<script src="../shared/search.js"></script>
 </body>
 </html>

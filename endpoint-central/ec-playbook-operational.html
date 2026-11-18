@@ -2839,5 +2839,16 @@ document.querySelectorAll('.escalate-btn').forEach(btn => {
 });
 </script>
 
+<a id="homeFab" href="../index.html" class="home-fab">
+  <span class="home-fab-icon">←</span> IT Hub
+</a>
+<script>
+// Home FAB: aparece após 200px de scroll (addEventListener para não sobrescrever outros handlers)
+window.addEventListener('scroll', () => {
+  const fab = document.getElementById('homeFab');
+  if (fab) fab.classList.toggle('visible', window.scrollY > 200);
+}, { passive: true });
+</script>
+<script src="../shared/search.js"></script>
 </body>
 </html>
