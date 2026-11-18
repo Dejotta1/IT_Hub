@@ -13,7 +13,8 @@
     'Endpoint Central': { bg:'rgba(77,159,255,.12)',  fg:'#4d9fff', bd:'rgba(77,159,255,.28)'  },
     'ServiceDesk Plus': { bg:'rgba(90,240,160,.12)',  fg:'#5af0a0', bd:'rgba(90,240,160,.28)'  },
     'AD360':            { bg:'rgba(169,127,245,.12)', fg:'#a97ff5', bd:'rgba(169,127,245,.28)' },
-    'PAM360':           { bg:'rgba(255,179,64,.12)',  fg:'#ffb340', bd:'rgba(255,179,64,.28)'  }
+    'PAM360':           { bg:'rgba(255,179,64,.12)',  fg:'#ffb340', bd:'rgba(255,179,64,.28)'  },
+    'Dicionário':       { bg:'rgba(51,224,255,.12)',  fg:'#33e0ff', bd:'rgba(51,224,255,.28)'  }
   };
   const color = g => COLORS[g] || { bg:'rgba(255,255,255,.07)', fg:'#8894ab', bd:'rgba(255,255,255,.14)' };
 
