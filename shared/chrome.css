@@ -1,0 +1,213 @@
+/* ═══════════════════════════════════════════════════════════════════
+   IT Hub · chrome.css — componentes compartilhados de Runbooks/Playbooks
+   ───────────────────────────────────────────────────────────────────
+   Carregar DEPOIS do <style> da página (fim do <head>), para que estas
+   regras prevaleçam sobre estilos antigos e locais.
+
+   Uso no cabeçalho:
+     <header class="hero ith-hero ith-hero--runbook"   (ou --playbook)
+             style="--ith-accent:var(--blue);--ith-accent-dim:var(--blue-dim)">
+       <div class="ith-bar">
+         <div class="ith-tags"> <span class="ith-cat">Runbook</span> … </div>
+         <div class="ith-actions"> [busca .ith-search] [a.ith-home] </div>
+       </div>
+       <div class="ith-body"> h1, descrição, extras </div>
+     </header>
+
+   A cor do produto (--ith-accent) muda por página.
+   O gradiente muda só pela CATEGORIA: runbook × playbook.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── HERO: estrutura comum ───────────────────────────────────────── */
+.hero.ith-hero {
+  --ith-accent: var(--blue);
+  --ith-accent-dim: var(--blue-dim);
+  position: relative;
+  overflow: hidden;
+  padding: 26px 48px 40px;
+  border-bottom: 1px solid var(--border);
+  display: block;
+}
+.hero.ith-hero::before,
+.hero.ith-hero::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+.hero.ith-hero > * { position: relative; z-index: 1; }
+
+/* RUNBOOK · referência: Endpoint Central Operational (petróleo + ciano) */
+.hero.ith-hero--runbook {
+  background: linear-gradient(135deg, #0d1117 0%, #0a1e25 50%, #091318 100%);
+}
+.hero.ith-hero--runbook::before {
+  top: -80px; right: -60px; width: 340px; height: 340px;
+  background: radial-gradient(circle, rgba(88,209,255,.11) 0%, transparent 70%);
+}
+.hero.ith-hero--runbook::after {
+  bottom: -60px; right: 220px; width: 220px; height: 220px;
+  background: radial-gradient(circle, rgba(63,185,80,.07) 0%, transparent 70%);
+}
+
+/* PLAYBOOK · complementar: ameixa + brasa (quente, oposto ao ciano) */
+.hero.ith-hero--playbook {
+  background: linear-gradient(135deg, #100d16 0%, #1d1428 50%, #140f1c 100%);
+}
+.hero.ith-hero--playbook::before {
+  top: -80px; right: -60px; width: 340px; height: 340px;
+  background: radial-gradient(circle, rgba(178,128,255,.13) 0%, transparent 70%);
+}
+.hero.ith-hero--playbook::after {
+  bottom: -60px; right: 220px; width: 220px; height: 220px;
+  background: radial-gradient(circle, rgba(255,150,90,.08) 0%, transparent 70%);
+}
+
+/* ── BARRA SUPERIOR DO HERO: tags à esquerda · ações à direita ───── */
+.ith-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
+}
+.ith-tags { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
+.ith-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+
+/* etiqueta de categoria (RUNBOOK / PLAYBOOK) */
+.ith-cat {
+  display: inline-flex; align-items: center; gap: 7px;
+  height: 24px; padding: 0 10px;
+  border-radius: 6px;
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  letter-spacing: 1.6px; text-transform: uppercase;
+}
+.ith-cat::before { content: ''; width: 6px; height: 6px; border-radius: 2px; background: currentColor; }
+.ith-hero--runbook  .ith-cat { color: #58d1ff; background: rgba(88,209,255,.10); border: 1px solid rgba(88,209,255,.28); }
+.ith-hero--playbook .ith-cat { color: #ff9f6b; background: rgba(255,150,90,.10); border: 1px solid rgba(255,150,90,.30); }
+
+/* badge do produto já existente nas páginas, padronizado */
+.ith-hero .hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 24px; margin: 0; padding: 0 10px;
+  border-radius: 999px;
+  background: var(--ith-accent-dim) !important;
+  border: 1px solid color-mix(in srgb, var(--ith-accent) 35%, transparent) !important;
+  color: var(--ith-accent) !important;
+  font-family: var(--mono); font-size: 10px !important; font-weight: 500 !important; letter-spacing: .4px;
+}
+.ith-hero .hero-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--ith-accent); }
+
+/* corpo do hero */
+.ith-body h1 { margin-bottom: 12px; }
+.ith-body .hero-desc { margin-top: 0; margin-bottom: 0; max-width: 680px; }
+.ith-body > * + .hero-meta,
+.ith-body > * + .playbook-btn { margin-top: 22px; }
+
+/* ação secundária no hero (ex.: "Acessar Playbook") */
+.ith-hero .playbook-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 36px; padding: 0 16px;
+  border-radius: 999px;
+  background: var(--ith-accent-dim);
+  border: 1px solid color-mix(in srgb, var(--ith-accent) 55%, transparent);
+  color: var(--ith-accent);
+  font-family: var(--sans); font-size: 12.5px; font-weight: 600;
+  text-decoration: none;
+  transition: background .15s, color .15s;
+}
+.ith-hero .playbook-btn:hover { background: var(--ith-accent); color: var(--bg); }
+
+/* ── BUSCA PADRÃO (Página / Global) ──────────────────────────────── */
+.search-unified.ith-search {
+  position: relative;
+  display: flex; align-items: center;
+  width: 440px; max-width: 100%;
+  height: 40px; margin: 0;
+  background: rgba(13,15,23,.78);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  backdrop-filter: blur(6px);
+  transition: border-color .15s, box-shadow .15s;
+}
+.search-unified.ith-search:focus-within {
+  border-color: var(--ith-accent);
+  box-shadow: 0 0 0 3px var(--ith-accent-dim);
+}
+.ith-search .search-mode-toggle {
+  display: flex; align-self: stretch; flex-shrink: 0;
+  padding: 4px; gap: 2px;
+  border-right: 1px solid var(--border2);
+}
+.ith-search .search-mode-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 100%; padding: 0 10px; margin: 0;
+  background: none; border: 0; border-radius: 6px;
+  color: var(--text3);
+  font-family: var(--mono); font-size: 9.5px; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase;
+  cursor: pointer; opacity: 1;
+  transition: background .15s, color .15s;
+}
+.ith-search .search-mode-btn:hover { color: var(--text); background: var(--bg3); }
+.ith-search .search-mode-btn.active { color: var(--ith-accent); background: var(--ith-accent-dim); }
+.ith-search .search-mode-btn[disabled] { cursor: pointer; opacity: 1; }
+.ith-search .ith-search-icon { flex-shrink: 0; margin: 0 8px 0 12px; color: var(--text3); }
+.ith-search .search-icon-wrap { display: none; }
+.ith-search .search-input-unified {
+  flex: 1; min-width: 0; height: 100%;
+  padding: 0 8px 0 0; margin: 0;
+  background: none; border: 0; outline: none; box-shadow: none;
+  color: var(--text);
+  font-family: var(--sans); font-size: 13px;
+}
+.ith-search .search-input-unified::placeholder { color: var(--text3); }
+.ith-search .search-input-unified::-webkit-search-cancel-button { filter: invert(.6); }
+.ith-search .ith-kbd {
+  flex-shrink: 0; margin-right: 10px;
+  font-family: var(--mono); font-size: 9.5px; color: var(--text3);
+  border: 1px solid var(--border2); border-bottom-width: 2px; border-radius: 4px;
+  padding: 1px 6px; background: var(--bg);
+  white-space: nowrap;
+}
+.ith-search .global-search-dropdown { top: calc(100% + 6px); }
+
+/* ── BOTÃO IT HUB (sempre no topo direito do hero) ───────────────── */
+.ith-home {
+  display: inline-flex; align-items: center; gap: 8px;
+  flex-shrink: 0;
+  height: 40px; padding: 0 16px;
+  border-radius: 999px;
+  background: rgba(13,15,23,.6);
+  border: 1px solid color-mix(in srgb, var(--ith-accent) 55%, transparent);
+  color: var(--ith-accent);
+  font-family: var(--sans); font-size: 12.5px; font-weight: 600;
+  text-decoration: none; white-space: nowrap;
+  transition: background .15s, color .15s, transform .15s;
+}
+.ith-home:hover { background: var(--ith-accent-dim); color: var(--text); transform: translateY(-1px); }
+.ith-home:focus-visible { outline: 2px solid var(--ith-accent); outline-offset: 2px; }
+.ith-home svg { flex-shrink: 0; }
+
+/* ── FAB "← IT Hub" (aparece no scroll): nunca por cima da sidebar ─ */
+@media (min-width: 901px) {
+  body:has(.sidebar) .home-fab { left: calc(var(--sidebar-w, 260px) + 24px); }
+}
+
+/* ── RESPONSIVO ──────────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .search-unified.ith-search { width: 360px; }
+  .ith-search .ith-kbd { display: none; }
+}
+@media (max-width: 900px) {
+  .hero.ith-hero { padding: 64px 20px 30px; }
+  .ith-actions { width: 100%; margin-left: 0; }
+  .search-unified.ith-search { flex: 1; width: auto; }
+}
+@media (max-width: 480px) {
+  .ith-home span { display: none; }
+  .ith-home { padding: 0 12px; }
+  .ith-search .search-mode-btn { padding: 0 7px; letter-spacing: .5px; }
+}
