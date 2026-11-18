@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../shared/tokens.css">
+<title>Dicionário de Arquivos — IT Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Syne:wght@700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════
+   DICIONÁRIO · "Livro de referência"
+   Papel escuro quente, verbetes em serifa, índice remissivo A–Z.
+   O topo (logo · status · Ctrl+K) é o chassi comum com o index.
+   ═══════════════════════════════════════════════════════════ */
+:root {
+  --paper: #14110c; --paper2: #1a1610; --paper3: #221d15;
+  --rule: #2c261c; --rule2: #3a3225;
+  --ink: #efe6d6; --ink2: #b3a68f; --ink3: #7d725f;
+  --cyan-ink: #5ee6f5;
+  --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --col: 760px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--paper); color: var(--ink); font-family: var(--serif); font-size: 17px; line-height: 1.6; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .9  0 0 0 0 .8  0 0 0 0 .6  0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+::selection { background: rgba(94,230,245,.25); }
+code { font-family: var(--mono); font-size: .82em; color: var(--ink); background: var(--paper3); border: 1px solid var(--rule); border-radius: 4px; padding: 0 5px; }
+.progress-bar { position: fixed; top: 0; left: 0; height: 2px; width: 0; background: var(--cyan-ink); z-index: 1000; }
+
+/* ── CHASSI: topo igual ao index ── */
+.topbar { position: sticky; top: 0; z-index: 60; background: rgba(20,17,12,.86); backdrop-filter: blur(10px); border-bottom: 1px solid var(--rule); font-family: var(--sans); }
+.topbar-in { max-width: 1240px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; gap: 18px; height: 56px; }
+.logo { display: flex; align-items: center; gap: 9px; text-decoration: none; color: var(--ink); font-family: var(--display); font-weight: 800; font-size: 18px; letter-spacing: -.4px; }
+.logo em { font-style: normal; color: var(--blue); }
+.logo-mark { width: 18px; height: 18px; border-radius: 5px; background: conic-gradient(var(--blue) 0 25%, var(--green) 0 50%, var(--purple) 0 75%, var(--amber) 0); }
+.crumb { font-size: 12.5px; color: var(--ink3); }
+.crumb b { color: var(--ink2); font-weight: 500; }
+.topbar-meta { display: flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 10.5px; color: var(--ink3); margin-left: auto; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2.6s infinite; }
+.dot.stale { background: var(--amber); }
+@keyframes pulse { 50% { opacity: .35; } }
+.kbar { display: inline-flex; align-items: center; gap: 10px; background: var(--paper2); border: 1px solid var(--rule2); border-radius: 8px; padding: 6px 8px 6px 12px; color: var(--ink2); font-family: var(--sans); font-size: 12.5px; cursor: pointer; }
+.kbar:hover { border-color: var(--cyan-ink); color: var(--ink); }
+kbd { font-family: var(--mono); font-size: 9.5px; color: var(--ink3); border: 1px solid var(--rule2); border-bottom-width: 2px; border-radius: 4px; padding: 1px 6px; background: var(--paper); }
+
+/* ── PÁGINA DE ROSTO ── */
+.layout { position: relative; z-index: 1; max-width: 1240px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 64px; }
+.front { grid-column: 1 / -1; padding: 64px 0 40px; border-bottom: 1px solid var(--rule); display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 64px; }
+.front-mark { font-family: var(--serif); font-size: 110px; line-height: .8; color: var(--rule2); font-style: italic; user-select: none; }
+.front-kicker { font-family: var(--mono); font-size: 10px; letter-spacing: 2.4px; text-transform: uppercase; color: var(--ink3); margin-bottom: 16px; }
+.front h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(38px, 5.4vw, 60px); line-height: 1.02; letter-spacing: -1.2px; max-width: 820px; }
+.front h1 i { color: var(--cyan-ink); }
+.front-lede { margin-top: 18px; font-size: 19px; color: var(--ink2); max-width: 640px; font-style: italic; }
+.front-meta { margin-top: 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; max-width: 820px; }
+.box-h { font-family: var(--sans); font-size: 10px; font-weight: 600; letter-spacing: 1.6px; text-transform: uppercase; color: var(--ink3); margin-bottom: 10px; }
+.abbr { display: flex; flex-direction: column; gap: 6px; font-size: 15px; color: var(--ink2); }
+.abbr span { display: flex; align-items: baseline; gap: 10px; }
+.conf { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; font-weight: 600; font-style: normal; white-space: nowrap; }
+.conf::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.conf.doc { color: var(--green); } .conf.sup { color: var(--amber); } .conf.int { color: var(--blue); }
+.editor-note { font-size: 15px; color: var(--ink2); line-height: 1.55; }
+.editor-note b { color: var(--ink); font-weight: 500; }
+
+/* ── ÍNDICE REMISSIVO ── */
+.thumb { position: sticky; top: 76px; align-self: start; padding: 32px 0 40px; font-family: var(--sans); max-height: calc(100vh - 76px); overflow-y: auto; }
+.thumb input { width: 100%; background: var(--paper2); border: 1px solid var(--rule2); border-radius: 8px; padding: 8px 11px; color: var(--ink); font-family: var(--serif); font-size: 15px; font-style: italic; outline: none; }
+.thumb input:focus { border-color: var(--cyan-ink); }
+.thumb input::placeholder { color: var(--ink3); }
+.alpha { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin: 18px 0 22px; }
+.alpha a, .alpha span { text-align: center; font-family: var(--serif); font-size: 15px; padding: 3px 0; border-radius: 4px; text-decoration: none; }
+.alpha span { color: var(--rule2); }
+.alpha a { color: var(--cyan-ink); font-weight: 600; }
+.alpha a:hover { background: var(--paper3); }
+.thumb-list { display: flex; flex-direction: column; gap: 1px; margin-bottom: 24px; }
+.thumb-list a { display: block; font-family: var(--mono); font-size: 11.5px; color: var(--ink2); text-decoration: none; padding: 5px 9px; border-left: 2px solid transparent; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.thumb-list a:hover { color: var(--ink); }
+.thumb-list a.active { color: var(--cyan-ink); border-left-color: var(--cyan-ink); background: var(--paper2); }
+.thumb-list a.dim { opacity: .3; }
+.filt { margin-bottom: 18px; }
+.filt-opts { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.filt-opts button { background: none; border: none; color: var(--ink3); font-family: var(--serif); font-size: 14.5px; cursor: pointer; padding: 1px 0; border-bottom: 1px solid transparent; }
+.filt-opts button:hover { color: var(--ink); }
+.filt-opts button.active { color: var(--ink); border-bottom-color: var(--cyan-ink); }
+.thumb-back { display: inline-block; margin-top: 6px; font-size: 13px; color: var(--ink3); text-decoration: none; }
+.thumb-back:hover { color: var(--ink); }
+.count { font-family: var(--mono); font-size: 10px; color: var(--ink3); margin-top: 14px; }
+
+/* ── VERBETES ── */
+.entries { padding: 40px 0 120px; max-width: var(--col); }
+.letter { font-family: var(--serif); font-size: 64px; font-style: italic; line-height: 1; color: var(--rule2); margin: 8px 0 22px; padding-bottom: 10px; border-bottom: 1px solid var(--rule); }
+.letter.hidden { display: none; }
+.entry { scroll-margin-top: 90px; padding-bottom: 46px; margin-bottom: 46px; border-bottom: 1px solid var(--rule); }
+.entry.hidden { display: none; }
+.hw { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 14px; }
+.hw-name { font-family: var(--mono); font-size: 27px; font-weight: 700; color: var(--cyan-ink); letter-spacing: -.6px; line-height: 1.15; word-break: break-word; }
+.hw-name.concept { font-family: var(--serif); font-weight: 500; font-size: 30px; letter-spacing: -.5px; color: var(--ink); }
+.permalink-btn { background: none; border: none; cursor: pointer; font-size: 13px; opacity: .3; transition: .2s; align-self: center; }
+.entry:hover .permalink-btn { opacity: .9; }
+.gram { margin-top: 6px; font-style: italic; color: var(--ink3); font-size: 15.5px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.gram .sep { color: var(--rule2); font-style: normal; }
+.gram .code-id { font-family: var(--mono); font-style: normal; font-size: 10.5px; color: var(--ink3); margin-left: auto; }
+.def { margin-top: 14px; font-size: 19.5px; line-height: 1.5; color: var(--ink); }
+.sub { margin-top: 30px; }
+.sub-h { font-family: var(--sans); font-size: 10px; font-weight: 600; letter-spacing: 1.7px; text-transform: uppercase; color: var(--ink3); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+.sub-h::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+.slab { display: flex; align-items: center; gap: 10px; background: #0f0d09; border: 1px solid var(--rule); border-radius: 7px; padding: 9px 12px; margin-bottom: 6px; font-family: var(--mono); }
+.slab-label { font-size: 10px; color: var(--ink3); min-width: 140px; font-family: var(--sans); }
+.slab-text { flex: 1; font-size: 12.5px; color: var(--ink); overflow-x: auto; white-space: nowrap; }
+.slab-text.plain { font-family: var(--serif); font-size: 15.5px; font-style: italic; color: var(--ink2); white-space: normal; }
+.flag { font-family: var(--sans); font-size: 9.5px; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; color: var(--amber); border: 1px solid rgba(255,179,64,.35); background: rgba(255,179,64,.08); border-radius: 4px; padding: 2px 7px; white-space: nowrap; }
+.copy-btn { background: none; border: 1px solid var(--rule2); border-radius: 4px; color: var(--ink3); font-size: 12px; padding: 1px 7px; cursor: pointer; flex-shrink: 0; }
+.copy-btn:hover { color: var(--cyan-ink); border-color: var(--cyan-ink); }
+.copy-btn.ok { color: var(--green); border-color: var(--green); }
+
+/* parâmetro + régua */
+.param { background: var(--paper2); border: 1px solid var(--rule); border-radius: 10px; padding: 18px 20px 16px; }
+.param + .param { margin-top: 10px; }
+.param-name { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--ink); }
+.g-title { font-family: var(--sans); font-size: 11px; color: var(--ink3); margin: 14px 0 0; }
+.gauge { margin: 38px 4px 8px; }
+.g-track { position: relative; height: 10px; background: var(--paper3); border: 1px solid var(--rule2); border-radius: 99px; }
+.g-zone { position: absolute; top: -1px; bottom: -1px; background: rgba(90,240,160,.22); border: 1px solid rgba(90,240,160,.55); border-radius: 99px; }
+.g-danger { position: absolute; top: -8px; bottom: -8px; width: 0; border-left: 2px dashed var(--red); }
+.g-mark { position: absolute; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; border: 2px solid var(--ink3); background: var(--paper); }
+.g-mark.case { border-color: var(--cyan-ink); background: var(--cyan-ink); box-shadow: 0 0 0 4px rgba(94,230,245,.15); }
+.g-mark.obs { border-color: var(--amber); }
+.g-lab { position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; font-family: var(--mono); font-size: 10.5px; color: var(--ink2); text-align: center; line-height: 1.25; }
+.g-lab i { display: block; font-family: var(--serif); font-size: 12px; color: var(--ink3); }
+.g-mark.top .g-lab { bottom: 18px; } .g-mark.bottom .g-lab { top: 18px; }
+.g-mark.case .g-lab { color: var(--cyan-ink); }
+.g-scale { position: relative; height: 16px; margin-top: 34px; font-family: var(--mono); font-size: 9.5px; color: var(--ink3); }
+.g-scale span { position: absolute; transform: translateX(-50%); }
+.g-scale span:first-child { transform: none; } .g-scale span:last-child { transform: translateX(-100%); }
+.g-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 8px; font-family: var(--sans); font-size: 11px; color: var(--ink3); }
+.g-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.lg-zone { width: 14px; height: 7px; border-radius: 99px; background: rgba(90,240,160,.22); border: 1px solid rgba(90,240,160,.55); }
+.lg-danger { width: 0; height: 12px; border-left: 2px dashed var(--red); }
+.p-rows { margin-top: 14px; display: grid; grid-template-columns: 110px 1fr; gap: 8px 16px; font-size: 15.5px; }
+.p-rows dt { font-family: var(--sans); font-size: 10.5px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--ink3); padding-top: 3px; }
+.p-rows dd { color: var(--ink2); }
+.p-rows dd.limit { color: var(--ink); }
+
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+ul.sym, ul.val { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+ul.sym li, ul.val li { position: relative; padding-left: 22px; font-size: 16px; color: var(--ink2); line-height: 1.45; }
+ul.sym li::before { content: '◆'; position: absolute; left: 2px; top: 3px; font-size: 9px; color: var(--red); }
+ul.val li::before { content: '✓'; position: absolute; left: 2px; top: 0; font-size: 14px; color: var(--green); font-family: var(--sans); }
+ol.steps { list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 9px; }
+ol.steps li { counter-increment: s; position: relative; padding-left: 32px; font-size: 16px; color: var(--ink2); line-height: 1.45; }
+ol.steps li::before { content: counter(s); position: absolute; left: 0; top: -2px; font-family: var(--serif); font-style: italic; font-size: 22px; color: var(--cyan-ink); line-height: 1; }
+li strong, .note strong { color: var(--ink); font-weight: 600; }
+.log-where { font-family: var(--sans); font-size: 10.5px; color: var(--ink3); white-space: nowrap; }
+.log-note { display: block; font-family: var(--serif); font-size: 14.5px; font-style: italic; color: var(--ink2); white-space: normal; margin-top: 2px; }
+.note { margin-top: 10px; padding: 12px 16px 12px 18px; border-left: 2px solid var(--amber); background: linear-gradient(90deg, rgba(255,179,64,.07), transparent 80%); font-size: 16px; color: var(--ink2); line-height: 1.5; }
+.note::before { content: 'Nota.'; font-family: var(--sans); font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--amber); margin-right: 8px; }
+details.case { margin-top: 30px; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+details.case summary { cursor: pointer; list-style: none; padding: 12px 0; font-family: var(--sans); font-size: 12.5px; font-weight: 600; color: var(--ink2); display: flex; align-items: center; gap: 10px; }
+details.case summary::-webkit-details-marker { display: none; }
+details.case summary::before { content: '+'; width: 18px; height: 18px; border: 1px solid var(--rule2); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; color: var(--cyan-ink); }
+details.case[open] summary::before { content: '−'; }
+details.case blockquote { padding: 0 0 18px 28px; font-size: 16.5px; font-style: italic; color: var(--ink2); line-height: 1.6; }
+.refs { display: flex; flex-direction: column; gap: 5px; font-size: 15px; }
+.refs a { color: var(--ink2); text-decoration: none; border-bottom: 1px solid var(--rule2); align-self: flex-start; }
+.refs a:hover { color: var(--cyan-ink); border-color: var(--cyan-ink); }
+.refs .nodoc { font-style: italic; color: var(--ink3); }
+.foot { margin-top: 26px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-family: var(--sans); }
+.see { font-size: 14px; color: var(--ink3); margin-right: 2px; font-family: var(--serif); font-style: italic; }
+.rel-link { font-size: 12.5px; color: var(--ink2); text-decoration: none; border: 1px solid var(--rule2); border-radius: 14px; padding: 4px 11px; }
+.rel-link:hover { color: var(--cyan-ink); border-color: var(--cyan-ink); }
+.escalate-btn { margin-left: auto; background: none; border: 1px solid var(--rule2); border-radius: 6px; color: var(--ink2); font-family: var(--mono); font-size: 11px; padding: 6px 14px; cursor: pointer; }
+.escalate-btn:hover { border-color: var(--amber); color: var(--amber); background: rgba(255,179,64,.08); }
+.escalate-btn.copied { border-color: var(--green); color: var(--green); }
+.empty { display: none; font-style: italic; color: var(--ink3); padding: 40px 0; font-size: 18px; }
+.empty.show { display: block; }
+.ornament { text-align: center; color: var(--rule2); letter-spacing: 12px; font-size: 14px; margin-top: 10px; }
+.home-fab { position: fixed; bottom: 24px; left: 24px; z-index: 999; display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: var(--paper3); border: 1px solid var(--rule2); border-radius: 999px; color: var(--ink); font-family: var(--sans); font-size: 12px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,.35); opacity: 0; visibility: hidden; pointer-events: none; transition: .2s; }
+.home-fab.visible { opacity: 1; visibility: visible; pointer-events: all; }
+.home-fab:hover { border-color: var(--cyan-ink); color: var(--cyan-ink); }
+.rise { opacity: 0; transform: translateY(12px); animation: rise .7s cubic-bezier(.2,.7,.2,1) forwards; animation-delay: calc(var(--i, 0) * 80ms); }
+@keyframes rise { to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .rise { animation: none; opacity: 1; transform: none; } .dot { animation: none; } }
+@media (max-width: 980px) {
+  .layout, .front { grid-template-columns: 1fr; gap: 0; }
+  .front-mark { display: none; }
+  .thumb { position: static; max-height: none; padding: 24px 0 8px; border-bottom: 1px solid var(--rule); }
+  .alpha { grid-template-columns: repeat(13, 1fr); margin: 14px 0; }
+  .thumb-list { display: none; }
+}
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .topbar-in, .layout { padding: 0 16px; }
+  .crumb, #statusText { display: none; }
+  .front { padding: 40px 0 28px; }
+  .front-lede { font-size: 17px; }
+  .front-meta { grid-template-columns: 1fr; }
+  .hw-name { font-size: 22px; } .hw-name.concept { font-size: 24px; }
+  .def { font-size: 17.5px; }
+  .cols { grid-template-columns: 1fr; }
+  .slab { flex-wrap: wrap; } .slab-label { min-width: 0; width: 100%; }
+  .p-rows { grid-template-columns: 1fr; gap: 2px 0; } .p-rows dd { margin-bottom: 8px; }
+  .escalate-btn { margin-left: 0; }
+}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="logo" href="../index.html"><span class="logo-mark"></span>IT<em>Hub</em></a>
+    <span class="crumb">/ <b>Dicionário</b></span>
+    <span class="topbar-meta"><span class="dot" id="statusDot"></span><span id="statusText">online</span></span>
+    <button class="kbar gs-open" type="button">Buscar <kbd>Ctrl K</kbd></button>
+  </div>
+</header>
+
+<div class="layout">
+  <header class="front">
+    <div class="front-mark rise" style="--i:0" aria-hidden="true">Aa</div>
+    <div>
+      <p class="front-kicker rise" style="--i:1">IT Hub · Referência · ManageEngine</p>
+      <h1 class="rise" style="--i:2">Dicionário de arquivos <i>&amp;</i> configurações</h1>
+      <p class="front-lede rise" style="--i:3">O que a console não mostra, mas que trava a operação quando chega no limite. Para que serve, o que pode alterar e até onde ir.</p>
+      <div class="front-meta rise" style="--i:4">
+        <div>
+          <p class="box-h">Abreviaturas</p>
+          <div class="abbr">
+            <span><em class="conf doc">doc.</em> documentado pela ManageEngine</span>
+            <span><em class="conf sup">sup.</em> informado pelo suporte ME em ticket</span>
+            <span><em class="conf int">int.</em> validado pelo time em produção</span>
+          </div>
+        </div>
+        <div>
+          <p class="box-h">Como usar</p>
+          <p class="editor-note">Os produtos ManageEngine on-premise sobem o servidor como serviço Java, com a configuração na pasta <code>conf</code>. <b>O conceito de um verbete costuma valer para outros produtos</b>, mudando só o path e o nome exato do arquivo.</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <aside class="thumb">
+    <input id="q" type="search" placeholder="procurar no dicionário…" autocomplete="off" aria-label="Filtrar verbetes">
+    <nav class="alpha" id="alpha" aria-label="Índice alfabético"></nav>
+    <nav class="thumb-list" id="thumbList" aria-label="Verbetes"></nav>
+    <div class="filt"><p class="box-h">Produto</p><div class="filt-opts" id="fProd"></div></div>
+    <div class="filt"><p class="box-h">Tipo</p><div class="filt-opts" id="fType"></div></div>
+    <p class="count" id="count"></p>
+    <a class="thumb-back" href="../index.html">← voltar ao IT Hub</a>
+  </aside>
+
+  <main class="entries" id="entries"></main>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// VERBETES — um objeto por arquivo/configuração.
+// confidence: 'doc' | 'sup' | 'int'   ·   gauge: régua do "até onde ir" (opcional)
+// ═══════════════════════════════════════════════════════════
+const FILES = [
+{
+  id: 'DIC-EC-JVM-01',
+  name: 'wrapper-arch.conf',
+  isFile: true,
+  type: 'Config JVM',
+  gram: 's. config. JVM',
+  confidence: 'int',
+  severity: 'ALTO',
+  products: ['Endpoint Central'],
+  purpose: 'Arquivo que define os parâmetros de inicialização da JVM (Java Virtual Machine) do servidor do Endpoint Central, principalmente o teto de memória heap.',
+  paths: [ { label: 'Endpoint Central', text: '...\\UEMS_CentralServer\\conf\\wrapper-arch.conf', confirm: true } ],
+  params: [{
+    name: 'Heap máximo · -Xmx / wrapper.java.maxmemory',
+    gauge: { unit: 'GB', max: 32, title: 'Exemplo: servidor com 32 GB de RAM física',
+             marks: [ { v: 4, label: 'padrão', kind: 'def', pos: 'bottom' }, { v: 8, label: 'caso real', kind: 'case', pos: 'top' } ],
+             zone: [8, 10.67], zoneLabel: 'faixa recomendada · 25–33% da RAM', danger: 16, dangerLabel: 'nunca acima de 50%' },
+    def: '4 GB (observado)',
+    caseVal: '8 GB, ou 25% de 32 GB',
+    limit: '25–33% da RAM física em servidor dedicado. Nunca acima de 50%. Acima de ~31 GB a JVM perde a compressão de ponteiros e desperdiça memória.',
+    risk: 'Baixo demais: GC constante, CPU alta, lentidão e OutOfMemoryError. Alto demais: falta memória para o Windows e o banco, e o servidor começa a paginar.'
+  }],
+  symptoms: [
+    'Console lenta e rotinas internas atrasando',
+    'CPU alta sem carga aparente: é o <strong>Garbage Collector</strong> trabalhando sem parar',
+    'Processo java colado no limite de memória, sempre no mesmo valor',
+    '<strong>OutOfMemoryError</strong> nos logs do servidor'
+  ],
+  commands: [
+    { label: 'RAM física (GB)', text: '[math]::Round((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory/1GB)' },
+    { label: 'RAM do processo Java (GB)', text: "Get-Process java | Select-Object Id, @{n='RAM_GB';e={[math]::Round($_.WorkingSet64/1GB,2)}}" },
+    { label: 'Achar a linha do heap', text: 'Select-String -Path "<EC_HOME>\\conf\\wrapper*.conf" -Pattern "Xmx|maxmemory"' }
+  ],
+  steps: [
+    'Medir a RAM física do servidor e quanto o processo java está usando',
+    'Calcular o novo limite: <strong>25–33% da RAM física</strong> (32 GB → 8 GB)',
+    'Fazer <strong>backup</strong> do arquivo, copiando com a data no nome',
+    'Combinar janela e <strong>parar o serviço</strong> do Endpoint Central',
+    'Alterar só o valor do heap máximo e salvar, sem mexer em outras linhas',
+    'Iniciar o serviço e acompanhar o <code>wrapper.log</code> até a console subir',
+    'Confirmar que a console abre e que os agentes voltam a comunicar'
+  ],
+  notes: [
+    '<strong>Heap não é o consumo total.</strong> O processo java usa heap + Metaspace + threads + buffers. 4 GB de heap aparecendo como ~4,8 GB no Gerenciador de Tarefas é normal.',
+    '<strong>Aumentar o heap sozinho não garante melhoria.</strong> Se a lentidão continuar, o gargalo pode estar no banco, no disco ou em outra parte da aplicação.',
+    '<strong>Reconfira depois de cada atualização (PPM).</strong> Há relatos de o valor do heap voltar ao padrão.'
+  ],
+  validate: [
+    'Uso de heap estável, sem ficar colado no máximo',
+    'Menos ciclos de Garbage Collection e pausas mais curtas',
+    'CPU e memória física do servidor em patamar saudável',
+    'Console e rotinas respondendo mais rápido que antes'
+  ],
+  caseReal: 'Servidor com 32 GB de RAM. O processo Java do Endpoint Central usava ~4,8 GB, com o heap máximo em 4 GB, ou seja, a aplicação operava colada no limite. O heap foi elevado para 8 GB (25% da RAM), mantendo memória livre para o sistema operacional e os demais processos. Próximo passo definido: acompanhar heap, GC, CPU e tempo de resposta sob carga real. Se a lentidão persistir, aprofundar nos indicadores da JVM e nos demais componentes.',
+  links: [
+    { label: 'Runbook Endpoint Central', href: '../endpoint-central/ec-runbook-main.html' },
+    { label: 'Checklist de Update EC', href: '../endpoint-central/ec-update-checklist.html' }
+  ],
+  refs: [
+    { label: 'ManageEngine · Increasing Product Memory (EventLog/Log360: teto de 1/3 da RAM)', href: 'https://www.manageengine.com/log-management/help/setting-up/increasing-product-memory.html' },
+    { label: 'ManageEngine · SDP MSP Performance Guide (wrapper.conf, wrapper.java.maxmemory)', href: 'https://www.manageengine.com/products/service-desk-msp/help/adminguide/general-features/performance-guide.html' }
+  ],
+  noDocNote: 'Não há documentação pública da ME sobre heap específica para o Endpoint Central. As referências são de outros produtos ME com o mesmo mecanismo.'
+},
+{
+  id: 'DIC-EC-RC-01',
+  name: 'Limite de sessões paralelas',
+  isFile: false,
+  type: 'Config do produto',
+  gram: 's. config. Remote Control',
+  confidence: 'sup',
+  severity: 'ALTO',
+  products: ['Endpoint Central'],
+  purpose: 'Quantas sessões de Remote Control o servidor aceita ao mesmo tempo. Vem pré-configurado de fábrica e não aparece em nenhuma tela da console.',
+  paths: [ { label: 'Endpoint Central', text: 'Configuração server-side, não exposta na console. A alteração é feita pelo suporte ManageEngine via ticket.', plain: true } ],
+  params: [{
+    name: 'Sessões paralelas · nível servidor',
+    gauge: { unit: '', max: 100, title: 'Caso real: ~11 mil endpoints · 62 técnicos',
+             marks: [ { v: 40, label: 'pico observado', kind: 'obs', pos: 'bottom' }, { v: 50, label: 'padrão', kind: 'def', pos: 'top' }, { v: 80, label: 'novo limite', kind: 'case', pos: 'top' } ] },
+    def: '50',
+    caseVal: '80',
+    limit: 'Dimensionar pelo pico real de sessões simultâneas, com folga. No caso, um pico de 40 levou o limite para 80.',
+    risk: 'Abaixo do pico: as novas sessões entram no gateway, mas ficam sem imagem e caem.'
+  }],
+  symptoms: [
+    'A sessão conecta, mas a <strong>tela fica preta</strong>, sem imagem',
+    'Agente e viewer aparecem como conectados ao gateway',
+    'Depois de alguns minutos o servidor envia <strong>stop</strong> e a sessão cai',
+    'Só acontece em <strong>horário de pico</strong> e não reproduz fora dele',
+    'Outras sessões do mesmo período funcionam normalmente'
+  ],
+  logs: [
+    { file: 'dc_rds.log', where: 'agente · endpoint', note: 'Registra as sessões de Remote Control no agente. Rotaciona rápido.' },
+    { file: 'serverout*.txt', where: 'servidor EC · logs', note: 'Mostra o pico de sessões simultâneas. Em ambiente grande, cobriu só as últimas 4–5 h.' }
+  ],
+  steps: [
+    '<strong>No momento da falha</strong>, coletar logs do servidor e do agente e tirar print com a URL do erro e o horário visíveis',
+    'Abrir ticket na ManageEngine com a volumetria: computadores gerenciados, técnicos e horário de pico',
+    'A ME ajusta o limite no servidor, porque não há tela para isso na console',
+    'Reiniciar o serviço do servidor do Endpoint Central <strong>duas vezes</strong> para o novo limite valer',
+    'Monitorar o Remote Control no próximo horário de pico'
+  ],
+  notes: [
+    '<strong>Os logs somem em horas.</strong> Em ambiente grande, <code>dc_rds.log</code> e <code>serverout</code> rotacionam rápido. Chamado aberto no dia seguinte significa evidência perdida, então colete na hora.',
+    '<strong>Subir o limite é medida preventiva.</strong> Se o problema voltar com o novo limite, a causa é outra: coletar logs e pedir sessão de troubleshooting ao vivo com a ME.'
+  ],
+  validate: [
+    'Remote Control estável no horário de pico',
+    'Se reincidir: logs de servidor + agente na hora, com print da URL e do horário',
+    'Persistindo: pedir sessão on-demand de troubleshooting com a ME'
+  ],
+  caseReal: 'Ambiente com ~11 mil computadores gerenciados e 62 técnicos. Sessões de Remote Control falhavam em horário de pico: agente e viewer entravam no gateway, mas nenhuma imagem chegava, e minutos depois o servidor enviava stop. Na análise da ME, o serverout mostrou pico de 40 sessões simultâneas para um limite de 50. Os logs do horário da falha já tinham rotacionado, então não foi possível confirmar que o limite estourou. Por precaução, a ME elevou o limite para 80 e orientou reiniciar o serviço do servidor duas vezes.',
+  links: [ { label: 'Runbook EC · Remote Control', href: '../endpoint-central/ec-runbook-main.html#rem-ctrl' } ],
+  refs: [],
+  noDocNote: 'Sem documentação pública da ME. Informação vinda do suporte ManageEngine em ticket.'
+}
+];
+
+// ═══════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const norm = s => (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+const letterOf = d => norm(d.name).replace(/[^a-z]/g, '').charAt(0).toUpperCase() || '#';
+const CONF_LABEL = { doc: 'doc.', sup: 'sup.', int: 'int.' };
+const CONF_TITLE = { doc: 'Documentação oficial ME', sup: 'Suporte ManageEngine', int: 'Caso interno' };
+FILES.sort((a, b) => norm(a.name).localeCompare(norm(b.name)));
+
+function slab(c) {
+  const flag = c.confirm ? '<span class="flag" title="Path a confirmar no servidor">confirmar</span>' : '';
+  const copy = c.plain ? '' : `<button class="copy-btn" data-copy="${esc(c.text)}" title="Copiar">⎘</button>`;
+  return `<div class="slab"><span class="slab-label">${esc(c.label)}</span><span class="slab-text${c.plain ? ' plain' : ''}">${esc(c.text)}</span>${flag}${copy}</div>`;
+}
+
+function gauge(g) {
+  const pct = v => Math.max(0, Math.min(100, v / g.max * 100));
+  const fmt = v => (Math.round(v * 10) / 10) + (g.unit ? ' ' + g.unit : '');
+  const ticks = [0, .25, .5, .75, 1].map(f => `<span style="left:${f * 100}%">${fmt(g.max * f)}</span>`).join('');
+  const zone = g.zone ? `<div class="g-zone" style="left:${pct(g.zone[0])}%;width:${pct(g.zone[1]) - pct(g.zone[0])}%"></div>` : '';
+  const danger = g.danger ? `<div class="g-danger" style="left:${pct(g.danger)}%"></div>` : '';
+  const marks = g.marks.map(m => `<div class="g-mark ${m.kind} ${m.pos}" style="left:${pct(m.v)}%"><span class="g-lab">${esc(fmt(m.v))}<i>${esc(m.label)}</i></span></div>`).join('');
+  const legend = (g.zone || g.danger) ? `<div class="g-legend">${g.zone ? `<span><i class="lg-zone"></i>${esc(g.zoneLabel)}</span>` : ''}${g.danger ? `<span><i class="lg-danger"></i>${esc(g.dangerLabel)}</span>` : ''}</div>` : '';
+  return `<p class="g-title">${esc(g.title)}</p><div class="gauge"><div class="g-track">${zone}${danger}${marks}</div><div class="g-scale">${ticks}</div>${legend}</div>`;
+}
+
+function renderEntry(d) {
+  const params = d.params.map(p => `
+    <div class="param">
+      <p class="param-name">${esc(p.name)}</p>
+      ${p.gauge ? gauge(p.gauge) : ''}
+      <dl class="p-rows">
+        <dt>Padrão</dt><dd>${esc(p.def)}</dd>
+        <dt>Caso real</dt><dd>${esc(p.caseVal)}</dd>
+        <dt>Até onde</dt><dd class="limit">${esc(p.limit)}</dd>
+        <dt>Risco</dt><dd>${esc(p.risk)}</dd>
+      </dl>
+    </div>`).join('');
+  const logs = d.logs ? `<div class="sub"><p class="sub-h">Logs que entregam o problema</p>${d.logs.map(l =>
+      `<div class="slab"><span class="slab-label"><span class="log-where">${esc(l.where)}</span></span><span class="slab-text">${esc(l.file)}<span class="log-note">${esc(l.note)}</span></span></div>`).join('')}</div>` : '';
+  const cmds = d.commands && d.commands.length ? `<div class="sub"><p class="sub-h">Comandos · PowerShell no servidor</p>${d.commands.map(slab).join('')}</div>` : '';
+  const refs = d.refs.map(r => `<a href="${esc(r.href)}" target="_blank" rel="noopener">${esc(r.label)} ↗</a>`).join('')
+             + (d.noDocNote ? `<span class="nodoc">${esc(d.noDocNote)}</span>` : '');
+  return `
+  <article class="entry" id="${esc(d.id)}" data-letter="${letterOf(d)}" data-prod="${esc(d.products.join('|'))}" data-type="${esc(d.type)}">
+    <div class="hw">
+      <h2 class="hw-name${d.isFile ? '' : ' concept'}">${esc(d.name)}</h2>
+      <button class="permalink-btn" data-id="${esc(d.id)}" title="Copiar link direto">🔗</button>
+    </div>
+    <p class="gram"><span>${esc(d.gram)}</span><span class="sep">·</span><span>${esc(d.products.join(', '))}</span><span class="sep">·</span><em class="conf ${d.confidence}" title="${CONF_TITLE[d.confidence]}">${CONF_LABEL[d.confidence]}</em><span class="code-id">${esc(d.id)}</span></p>
+    <p class="def">${esc(d.purpose)}</p>
+    <div class="sub"><p class="sub-h">Onde fica</p>${d.paths.map(slab).join('')}</div>
+    <div class="sub"><p class="sub-h">O que pode alterar · e até onde</p>${params}</div>
+    <div class="sub cols">
+      <div><p class="sub-h">Sintomas que apontam para cá</p><ul class="sym">${d.symptoms.map(s => `<li>${s}</li>`).join('')}</ul></div>
+      <div><p class="sub-h">Como alterar</p><ol class="steps">${d.steps.map(s => `<li>${s}</li>`).join('')}</ol></div>
+    </div>
+    ${logs}
+    ${cmds}
+    <div class="sub">${d.notes.map(n => `<p class="note">${n}</p>`).join('')}</div>
+    <div class="sub"><p class="sub-h">Depois de alterar · acompanhar</p><ul class="val">${d.validate.map(v => `<li>${v}</li>`).join('')}</ul></div>
+    <details class="case"><summary>Caso documentado (anonimizado)</summary><blockquote>${esc(d.caseReal)}</blockquote></details>
+    <div class="sub"><p class="sub-h">Fontes</p><div class="refs">${refs}</div></div>
+    <div class="foot">
+      <span class="see">ver também</span>
+      ${d.links.map(l => `<a class="rel-link" href="${esc(l.href)}">${esc(l.label)}</a>`).join('')}
+      <button class="escalate-btn" data-title="${esc(d.name)}" data-code="${esc(d.id)}" data-module="${esc(d.products.join(', '))}" data-severity="${esc(d.severity)}">⬆ Escalar para N2</button>
+    </div>
+  </article>`;
+}
+
+function renderAll() {
+  let html = '', last = '';
+  FILES.forEach(d => {
+    const L = letterOf(d);
+    if (L !== last) { html += `<p class="letter" id="letra-${L}" data-letter="${L}">${L}</p>`; last = L; }
+    html += renderEntry(d);
+  });
+  html += '<p class="empty" id="empty">Nenhum verbete para esse filtro.</p><p class="ornament">✦ ✦ ✦</p>';
+  document.getElementById('entries').innerHTML = html;
+  const used = new Set(FILES.map(letterOf));
+  document.getElementById('alpha').innerHTML = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+    .map(L => used.has(L) ? `<a href="#letra-${L}">${L}</a>` : `<span>${L}</span>`).join('');
+  document.getElementById('thumbList').innerHTML = FILES
+    .map(d => `<a href="#${esc(d.id)}" data-nav="${esc(d.id)}" title="${esc(d.name)}">${esc(d.name)}</a>`).join('');
+  const opts = list => ['Todos', ...list].map((v, i) => `<button class="${i ? '' : 'active'}" data-v="${esc(v)}">${esc(v)}</button>`).join('');
+  document.getElementById('fProd').innerHTML = opts([...new Set(FILES.flatMap(d => d.products))]);
+  document.getElementById('fType').innerHTML = opts([...new Set(FILES.map(d => d.type))]);
+}
+
+// ═══════════════════════════════════════════════════════════
+// FILTROS
+// ═══════════════════════════════════════════════════════════
+const state = { prod: 'Todos', type: 'Todos', q: '' };
+function applyFilters() {
+  const terms = norm(state.q).split(/\s+/).filter(Boolean);
+  const vis = new Set(); let n = 0;
+  document.querySelectorAll('.entry').forEach(el => {
+    const show = (state.prod === 'Todos' || el.dataset.prod.split('|').includes(state.prod))
+              && (state.type === 'Todos' || el.dataset.type === state.type)
+              && terms.every(t => norm(el.textContent).includes(t));
+    el.classList.toggle('hidden', !show);
+    document.querySelector(`[data-nav="${el.id}"]`)?.classList.toggle('dim', !show);
+    if (show) { n++; vis.add(el.dataset.letter); }
+  });
+  document.querySelectorAll('.letter').forEach(l => l.classList.toggle('hidden', !vis.has(l.dataset.letter)));
+  document.getElementById('count').textContent = `${n} de ${FILES.length} verbetes`;
+  document.getElementById('empty').classList.toggle('show', n === 0);
+}
+
+renderAll();
+applyFilters();
+
+function bindOpts(id, key) {
+  document.getElementById(id).addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    [...b.parentElement.children].forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); state[key] = b.dataset.v; applyFilters();
+  });
+}
+bindOpts('fProd', 'prod'); bindOpts('fType', 'type');
+let qt; document.getElementById('q').addEventListener('input', e => { clearTimeout(qt); qt = setTimeout(() => { state.q = e.target.value; applyFilters(); }, 150); });
+
+// copiar comando · permalink · escalar
+document.addEventListener('click', e => {
+  const cp = e.target.closest('.copy-btn');
+  if (cp) { navigator.clipboard.writeText(cp.dataset.copy).then(() => { cp.textContent = '✓'; cp.classList.add('ok'); setTimeout(() => { cp.textContent = '⎘'; cp.classList.remove('ok'); }, 1500); }); return; }
+  const pl = e.target.closest('.permalink-btn');
+  if (pl) { navigator.clipboard.writeText(location.href.split('#')[0] + '#' + pl.dataset.id).then(() => { pl.textContent = '✓'; setTimeout(() => { pl.textContent = '🔗'; }, 1500); }); return; }
+  const btn = e.target.closest('.escalate-btn');
+  if (!btn) return;
+  const now = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+  const url = location.href.split('#')[0] + '#' + btn.dataset.code;
+  const template = `
+🔺 ESCALONAMENTO N1 → N2
+━━━━━━━━━━━━━━━━━━━━━━━
+📋 Chamado: [INSERIR ID DO CHAMADO]
+🕐 Horário: ${now}
+📦 Módulo: ${btn.dataset.module}
+🔑 Código: ${btn.dataset.code}
+⚠️  Severidade: ${btn.dataset.severity}
+📌 Cenário: ${btn.dataset.title}
+
+🔗 Referência: ${url}
+
+📝 O que foi feito no N1:
+- [ ] Verificado status do serviço
+- [ ] Consultado o Dicionário de Arquivos (link acima)
+- [ ] [DESCREVER AÇÕES TOMADAS]
+
+❓ Motivo do escalonamento:
+[DESCREVER POR QUE NÃO FOI RESOLVIDO NO N1]
+
+👤 Analista N1: [SEU NOME]`.trim();
+  navigator.clipboard.writeText(template).then(() => {
+    const o = btn.textContent; btn.textContent = '✓ Template copiado!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = o; btn.classList.remove('copied'); }, 3000);
+  });
+});
+
+// progresso · FAB · verbete ativo no índice
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - innerHeight;
+  document.getElementById('progressBar').style.width = (h > 0 ? scrollY / h * 100 : 0) + '%';
+  document.getElementById('homeFab')?.classList.toggle('visible', scrollY > 200);
+  let cur = null;
+  document.querySelectorAll('.entry:not(.hidden)').forEach(el => { if (el.getBoundingClientRect().top < 180) cur = el.id; });
+  document.querySelectorAll('[data-nav]').forEach(a => a.classList.toggle('active', a.dataset.nav === cur));
+}, { passive: true });
+
+// status do repositório
+fetch('https://api.github.com/repos/dejotta1/IT_Hub/commits?per_page=1')
+  .then(r => r.json())
+  .then(data => {
+    if (!data[0]) return;
+    const d = Math.floor((Date.now() - new Date(data[0].commit.author.date)) / 86400000);
+    document.getElementById('statusText').textContent = d === 0 ? 'atualizado hoje' : d === 1 ? 'atualizado ontem' : d <= 30 ? `atualizado há ${d} dias` : `atualizado há ${Math.floor(d / 30)} meses`;
+    if (d > 30) document.getElementById('statusDot').classList.add('stale');
+  })
+  .catch(() => {});
+</script>
+
+<a id="homeFab" href="../index.html" class="home-fab"><span class="home-fab-icon">←</span> IT Hub</a>
+<script src="../shared/search.js"></script>
+</body>
+</html>
