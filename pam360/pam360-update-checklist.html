@@ -7,31 +7,31 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:         #0f1117;
-  --bg2:        #181c27;
-  --bg3:        #1e2333;
-  --bg4:        #252b3d;
-  --border:     #252b3d;
-  --border2:    #303750;
-  --text:       #f0f4ff;
-  --text2:      #a0aabf;
-  --text3:      #5a6480;
-  --blue:       #4d9fff;
-  --blue-dim:   rgba(77,159,255,.1);
-  --blue-glow:  rgba(77,159,255,.2);
-  --primary:    #ff9f4d;
-  --primary-dim: rgba(255,159,77,.1);
-  --primary-glow: rgba(255,159,77,.2);
-  --red:        #ff5c6e;
-  --red-dim:    rgba(255,92,110,.1);
-  --amber:      #ffb340;
-  --amber-dim:  rgba(255,179,64,.1);
-  --purple:     #a97ff5;
-  --purple-dim: rgba(169,127,245,.1);
-  --cyan:       #33e0ff;
-  --cyan-dim:   rgba(51,224,255,.1);
-  --green:      #5af0a0;
-  --green-dim:  rgba(90,240,160,.1);
+  --bg:         #ffffff;
+  --bg2:        #f6f8fa;
+  --bg3:        #eff2f5;
+  --bg4:        #e6eaef;
+  --border:     #d8dee4;
+  --border2:    #1f2328;
+  --text:       #1f2328;
+  --text2:      #59636e;
+  --text3:      #6e7781;
+  --blue:       #0969da;
+  --blue-dim:   rgba(9,105,218,.08);
+  --blue-glow:  rgba(9,105,218,.15);
+  --primary:    #bc4c00;
+  --primary-dim: rgba(188,76,0,.08);
+  --primary-glow: rgba(188,76,0,.15);
+  --red:        #cf222e;
+  --red-dim:    rgba(207,34,46,.08);
+  --amber:      #9a6700;
+  --amber-dim:  rgba(191,135,0,.12);
+  --purple:     #8250df;
+  --purple-dim: rgba(130,80,223,.09);
+  --cyan:       #0e7490;
+  --cyan-dim:   rgba(14,116,144,.09);
+  --green:      #1a7f37;
+  --green-dim:  rgba(26,127,55,.09);
   --mono:    'JetBrains Mono', monospace;
   --sans:    'DM Sans', sans-serif;
   --display: 'Syne', sans-serif;
@@ -81,7 +81,7 @@ body {
 .logo-badge {
   display: inline-flex; align-items: center; gap: 6px;
   background: var(--primary-dim);
-  border: 1px solid rgba(255,159,77,.2);
+  border: 1px solid rgba(188,76,0,.2);
   border-radius: 5px;
   padding: 2px 9px 2px 7px;
   margin-bottom: 10px;
@@ -160,7 +160,7 @@ body {
 }
 .sidebar-overlay {
   display: none;
-  position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  position: fixed; inset: 0; background: rgba(31,35,40,0.24);
   z-index: 150; backdrop-filter: blur(2px);
 }
 
@@ -201,11 +201,11 @@ body {
   background: var(--primary);
   color: var(--bg);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255,159,77,0.3);
+  box-shadow: 0 4px 12px rgba(188,76,0,0.3);
 }
 .hero-badge {
   display: inline-flex; align-items: center; gap: 6px;
-  background: var(--primary-dim); border: 1px solid rgba(255,159,77,.25);
+  background: var(--primary-dim); border: 1px solid rgba(188,76,0,.25);
   border-radius: 999px; padding: 3px 11px 3px 7px;
   font-family: var(--mono); font-size: 10px;
   color: var(--primary); font-weight: 500; letter-spacing: .4px;
@@ -261,7 +261,7 @@ body {
 }
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #ff9f4d, #ffb340);
+  background: linear-gradient(90deg, #bc4c00, #9a6700);
   border-radius: 4px;
   transition: width 0.3s ease;
   width: 0%;
@@ -462,7 +462,7 @@ body {
 .step-status.completed {
   background: var(--green-dim);
   color: var(--green);
-  border: 1px solid rgba(90,240,160,.3);
+  border: 1px solid rgba(26,127,55,.3);
 }
 
 /* ── VALIDATION SUBCHECKLIST ─────────── */
@@ -574,7 +574,7 @@ body {
   color: var(--red);
 }
 .generate-btn {
-  background: linear-gradient(135deg, var(--primary), #ffb340);
+  background: linear-gradient(135deg, var(--primary), #9a6700);
   border: none;
   border-radius: 8px;
   padding: 14px 24px;
@@ -592,7 +592,7 @@ body {
 }
 .generate-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(255,159,77,.3);
+  box-shadow: 0 8px 20px rgba(188,76,0,.3);
 }
 
 /* ── PRINT STYLES ─────────────────────── */
@@ -715,7 +715,7 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   backdrop-filter: blur(8px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 12px rgba(31,35,40,0.12);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -730,9 +730,9 @@ body {
 .home-fab:hover {
   background: var(--primary-dim);
   border-color: var(--primary);
-  color: #ff9f4d;
+  color: #bc4c00;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  box-shadow: 0 6px 20px rgba(31,35,40,0.16);
 }
 
 .home-fab-icon {
