@@ -8,6 +8,23 @@
  *    (Runbooks já têm a sua; este script não interfere nelas.)
  * 2. O modo GLOBAL é tratado por shared/search.js (modal Ctrl+K).
  */
+/* ith-nav-filter: item da sidebar com href="#x" sem seção #x, mas com filtro
+   data-filter="x" na página (playbooks) → aciona o filtro e rola até ele. */
+(function () {
+  document.addEventListener('click', e => {
+    const a = e.target.closest('.nav-item[href^="#"]');
+    if (!a) return;
+    const key = a.getAttribute('href').slice(1);
+    if (!key || document.getElementById(key)) return;
+    const btn = document.querySelector('.filter-btn[data-filter="' + key + '"]');
+    if (!btn) return;
+    e.preventDefault();
+    btn.click();
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n === a));
+    (document.querySelector('.toolbar') || btn).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+})();
+
 (function () {
   'use strict';
   const box = document.getElementById('searchUnified');

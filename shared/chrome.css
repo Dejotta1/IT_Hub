@@ -220,3 +220,6 @@
   color: var(--amber); background: var(--amber-dim); border: 1px solid rgba(255,179,64,.35);
   cursor: help;
 }
+
+/* ── LINK "EM BREVE": destino ainda não existe ── */
+.is-soon { opacity: .45; cursor: not-allowed; pointer-events: none; }
