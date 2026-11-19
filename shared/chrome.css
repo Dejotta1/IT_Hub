@@ -40,28 +40,28 @@
 
 /* RUNBOOK · referência: Endpoint Central Operational (petróleo + ciano) */
 .hero.ith-hero--runbook {
-  background: linear-gradient(135deg, #0d1117 0%, #0a1e25 50%, #091318 100%);
+  background: linear-gradient(135deg, #f6f8fa 0%, #edf5f8 55%, #f4f8fa 100%);
 }
 .hero.ith-hero--runbook::before {
   top: -80px; right: -60px; width: 340px; height: 340px;
-  background: radial-gradient(circle, rgba(88,209,255,.11) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(14,116,144,.10) 0%, transparent 70%);
 }
 .hero.ith-hero--runbook::after {
   bottom: -60px; right: 220px; width: 220px; height: 220px;
-  background: radial-gradient(circle, rgba(63,185,80,.07) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(26,127,55,.06) 0%, transparent 70%);
 }
 
 /* PLAYBOOK · complementar: ameixa + brasa (quente, oposto ao ciano) */
 .hero.ith-hero--playbook {
-  background: linear-gradient(135deg, #100d16 0%, #1d1428 50%, #140f1c 100%);
+  background: linear-gradient(135deg, #f8f7fa 0%, #f5f0f8 55%, #faf6f2 100%);
 }
 .hero.ith-hero--playbook::before {
   top: -80px; right: -60px; width: 340px; height: 340px;
-  background: radial-gradient(circle, rgba(178,128,255,.13) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(130,80,223,.09) 0%, transparent 70%);
 }
 .hero.ith-hero--playbook::after {
   bottom: -60px; right: 220px; width: 220px; height: 220px;
-  background: radial-gradient(circle, rgba(255,150,90,.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(188,76,0,.06) 0%, transparent 70%);
 }
 
 /* ── BARRA SUPERIOR DO HERO: tags à esquerda · ações à direita ───── */
@@ -85,8 +85,8 @@
   letter-spacing: 1.6px; text-transform: uppercase;
 }
 .ith-cat::before { content: ''; width: 6px; height: 6px; border-radius: 2px; background: currentColor; }
-.ith-hero--runbook  .ith-cat { color: #58d1ff; background: rgba(88,209,255,.10); border: 1px solid rgba(88,209,255,.28); }
-.ith-hero--playbook .ith-cat { color: #ff9f6b; background: rgba(255,150,90,.10); border: 1px solid rgba(255,150,90,.30); }
+.ith-hero--runbook  .ith-cat { color: #0e7490; background: rgba(14,116,144,.08); border: 1px solid rgba(14,116,144,.28); }
+.ith-hero--playbook .ith-cat { color: #bc4c00; background: rgba(188,76,0,.07); border: 1px solid rgba(188,76,0,.28); }
 
 /* badge do produto já existente nas páginas, padronizado */
 .ith-hero .hero-badge {
@@ -126,7 +126,8 @@
   display: flex; align-items: center;
   width: 440px; max-width: 100%;
   height: 40px; margin: 0;
-  background: rgba(13,15,23,.78);
+  background: var(--bg);
+  box-shadow: var(--shadow-sm);
   border: 1px solid var(--border2);
   border-radius: 10px;
   backdrop-filter: blur(6px);
@@ -164,7 +165,7 @@
   font-family: var(--sans); font-size: 13px;
 }
 .ith-search .search-input-unified::placeholder { color: var(--text3); }
-.ith-search .search-input-unified::-webkit-search-cancel-button { filter: invert(.6); }
+.ith-search .search-input-unified::-webkit-search-cancel-button { filter: none; }
 .ith-search .ith-kbd {
   flex-shrink: 0; margin-right: 10px;
   font-family: var(--mono); font-size: 9.5px; color: var(--text3);
@@ -180,7 +181,8 @@
   flex-shrink: 0;
   height: 40px; padding: 0 16px;
   border-radius: 999px;
-  background: rgba(13,15,23,.6);
+  background: var(--bg);
+  box-shadow: var(--shadow-sm);
   border: 1px solid color-mix(in srgb, var(--ith-accent) 55%, transparent);
   color: var(--ith-accent);
   font-family: var(--sans); font-size: 12.5px; font-weight: 600;
@@ -217,7 +219,7 @@
   display: inline-block; vertical-align: middle; margin-left: 8px;
   padding: 1px 6px; border-radius: 4px;
   font-family: var(--mono); font-size: 9px; font-weight: 600; letter-spacing: .8px; text-transform: uppercase;
-  color: var(--amber); background: var(--amber-dim); border: 1px solid rgba(255,179,64,.35);
+  color: var(--amber); background: var(--amber-dim); border: 1px solid rgba(154,103,0,.30);
   cursor: help;
 }
 

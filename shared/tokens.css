@@ -1,33 +1,42 @@
+/* IT Hub · tokens — tema "Documentação clara"
+   Fundo branco, texto grafite, cores de status escurecidas para contraste
+   AA sobre branco. Versão escura anterior: _backup/tokens-escuro-2026-11-19.css */
 :root {
+  color-scheme: light;
+
   /* Backgrounds */
-  --bg:          #0d0f17;
-  --bg2:         #12151f;
-  --bg3:         #181c28;
-  --bg4:         #1e2335;
+  --bg:          #ffffff;
+  --bg2:         #f6f8fa;
+  --bg3:         #eff2f5;
+  --bg4:         #e6eaef;
 
   /* Borders */
-  --border:      #1e2438;
-  --border2:     #252c40;
-  --border3:     #303750;
+  --border:      #d8dee4;
+  --border2:     #c9d1d9;
+  --border3:     #b1bac4;
 
   /* Text */
-  --text:        #edf0fa;
-  --text2:       #8894ab;
-  --text3:       #4a556a;
+  --text:        #1f2328;
+  --text2:       #59636e;
+  --text3:       #6e7781;
 
   /* Semantic — Status */
-  --green:       #5af0a0;
-  --green-dim:   rgba(90,240,160,.10);
-  --blue:        #4d9fff;
-  --blue-dim:    rgba(77,159,255,.10);
-  --purple:      #a97ff5;
-  --purple-dim:  rgba(169,127,245,.10);
-  --amber:       #ffb340;
-  --amber-dim:   rgba(255,179,64,.10);
-  --red:         #f04f5e;
-  --red-dim:     rgba(240,79,94,.10);
-  --cyan:        #33e0ff;
-  --cyan-dim:    rgba(51,224,255,.10);
+  --green:       #1a7f37;
+  --green-dim:   rgba(26,127,55,.09);
+  --blue:        #0969da;
+  --blue-dim:    rgba(9,105,218,.08);
+  --purple:      #8250df;
+  --purple-dim:  rgba(130,80,223,.09);
+  --amber:       #9a6700;
+  --amber-dim:   rgba(191,135,0,.12);
+  --red:         #cf222e;
+  --red-dim:     rgba(207,34,46,.08);
+  --cyan:        #0e7490;
+  --cyan-dim:    rgba(14,116,144,.09);
+
+  /* Sombras (novas: no claro a profundidade vem de sombra, não de brilho) */
+  --shadow-sm:   0 1px 2px rgba(31,35,40,.06);
+  --shadow:      0 1px 3px rgba(31,35,40,.08), 0 4px 12px rgba(31,35,40,.05);
 
   /* Typography */
   --mono:        'JetBrains Mono', monospace;
