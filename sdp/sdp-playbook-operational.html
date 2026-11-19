@@ -355,7 +355,9 @@ const PLAYBOOK_DATA = [
       "Se persistir, execute a reindexação do Lucene."
     ],
     ref: "./sdp-runbook-main.html#SDP-INFRA-202"
-  }
+  },
+  {"id": "SDP-PB-701", "sim": true, "cat": "admin", "badge": "ADMIN", "title": "Publicar alteração de Ciclo de Vida sem quebrar chamados", "context": "Mudança em ciclo de vida já publicado, com milhares de chamados em andamento. Atenção: desativar um ciclo publicado desassocia TODOS os chamados ligados a ele.", "action": ["Nunca inative o ciclo de vida para 'resetar': isso desassocia todos os chamados vinculados.", "Abra o ciclo publicado e clique em Save Draft antes de editar; sem isso nada é salvo.", "Reproduza a alteração em homologação (template clone ligado a uma cópia do ciclo).", "Teste cada transição alterada: papéis do Before, campos obrigatórios do During e notificações do After.", "Valide os pontos cegos: chamados criados por e-mail e por API/integração (ver SDP-RLC-401 e SDP-RLC-402).", "Publique em janela de manutenção combinada e avise os grupos de técnicos.", "Monitore por 24h: filtre chamados parados no status alterado e sem transição disponível."], "ref": "./sdp-runbook-main.html#SDP-RLC-401"},
+  {"id": "SDP-PB-702", "sim": true, "cat": "admin", "badge": "ADMIN", "title": "Onboarding de unidade nova (site)", "context": "Toda unidade nova precisa nascer com SLA, horário, grupos, regras e aprovadores próprios. Esquecer um item gera chamados no grupo e no SLA errados (ver SDP-SLA-601).", "action": ["Cadastre o site com fuso, horário operacional e feriados locais.", "Crie os SLAs do site (o seletor de site fica no topo da tela de SLA) e confira a ordem.", "Crie ou associe os grupos de técnicos da unidade.", "Revise as Business Rules que filtram por site e inclua a unidade nova nos critérios.", "Cadastre os aprovadores da unidade (ex.: gerente) e um substituto.", "Teste ponta a ponta: um chamado de cada template crítico, pelo portal e por e-mail.", "Registre a unidade no inventário de sites do contrato."], "ref": "./sdp-runbook-main.html#SDP-SLA-601"}
 ];
 
 function renderPlaybook(filter = 'all') {
@@ -369,7 +371,9 @@ function renderPlaybook(filter = 'all') {
     card.className = 'card';
     
     // Generate ID from anchor or title
-    if (d.ref && d.ref.includes('#')) {
+    if (d.id) {
+      card.id = d.id;
+    } else if (d.ref && d.ref.includes('#')) {
       card.id = d.ref.split('#')[1];
     } else {
       card.id = d.title.toLowerCase()
@@ -380,7 +384,7 @@ function renderPlaybook(filter = 'all') {
     
     card.innerHTML = `
       <div class="card-header">
-        <h3 class="card-title">${d.title}</h3>
+        <h3 class="card-title">${d.title}${d.sim ? ' <span class="sim-badge" title="Cenário simulado a partir da documentação ManageEngine. Validar em campo.">simulado</span>' : ''}</h3>
         <div style="display: flex; align-items: center; gap: 8px;">
           <span class="card-badge badge-${d.cat === 'incident' ? 'inc' : d.cat === 'service' ? 'req' : d.cat === 'asset' ? 'asset' : 'admin'}">${d.badge}</span>
           <button class="permalink-btn" title="Copiar link direto">🔗</button>
@@ -400,7 +404,7 @@ function renderPlaybook(filter = 'all') {
       <div class="escalate-bar">
         <button class="escalate-btn"
           data-title="${d.title}"
-          data-code=""
+          data-code="${d.id || ''}"
           data-module="ServiceDesk Plus"
           data-severity="N/A">
           ⬆ Escalar para N2
