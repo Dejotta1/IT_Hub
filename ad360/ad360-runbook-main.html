@@ -9,23 +9,23 @@
 <style>
 :root {
   /* Local variables not in shared tokens */
-  --primary:       #bc8cff;
-  --primary-dim:   rgba(188,140,255,.1);
-  --primary-glow:  rgba(188,140,255,.2);
-  --blue-glow:  rgba(77,159,255,.2);
-  --teal:       #3ddba8;
-  --teal-dim:   rgba(61,219,168,.1);
-  --red-l:      rgba(255,92,110,.08);
-  --orange:     #ff8c40;
-  --orange-l:   rgba(255,140,64,.08);
-  --purple-l:   rgba(188,140,255,.08);
-  --cyan-l:     rgba(188,140,255,.08);
-  --cyan-glow:  rgba(188,140,255,.2);
-  --yellow:     #f0c040;
-  --yellow-dim: rgba(240,192,64,.1);
-  --yellow-l:   rgba(240,192,64,.08);
-  --indigo:     #7c83fd;
-  --indigo-l:   rgba(124,131,253,.08);
+  --primary:       #8250df;
+  --primary-dim:   rgba(130,80,223,.1);
+  --primary-glow:  rgba(130,80,223,.2);
+  --blue-glow:  rgba(9,105,218,.2);
+  --teal:       #0f766e;
+  --teal-dim:   rgba(15,118,110,.1);
+  --red-l:      rgba(207,34,46,.08);
+  --orange:     #bc4c00;
+  --orange-l:   rgba(188,76,0,.08);
+  --purple-l:   rgba(130,80,223,.08);
+  --cyan-l:     rgba(130,80,223,.08);
+  --cyan-glow:  rgba(130,80,223,.2);
+  --yellow:     #9a6700;
+  --yellow-dim: rgba(154,103,0,.1);
+  --yellow-l:   rgba(154,103,0,.08);
+  --indigo:     #4f46e5;
+  --indigo-l:   rgba(79,70,229,.08);
   --r:       10px;
   --r-lg:    14px;
   --radius:  8px;
@@ -129,7 +129,7 @@ body {
 .logo-badge {
   display: inline-flex; align-items: center; gap: 6px;
   background: var(--primary-dim);
-  border: 1px solid rgba(188,140,255,.25);
+  border: 1px solid rgba(130,80,223,.25);
   border-radius: 5px;
   padding: 2px 9px 2px 7px;
   margin-bottom: 10px;
@@ -206,7 +206,7 @@ body {
 }
 .sidebar-overlay {
   display: none;
-  position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  position: fixed; inset: 0; background: rgba(31,35,40,0.24);
   z-index: 150; backdrop-filter: blur(2px);
 }
 
@@ -227,7 +227,7 @@ body {
 .hero-left { flex: 1; min-width: 260px; }
 .hero-badge {
   display: inline-flex; align-items: center; gap: 6px;
-  background: var(--primary-dim); border: 1px solid rgba(188,140,255,.25);
+  background: var(--primary-dim); border: 1px solid rgba(130,80,223,.25);
   border-radius: 999px; padding: 3px 11px 3px 7px;
   font-family: var(--mono); font-size: 10px;
   color: var(--primary); font-weight: 500; letter-spacing: .4px;
@@ -295,7 +295,7 @@ body {
   background: var(--bg2); border: 1px solid var(--border2);
   border-radius: var(--r); max-height: 360px; overflow-y: auto;
   z-index: 1000; display: none;
-  box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  box-shadow: 0 8px 24px rgba(31,35,40,0.16);
 }
 .global-search-dropdown.open { display: block; }
 
@@ -344,7 +344,7 @@ body {
   background: var(--primary);
   color: var(--bg);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(188,140,255,0.3);
+  box-shadow: 0 4px 12px rgba(130,80,223,0.3);
 }
 
 /* ── CONTENT ── */
@@ -432,15 +432,15 @@ body {
 }
 .bento-badge.critical {
   background: var(--red-dim); color: var(--red);
-  border: 1px solid rgba(255,92,110,.5); box-shadow: 0 0 6px rgba(255,92,110,.15);
+  border: 1px solid rgba(207,34,46,.5); box-shadow: 0 0 6px rgba(207,34,46,.15);
 }
 .bento-badge.warning {
   background: var(--amber-dim); color: var(--amber);
-  border: 1px solid rgba(255,179,64,.4);
+  border: 1px solid rgba(154,103,0,.4);
 }
 .bento-badge.info {
   background: var(--primary-dim); color: var(--primary);
-  border: 1px solid rgba(188,140,255,.3);
+  border: 1px solid rgba(130,80,223,.3);
 }
 .bento-links { display: flex; gap: 8px; }
 .bento-link {
@@ -455,7 +455,7 @@ body {
 .checklist li {
   position: relative; padding: 7px 0 7px 16px; margin-bottom: 0;
   font-family: var(--sans); font-size: 11px; color: var(--text2);
-  line-height: 1.5; border-bottom: 1px solid rgba(255,255,255,.04);
+  line-height: 1.5; border-bottom: 1px solid rgba(31,35,40,0.04);
 }
 .checklist li:last-child { border-bottom: none; padding-bottom: 4px; }
 .checklist li::before {
@@ -488,7 +488,7 @@ body {
 /* ── TOOLBAR / FILTERS ── */
 .toolbar {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(13,17,23,.95); backdrop-filter: blur(12px);
+  background: rgba(255,255,255,.95); backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
   padding: 10px 40px;
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
@@ -500,12 +500,12 @@ body {
   transition: all .15s; background: transparent; font-family: var(--sans);
 }
 .filter-btn.all     { border-color: var(--border2); color: var(--text2); }
-.filter-btn.ada     { border-color: rgba(77,159,255,.4);  color: var(--blue); }
-.filter-btn.ads     { border-color: rgba(188,140,255,.4); color: var(--purple); }
-.filter-btn.adm     { border-color: rgba(188,140,255,.4); color: var(--purple); }
-.filter-btn.ad360   { border-color: rgba(255,179,64,.4);  color: var(--amber); }
-.filter-btn.db      { border-color: rgba(188,140,255,.4); color: var(--purple); }
-.filter-btn.critico { border-color: rgba(255,92,110,.4);  color: var(--red); }
+.filter-btn.ada     { border-color: rgba(9,105,218,.4);  color: var(--blue); }
+.filter-btn.ads     { border-color: rgba(130,80,223,.4); color: var(--purple); }
+.filter-btn.adm     { border-color: rgba(130,80,223,.4); color: var(--purple); }
+.filter-btn.ad360   { border-color: rgba(154,103,0,.4);  color: var(--amber); }
+.filter-btn.db      { border-color: rgba(130,80,223,.4); color: var(--purple); }
+.filter-btn.critico { border-color: rgba(207,34,46,.4);  color: var(--red); }
 .filter-btn.active  { opacity: 1; }
 .filter-btn.all.active     { background: var(--bg3); border-color: var(--text2); color: var(--text); }
 .filter-btn.ada.active     { background: var(--blue-dim);    border-color: var(--blue); }
@@ -600,7 +600,7 @@ body {
   display: inline-flex; align-items: center; gap: 4px;
   color: var(--primary); font-size: 11px; text-decoration: none;
   padding: 3px 8px; background: var(--primary-dim); border-radius: var(--radius);
-  border: 1px solid rgba(188,140,255,.3); margin-top: 6px;
+  border: 1px solid rgba(130,80,223,.3); margin-top: 6px;
 }
 .detail-link:hover { background: var(--primary-glow); }
 
@@ -645,7 +645,7 @@ body {
 
 /* ── CLIENT SCRIPT ── */
 .client-script {
-  background: var(--primary-dim); border: 1px solid rgba(188,140,255,.2);
+  background: var(--primary-dim); border: 1px solid rgba(130,80,223,.2);
   border-left: 3px solid var(--primary);
   border-radius: 0 var(--radius) var(--radius) 0;
   padding: 10px 12px; font-size: 12px; color: var(--text2);
@@ -675,7 +675,7 @@ body {
 /* ── STEP NUMBER ── */
 .step-number {
   width: 26px; height: 26px; border-radius: 50%;
-  background: var(--primary-dim); border: 1px solid rgba(188,140,255,.3);
+  background: var(--primary-dim); border: 1px solid rgba(130,80,223,.3);
   display: flex; align-items: center; justify-content: center;
   font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--primary);
   flex-shrink: 0;
@@ -814,13 +814,13 @@ tr:hover td { background: var(--bg3); }
   font-family: var(--mono); font-size: 8px; font-weight: 700; line-height: 1.4;
   color: var(--primary);
 }
-.bento-badges .bento-badge.warning  { color: var(--amber); border: 1px solid rgba(255,179,64,.4); background: var(--amber-dim); }
+.bento-badges .bento-badge.warning  { color: var(--amber); border: 1px solid rgba(154,103,0,.4); background: var(--amber-dim); }
 .bento-badges .bento-badge.critical { color: var(--red); }
 .cell-glyph {
   display: inline-flex; align-items: center; justify-content: center;
   min-width: 30px; height: 30px; padding: 0 9px; margin-bottom: 12px;
   border-radius: 7px; width: fit-content;
-  background: var(--primary-dim); border: 1px solid rgba(188,140,255,.35); color: var(--primary);
+  background: var(--primary-dim); border: 1px solid rgba(130,80,223,.35); color: var(--primary);
   font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .8px; line-height: 1;
 }
 </style>
@@ -852,22 +852,22 @@ tr:hover td { background: var(--bg3); }
   <div class="nav-section">
     <div class="nav-label">Fundação</div>
     <a class="nav-item" href="#overview">
-      <span class="nav-item-icon" style="background:rgba(188,140,255,.1);border:1px solid rgba(188,140,255,.2);">🏗️</span>
+      <span class="nav-item-icon" style="background:rgba(130,80,223,.1);border:1px solid rgba(130,80,223,.2);">🏗️</span>
       <span class="nav-item-text">Visão Geral</span>
       <span class="nav-item-arrow">›</span>
     </a>
     <a class="nav-item" href="#readiness">
-      <span class="nav-item-icon" style="background:rgba(188,140,255,.1);border:1px solid rgba(188,140,255,.2);">🔧</span>
+      <span class="nav-item-icon" style="background:rgba(130,80,223,.1);border:1px solid rgba(130,80,223,.2);">🔧</span>
       <span class="nav-item-text">Infraestrutura & Readiness</span>
       <span class="nav-item-arrow">›</span>
     </a>
     <a class="nav-item" href="#ports">
-      <span class="nav-item-icon" style="background:rgba(188,140,255,.1);border:1px solid rgba(188,140,255,.2);">🔌</span>
+      <span class="nav-item-icon" style="background:rgba(130,80,223,.1);border:1px solid rgba(130,80,223,.2);">🔌</span>
       <span class="nav-item-text">Matriz de Portas</span>
       <span class="nav-item-arrow">›</span>
     </a>
     <a class="nav-item" href="#logs">
-      <span class="nav-item-icon" style="background:rgba(188,140,255,.1);border:1px solid rgba(188,140,255,.2);">📋</span>
+      <span class="nav-item-icon" style="background:rgba(130,80,223,.1);border:1px solid rgba(130,80,223,.2);">📋</span>
       <span class="nav-item-text">Central de Logs</span>
       <span class="nav-item-arrow">›</span>
     </a>
@@ -878,22 +878,22 @@ tr:hover td { background: var(--bg3); }
   <div class="nav-section">
     <div class="nav-label">Módulos & Agentes</div>
     <a class="nav-item" href="#adaudit">
-      <span class="nav-item-icon" style="background:rgba(77,159,255,.1);border:1px solid rgba(77,159,255,.2);">🔍</span>
+      <span class="nav-item-icon" style="background:rgba(9,105,218,.1);border:1px solid rgba(9,105,218,.2);">🔍</span>
       <span class="nav-item-text">ADAudit Plus</span>
       <span class="nav-item-arrow">›</span>
     </a>
     <a class="nav-item" href="#adselfservice">
-      <span class="nav-item-icon" style="background:rgba(188,140,255,.1);border:1px solid rgba(188,140,255,.2);">🔑</span>
+      <span class="nav-item-icon" style="background:rgba(130,80,223,.1);border:1px solid rgba(130,80,223,.2);">🔑</span>
       <span class="nav-item-text">ADSelfService Plus</span>
       <span class="nav-item-arrow">›</span>
     </a>
     <a class="nav-item" href="#admanager">
-      <span class="nav-item-icon" style="background:rgba(169,127,245,.1);border:1px solid rgba(169,127,245,.2);">👥</span>
+      <span class="nav-item-icon" style="background:rgba(130,80,223,.1);border:1px solid rgba(130,80,223,.2);">👥</span>
       <span class="nav-item-text">ADManager Plus</span>
       <span class="nav-item-arrow">›</span>
     </a>
     <a class="nav-item" href="#ad360core">
-      <span class="nav-item-icon" style="background:rgba(255,179,64,.1);border:1px solid rgba(255,179,64,.2);">🌐</span>
+      <span class="nav-item-icon" style="background:rgba(154,103,0,.1);border:1px solid rgba(154,103,0,.2);">🌐</span>
       <span class="nav-item-text">AD360 Transversal</span>
       <span class="nav-item-arrow">›</span>
     </a>
@@ -904,17 +904,17 @@ tr:hover td { background: var(--bg3); }
   <div class="nav-section">
     <div class="nav-label">N3 Operations</div>
     <a class="nav-item" href="#errors">
-      <span class="nav-item-icon" style="background:rgba(255,92,110,.1);border:1px solid rgba(255,92,110,.2);">⚠️</span>
+      <span class="nav-item-icon" style="background:rgba(207,34,46,.1);border:1px solid rgba(207,34,46,.2);">⚠️</span>
       <span class="nav-item-text">Catálogo de Erros</span>
       <span class="nav-item-arrow">›</span>
     </a>
     <a class="nav-item" href="#scripts">
-      <span class="nav-item-icon" style="background:rgba(90,240,160,.1);border:1px solid rgba(90,240,160,.2);">⚙️</span>
+      <span class="nav-item-icon" style="background:rgba(26,127,55,.1);border:1px solid rgba(26,127,55,.2);">⚙️</span>
       <span class="nav-item-text">Scripts Operacionais</span>
       <span class="nav-item-arrow">›</span>
     </a>
     <a class="nav-item" href="#backup">
-      <span class="nav-item-icon" style="background:rgba(188,140,255,.1);border:1px solid rgba(188,140,255,.2);">💾</span>
+      <span class="nav-item-icon" style="background:rgba(130,80,223,.1);border:1px solid rgba(130,80,223,.2);">💾</span>
       <span class="nav-item-text">Backup do Banco</span>
       <span class="nav-item-arrow">›</span>
     </a>
@@ -925,12 +925,12 @@ tr:hover td { background: var(--bg3); }
   <div class="nav-section">
     <div class="nav-label">Recursos</div>
     <a class="nav-item" href="../dicionario/dicionario-arquivos.html">
-      <span class="nav-item-icon" style="background:rgba(51,224,255,.08);border:1px solid rgba(51,224,255,.2);">📖</span>
+      <span class="nav-item-icon" style="background:rgba(14,116,144,.08);border:1px solid rgba(14,116,144,.2);">📖</span>
       <span class="nav-item-text">Dicionário de Arquivos</span>
       <span class="nav-item-arrow">›</span>
     </a>
     <a class="nav-item" href="https://www.manageengine.com/productdocument.html" target="_blank" rel="noopener">
-      <span class="nav-item-icon" style="background:rgba(188,140,255,.08);border:1px solid rgba(188,140,255,.15);">📄</span>
+      <span class="nav-item-icon" style="background:rgba(130,80,223,.08);border:1px solid rgba(130,80,223,.15);">📄</span>
       <span class="nav-item-text">Documentação Oficial</span>
       <span class="nav-item-arrow">↗</span>
     </a>
