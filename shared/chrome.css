@@ -211,3 +211,12 @@
   .ith-home { padding: 0 12px; }
   .ith-search .search-mode-btn { padding: 0 7px; letter-spacing: .5px; }
 }
+
+/* ── SELO "SIMULADO": cenário montado a partir da doc ME, ainda não visto em campo ── */
+.sim-badge {
+  display: inline-block; vertical-align: middle; margin-left: 8px;
+  padding: 1px 6px; border-radius: 4px;
+  font-family: var(--mono); font-size: 9px; font-weight: 600; letter-spacing: .8px; text-transform: uppercase;
+  color: var(--amber); background: var(--amber-dim); border: 1px solid rgba(255,179,64,.35);
+  cursor: help;
+}
