@@ -622,5 +622,61 @@
     "anchor": "#DIC-EC-RC-01",
     "tags": ["remote control", "acesso remoto", "sessoes", "paralelas", "simultaneas", "tela preta", "sem imagem", "gateway", "dc_rds", "serverout", "pico", "endpoint central"],
     "excerpt": "Remote Control vem limitado a 50 sessões simultâneas. No pico, a sessão conecta ao gateway e a tela fica preta."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "Chamado volta sozinho para o grupo errado",
+    "anchor": "#SDP-RULE-301",
+    "tags": ["business rule", "regra de negocio", "grupo errado", "reatribuicao", "volta sozinho", "cascata", "override", "roteamento"],
+    "excerpt": "Técnico reatribui; na edição seguinte grupo/técnico voltam ao anterior. Em massa, em vários sites."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "Botão de Resolver/Fechar não aparece",
+    "anchor": "#SDP-RLC-401",
+    "tags": ["ciclo de vida", "life cycle", "rlc", "transicao", "resolver", "fechar", "botao", "api", "status"],
+    "excerpt": "Técnico não vê o status de destino; integração via API passa a falhar ao fechar chamados."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "Chamado por e-mail chega sem categoria e cai no SLA padrão",
+    "anchor": "#SDP-RLC-402",
+    "tags": ["ciclo de vida", "email", "e-mail", "sem categoria", "triagem", "sla padrao", "mail fetching"],
+    "excerpt": "Chamados abertos por e-mail sem Categoria/Site; fila do grupo padrão inchada e SLA errado."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "Aprovado, mas o chamado não anda",
+    "anchor": "#SDP-WF-501",
+    "tags": ["workflow", "aprovacao", "aprovado", "approval status", "parado", "travado", "resume workflow"],
+    "excerpt": "Nó de aprovação saiu como Approved, mas o Approval Status segue pendente e a etapa seguinte não libera."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "Unidade nova com SLA violando em massa",
+    "anchor": "#SDP-SLA-601",
+    "tags": ["sla", "site", "unidade nova", "violacao", "horario operacional", "feriado", "prazo"],
+    "excerpt": "Chamados de uma unidade recém-criada nascem com SLA errado ou vencem fora do horário."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-playbook-operational.html",
+    "section": "Publicar alteração de Ciclo de Vida sem quebrar chamados",
+    "anchor": "#SDP-PB-701",
+    "tags": ["ciclo de vida", "publicar", "alteracao", "draft", "mudanca", "producao", "janela"],
+    "excerpt": "Mudança em ciclo de vida já publicado, com milhares de chamados em andamento. Atenção: desativar um ciclo publicado desassocia TODOS os cham"
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-playbook-operational.html",
+    "section": "Onboarding de unidade nova (site)",
+    "anchor": "#SDP-PB-702",
+    "tags": ["onboarding", "unidade nova", "site", "sla", "aprovador", "grupo", "checklist"],
+    "excerpt": "Toda unidade nova precisa nascer com SLA, horário, grupos, regras e aprovadores próprios. Esquecer um item gera chamados no grupo e no SLA e"
   }
 ]
