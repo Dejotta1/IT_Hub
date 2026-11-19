@@ -9,9 +9,9 @@
 <style>
 :root {
   /* Local variables not in shared tokens */
-  --blue-glow:  rgba(77,159,255,.2);
-  --teal:       #3ddba8;
-  --teal-dim:   rgba(61,219,168,.1);
+  --blue-glow:  rgba(9,105,218,.2);
+  --teal:       #0f766e;
+  --teal-dim:   rgba(15,118,110,.1);
   --r:       10px;
   --r-lg:    14px;
 }
@@ -57,7 +57,7 @@ body {
 .logo-badge {
   display: inline-flex; align-items: center; gap: 6px;
   background: var(--blue-dim);
-  border: 1px solid rgba(77,159,255,.2);
+  border: 1px solid rgba(9,105,218,.2);
   border-radius: 5px;
   padding: 2px 9px 2px 7px;
   margin-bottom: 10px;
@@ -136,7 +136,7 @@ body {
 }
 .sidebar-overlay {
   display: none;
-  position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  position: fixed; inset: 0; background: rgba(31,35,40,0.24);
   z-index: 150; backdrop-filter: blur(2px);
 }
 
@@ -177,11 +177,11 @@ body {
   background: var(--blue);
   color: var(--bg);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(77,159,255,0.3);
+  box-shadow: 0 4px 12px rgba(9,105,218,0.3);
 }
 .hero-badge {
   display: inline-flex; align-items: center; gap: 6px;
-  background: var(--teal-dim); border: 1px solid rgba(46,200,154,.25);
+  background: var(--teal-dim); border: 1px solid rgba(15,118,110,.25);
   border-radius: 999px; padding: 3px 11px 3px 7px;
   font-family: var(--mono); font-size: 10px;
   color: var(--teal); font-weight: 500; letter-spacing: .4px;
@@ -438,7 +438,7 @@ body {
 .step-status.completed {
   background: var(--green-dim);
   color: var(--green);
-  border: 1px solid rgba(90,240,160,.3);
+  border: 1px solid rgba(26,127,55,.3);
 }
 
 /* ── VALIDATION SUBCHECKLIST ─────────── */
@@ -568,7 +568,7 @@ body {
 }
 .generate-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(61,219,168,.3);
+  box-shadow: 0 8px 20px rgba(15,118,110,.3);
 }
 
 /* ── PRINT STYLES ─────────────────────── */
@@ -691,7 +691,7 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   backdrop-filter: blur(8px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 12px rgba(31,35,40,0.12);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -706,9 +706,9 @@ body {
 .home-fab:hover {
   background: var(--blue-dim);
   border-color: var(--blue);
-  color: #4d9fff;
+  color: #0969da;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  box-shadow: 0 6px 20px rgba(31,35,40,0.16);
 }
 
 .home-fab-icon {
