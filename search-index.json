@@ -678,5 +678,125 @@
     "anchor": "#SDP-PB-702",
     "tags": ["onboarding", "unidade nova", "site", "sla", "aprovador", "grupo", "checklist"],
     "excerpt": "Toda unidade nova precisa nascer com SLA, horário, grupos, regras e aprovadores próprios. Esquecer um item gera chamados no grupo e no SLA e"
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "Auto assign concentra chamados em poucos técnicos",
+    "anchor": "#SDP-ASGN-701",
+    "tags": ["auto assign", "atribuicao automatica", "round robin", "load balancing", "fila", "desbalanceada", "concentra", "tecnico"],
+    "excerpt": "Alguns técnicos acumulam dezenas de chamados enquanto outros do mesmo grupo recebem poucos."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "Técnico definido pela regra de negócio é trocado na criação",
+    "anchor": "#SDP-ASGN-702",
+    "tags": ["auto assign", "atribuicao automatica", "tecnico trocado", "regra de negocio", "all requests", "unassigned"],
+    "excerpt": "A Business Rule atribui o técnico especialista, mas o chamado aparece com outro técnico logo após abrir."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "Solicitante não consegue enviar o formulário no portal",
+    "anchor": "#SDP-FORM-801",
+    "tags": ["field and form rules", "formulario", "portal", "campo obrigatorio", "nao envia", "catalogo", "template", "solicitante"],
+    "excerpt": "Pelo portal o envio é bloqueado (campo obrigatório) sem campo visível para preencher; como técnico, o mesmo template funciona."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "Uma das caixas de e-mail parou de abrir chamados, sem erro visível",
+    "anchor": "#SDP-MAIL-104",
+    "tags": ["email", "e-mail", "caixa", "mailbox", "nao abre chamado", "spam filter", "email command", "oauth"],
+    "excerpt": "Usuários dizem que enviaram e-mail para a caixa de uma área, mas nenhum chamado foi criado; as outras caixas funcionam."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "Lista de chamados e relatórios lentos com base muito grande",
+    "anchor": "#SDP-DB-901",
+    "tags": ["banco", "lento", "lentidao", "performance", "arquivamento", "archiving", "relatorio", "base grande"],
+    "excerpt": "Console e relatórios lentos mesmo com JVM ajustada; a base acumula anos de chamados fechados."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-playbook-operational.html",
+    "section": "Implantar arquivamento de chamados com segurança",
+    "anchor": "#SDP-PB-703",
+    "tags": ["arquivamento", "archiving", "retencao", "compliance", "exclusao", "backup", "banco"],
+    "excerpt": "Base com anos de chamados deixando a console lenta. Arquivar resolve, mas muda o comportamento: chamado arquivado vira somente leitura e res"
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-playbook-operational.html",
+    "section": "Ativar atribuição automática em grupo grande",
+    "anchor": "#SDP-PB-704",
+    "tags": ["auto assign", "atribuicao automatica", "round robin", "load balancing", "grupo", "piloto"],
+    "excerpt": "Grupo com muitos técnicos e fila alta. A atribuição automática reduz chamado parado sem dono, mas configurada errada concentra a fila ou pas"
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "[Cloud] Integração via API v3 recusa toda chamada (401 / token inválido)",
+    "anchor": "#SDP-CLD-1001",
+    "tags": ["cloud", "api", "v3", "401", "token", "oauth", "datacenter", "zoho", "integracao", "autenticacao", "escopo"],
+    "excerpt": "Integração nova (ou recém-migrada) nunca autentica; o mesmo token funciona no Postman de um analista, mas não na integração."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "[Cloud] Integração funciona e para de responder depois de um tempo",
+    "anchor": "#SDP-CLD-1002",
+    "tags": ["cloud", "api", "integracao", "para", "expira", "refresh token", "rate limit", "limite", "polling", "webhook"],
+    "excerpt": "A integração roda normalmente e começa a falhar depois de algum tempo ou em horário de pico; volta sozinha ou só com token novo."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "[Cloud] Usuário novo do Entra ID (Azure AD) não aparece no SDP",
+    "anchor": "#SDP-CLD-1003",
+    "tags": ["cloud", "entra id", "azure ad", "sync", "sincronizacao", "usuario novo", "nao aparece", "admissao", "restart sync"],
+    "excerpt": "Colaborador admitido não consegue abrir chamado: não existe no SDP. Às vezes atinge todos os admitidos desde certa data."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "[Cloud] Login por SSO (SAML) parou para todos os usuários",
+    "anchor": "#SDP-CLD-1004",
+    "tags": ["cloud", "sso", "saml", "login", "certificado", "idp", "ninguem entra", "acesso", "portal"],
+    "excerpt": "Todos os usuários recebem erro no retorno do provedor de identidade; ninguém entra pelo portal."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "[Cloud] Custom function (Deluge) falha de forma intermitente",
+    "anchor": "#SDP-CLD-1005",
+    "tags": ["cloud", "custom function", "deluge", "falha", "intermitente", "invokeurl", "automacao", "workflow"],
+    "excerpt": "Regra de negócio ou workflow com custom function funciona na maioria das vezes, mas parte dos chamados fica sem a ação (sem nota, sem campo atualizado, sem integração)."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-runbook-main.html",
+    "section": "[Cloud] Configuração validada no Sandbox se comporta diferente em produção",
+    "anchor": "#SDP-CLD-1006",
+    "tags": ["cloud", "sandbox", "producao", "homologacao", "implantacao", "deploy", "regra", "workflow"],
+    "excerpt": "Regra, workflow ou template funcionou nos testes do Sandbox; após publicar em produção, roteia para grupo errado ou não dispara."
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-playbook-operational.html",
+    "section": "[Cloud] Criar integração com a API v3 do SDP Cloud do jeito certo",
+    "anchor": "#SDP-PB-705",
+    "tags": ["cloud", "api", "integracao", "oauth", "conta de servico", "token", "boas praticas", "webhook"],
+    "excerpt": "Toda integração (RPA, monitoramento, ERP) que abre ou atualiza chamados no SDP Cloud. Feita às pressas, ela quebra por datacenter errado, to"
+  },
+  {
+    "guide": "ServiceDesk Plus",
+    "file": "sdp/sdp-playbook-operational.html",
+    "section": "[Cloud] Trocar o certificado do SSO (SAML) sem derrubar o login",
+    "anchor": "#SDP-PB-706",
+    "tags": ["cloud", "sso", "saml", "certificado", "troca", "renovacao", "idp", "login"],
+    "excerpt": "O certificado de assinatura do provedor de identidade tem validade. Se ele é renovado sem atualizar o SDP, ninguém entra (ver SDP-CLD-1004)."
   }
 ]
