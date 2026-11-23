@@ -767,6 +767,16 @@ body {
   border-color: var(--cyan);
 }
 
+/* ── Campos novos: pontos de atenção + mensagem copiável ── */
+.ith-notes { margin: 0; padding: 12px 14px 12px 30px; background: var(--amber-dim); border-left: 3px solid var(--amber); border-radius: 0 var(--radius) var(--radius) 0; font-size: 12px; color: var(--text2); line-height: 1.6; }
+.ith-notes li { margin-bottom: 4px; }
+.ith-notes li:last-child { margin-bottom: 0; }
+.card code { font-family: var(--mono); font-size: 11px; background: var(--bg4); padding: 1px 5px; border-radius: 4px; color: var(--text); }
+.client-msg { margin: 0; padding: 14px; background: var(--surface, var(--bg)); border: 1px solid var(--border); border-radius: var(--radius); font-family: var(--sans); font-size: 12.5px; line-height: 1.6; color: var(--text); white-space: pre-wrap; max-height: 260px; overflow: auto; }
+.copy-msg-btn { align-self: flex-start; margin-top: 2px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--border2); background: var(--surface, var(--bg)); color: var(--text); font-family: var(--sans); font-size: 12px; font-weight: 600; cursor: pointer; transition: background .15s, border-color .15s; }
+.copy-msg-btn:hover { border-color: var(--blue); background: var(--blue-dim); }
+.copy-msg-btn.copied { border-color: var(--green); color: var(--green); }
+
 /* ── UNIFIED SEARCH COMPONENT ───────────────────────── */
 .search-container {
   position: sticky;
@@ -2337,6 +2347,97 @@ body {
             </div>
           </div>
         </div>
+        <!-- EC-PB-RC-COLETA · coleta de evidências pedida pelo suporte ME (caso real, anonimizado) -->
+        <div class="card" data-module="remote" id="EC-PB-RC-COLETA">
+          <div class="card-header">
+            <div class="card-title">Remote Control lento ou travando — coleta para o suporte ME</div>
+            <div class="card-module remote">Remote</div>
+          </div>
+          <div class="card-content">
+            <div class="content-block">
+              <div class="content-label">Use Case</div>
+              <div class="content-text">O Remote Control demora para abrir, congela ou fica em tela preta de forma <strong>intermitente</strong>. O caso já está aberto com o suporte ManageEngine, que pediu evidências do servidor coletadas <strong>durante o problema</strong>.</div>
+            </div>
+            <div class="content-block">
+              <div class="content-label">Contexto</div>
+              <div class="content-text">Ambiente de grande porte, problema concentrado em horário de pico. Fora dele tudo funciona, e a coleta feita depois volta do suporte como "não reproduzido".</div>
+            </div>
+            <div class="content-block">
+              <div class="content-label">O que a coleta responde</div>
+              <div class="content-text">Cada item do pedido testa uma hipótese: <strong>thread dump</strong> mostra se a JVM do servidor tem threads presas; <strong>Gerenciador de Tarefas</strong> mostra CPU, memória e rede no limite; <strong>Monitor de Recursos</strong> mostra disco saturado; <strong>console lenta</strong> no mesmo horário aponta para o servidor, e não para o endpoint.</div>
+            </div>
+            <div class="content-block">
+              <div class="content-label">Antes de coletar (N1)</div>
+              <div class="action-steps">
+                <ol>
+                  <li>Anotar data e hora exatas do início do problema e quais técnicos e endpoints foram afetados.</li>
+                  <li>Perguntar se o console do EC também está lento no mesmo momento (item 4 do pedido da ME).</li>
+                  <li>Anotar quantas sessões de Remote Control estavam abertas. Perto de 50, ver o verbete de sessões paralelas no Dicionário.</li>
+                  <li>Confirmar a pasta de instalação do servidor. Aqui ela é chamada de <code>&lt;EC_HOME&gt;</code>: <code>UEMS_CentralServer</code> nas versões recentes, <code>DesktopCentral_Server</code> nas antigas.</li>
+                </ol>
+              </div>
+            </div>
+            <div class="content-block">
+              <div class="content-label">Coleta no servidor, durante o problema (N2)</div>
+              <div class="action-steps">
+                <ol>
+                  <li>Criar <code>&lt;EC_HOME&gt;\debug</code> se não existir e copiar para ela o <code>threaddump.bat</code> enviado pelo suporte (se vier em ZIP, extrair antes).</li>
+                  <li>Abrir o Prompt de Comando como Administrador, entrar na pasta com <code>cd /d "&lt;EC_HOME&gt;\debug"</code> e rodar <code>threaddump.bat</code>.</li>
+                  <li><b>Recomendação IT Hub:</b> rodar 3 vezes, com uns 10 segundos entre cada, anotando o horário. Um dump mostra um instante; três mostram se a thread está presa ou só ocupada.</li>
+                  <li>Só depois dos dumps, copiar os 5 arquivos <code>wrapper*.log</code> de <code>&lt;EC_HOME&gt;\logs</code>. O dump é gravado dentro deles.</li>
+                  <li>Gerenciador de Tarefas: print da aba Desempenho (CPU, Memória, Ethernet) e da aba Detalhes ordenada por Memória, com o <code>java.exe</code> do servidor visível.</li>
+                  <li>Monitor de Recursos &gt; Disco: ordenar por Total (B/s) decrescente e tirar prints de toda a lista, rolando até o fim. Incluir o quadro Armazenamento (fila de disco).</li>
+                  <li>Compactar tudo em um ZIP com data e hora no nome e anexar ao ticket da ME, junto com os horários anotados.</li>
+                </ol>
+              </div>
+            </div>
+            <div class="content-block">
+              <div class="content-label">Pontos de atenção no pedido da ME</div>
+              <ul class="ith-notes">
+                <li>O link do script enviado aponta para a pasta do <b>Endpoint Central MSP</b>. Se o ambiente não é MSP, confirme no ticket se o script é o mesmo.</li>
+                <li>O exemplo de caminho usa <code>DesktopCentral_Server</code>. Em versões recentes a pasta é <code>UEMS_CentralServer</code>.</li>
+                <li>O texto manda extrair um ZIP, mas o link é de um <code>.bat</code>. Baixou o .bat direto, é só copiar.</li>
+                <li>O pedido não diz onde ficam os wrapper logs: <code>&lt;EC_HOME&gt;\logs</code>.</li>
+                <li>Coleta fora do momento do problema não serve. Se não der para pegar ao vivo, combine com o cliente o próximo horário de pico.</li>
+                <li>Wrapper logs e prints mostram nomes de máquina, IPs e usuários. Envie só pelo ticket da ME, nunca por canal aberto.</li>
+              </ul>
+            </div>
+            <div class="content-block">
+              <div class="content-label">Mensagem para o cliente</div>
+              <pre class="client-msg" id="msg-EC-PB-RC-COLETA">Olá, [NOME].
+
+Para o suporte da ManageEngine analisar a lentidão do Controle Remoto, precisamos de algumas informações do servidor do Endpoint Central. Elas precisam ser coletadas ENQUANTO o problema estiver acontecendo.
+
+1. Anote a data e a hora em que o problema começou.
+2. No servidor, rode o script threaddump.bat conforme o passo a passo enviado, 3 vezes, com 10 segundos de intervalo, e anote os horários.
+3. Depois disso, copie os 5 arquivos wrapper*.log da pasta "logs" da instalação do Endpoint Central.
+4. Tire prints do Gerenciador de Tarefas: aba Desempenho (CPU, memória e rede) e aba Detalhes ordenada por memória.
+5. Abra o Monitor de Recursos, aba Disco, ordene por "Total (B/s)" e tire prints de toda a lista.
+6. Informe se o console do Endpoint Central também estava lento no mesmo momento.
+
+Compacte tudo em um único arquivo e envie pelo chamado. Os arquivos têm nomes de máquinas e usuários, por isso não envie por e-mail aberto nem por grupos de mensagem.
+
+Obrigado!</pre>
+              <button class="copy-msg-btn" type="button" data-target="msg-EC-PB-RC-COLETA">📋 Copiar mensagem</button>
+            </div>
+            <div class="content-block">
+              <div class="content-label">Referência Cruzada</div>
+              <a href="../dicionario/dicionario-arquivos.html#DIC-EC-RC-01" class="reference-link">📖 Dicionário · Limite de sessões paralelas do Remote Control</a>
+              <a href="../dicionario/dicionario-arquivos.html#DIC-EC-JVM-01" class="reference-link" style="margin-top: 6px;">📖 Dicionário · wrapper-arch.conf (memória heap da JVM)</a>
+              <a href="https://www.manageengine.com/products/desktop-central/help/remote_desktop_sharing/remote_desktop_sharing_troubleshooting.html" target="_blank" class="reference-link" style="margin-top: 6px;">🔗 Remote Desktop Sharing Troubleshooting</a>
+            </div>
+            <div class="escalate-bar">
+              <button class="escalate-btn"
+                data-title="Remote Control lento — coleta para o suporte ME"
+                data-code="EC-PB-RC-COLETA"
+                data-module="Endpoint Central"
+                data-severity="ALTA">
+                ⬆ Escalar para N2
+              </button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -2833,6 +2934,22 @@ document.querySelectorAll('.escalate-btn').forEach(btn => {
         btn.textContent = original;
         btn.classList.remove('copied');
       }, 3000);
+    });
+  });
+});
+</script>
+
+<script>
+// Copiar mensagem pronta para o cliente
+document.querySelectorAll('.copy-msg-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const el = document.getElementById(btn.dataset.target);
+    if (!el) return;
+    navigator.clipboard.writeText(el.innerText.trim()).then(() => {
+      const original = btn.textContent;
+      btn.textContent = '✓ Mensagem copiada';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 2500);
     });
   });
 });
