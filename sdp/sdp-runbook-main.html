@@ -89,7 +89,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); font
 .nav-item.active { background: var(--bg3); color: var(--text); border-left-color: var(--green); }
 
 .main { margin-left: var(--sidebar-w); }
-.hero { padding: 48px; border-bottom: 1px solid var(--border); background: linear-gradient(135deg, #f6f8fa 0%, #eef6f0 100%); }
+.hero { padding: 48px; border-bottom: 1px solid var(--border); background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%); }
 .hero h1 { font-family: var(--display); font-size: 36px; font-weight: 800; letter-spacing: -1px; }
 .hero h1 span { color: var(--green); }
 .hero-desc { color: var(--text2); max-width: 650px; margin-top: 12px; font-size: 15px; }
@@ -286,7 +286,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--sans); font
 </style>
 <link rel="stylesheet" href="../shared/chrome.css">
 </head>
-<body>
+<body data-mod="sdp">
 
 <div class="progress-bar" id="progressBar"></div>
 
