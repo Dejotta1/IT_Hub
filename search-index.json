@@ -4,7 +4,13 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "Saúde do Ambiente & Readiness",
     "anchor": "#readiness",
-    "tags": ["saude", "ambiente", "readiness", "monitoramento", "servicos"],
+    "tags": [
+      "saude",
+      "ambiente",
+      "readiness",
+      "monitoramento",
+      "servicos"
+    ],
     "excerpt": "Validar integridade dos serviços AD360, conectividade com AD, e estado dos bancos PostgreSQL/MS SQL."
   },
   {
@@ -12,7 +18,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "Visão Geral da Arquitetura",
     "anchor": "#overview",
-    "tags": ["arquitetura", "overview", "componentes", "servicos"],
+    "tags": [
+      "arquitetura",
+      "overview",
+      "componentes",
+      "servicos"
+    ],
     "excerpt": "Estrutura completa do AD360: ADAudit Plus, ADManager Plus, AD360 SelfService, e integrações."
   },
   {
@@ -20,7 +31,13 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "Legenda de Severidade",
     "anchor": "#errors",
-    "tags": ["legenda", "severidade", "critico", "alto", "medio"],
+    "tags": [
+      "legenda",
+      "severidade",
+      "critico",
+      "alto",
+      "medio"
+    ],
     "excerpt": "Classificação de erros: Crítico (impacto operacional), Alto (funcionalidade afetada), Médio (workaround disponível)."
   },
   {
@@ -28,7 +45,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "Portas de Comunicação",
     "anchor": "#ports",
-    "tags": ["portas", "comunicacao", "rede", "firewall"],
+    "tags": [
+      "portas",
+      "comunicacao",
+      "rede",
+      "firewall"
+    ],
     "excerpt": "Portas essenciais: 389/636 (LDAP), 3268 (GC), 135 (RPC), 8020/8383 (ADAudit), 8888/8889 (ADManager)."
   },
   {
@@ -36,7 +58,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "Logs Suite Diagnóstica",
     "anchor": "#logs",
-    "tags": ["logs", "diagnostico", "troubleshooting", "eventos"],
+    "tags": [
+      "logs",
+      "diagnostico",
+      "troubleshooting",
+      "eventos"
+    ],
     "excerpt": "Localização de logs críticos: ADAudit logs, ADManager logs, Windows Event Viewer, e ferramentas de análise."
   },
   {
@@ -44,7 +71,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "Scripts de Operação",
     "anchor": "#scripts",
-    "tags": ["scripts", "operacao", "powershell", "automacao"],
+    "tags": [
+      "scripts",
+      "operacao",
+      "powershell",
+      "automacao"
+    ],
     "excerpt": "Scripts essenciais para validação de portas, reset de serviços, diagnóstico de banco e análise de logs."
   },
   {
@@ -52,7 +84,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "ADAudit Plus - Coleta de Logs",
     "anchor": "#section-ada-log",
-    "tags": ["adaudit", "logs", "eventos", "coleta"],
+    "tags": [
+      "adaudit",
+      "logs",
+      "eventos",
+      "coleta"
+    ],
     "excerpt": "Problemas na coleta de eventos do Active Directory, falhas de conectividade com DCs e análise de logs."
   },
   {
@@ -60,7 +97,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "ADAudit Plus - Agente de Coleta",
     "anchor": "#section-ada-agt",
-    "tags": ["adaudit", "agente", "coleta", "deploy"],
+    "tags": [
+      "adaudit",
+      "agente",
+      "coleta",
+      "deploy"
+    ],
     "excerpt": "Instalação e configuração do agente ADAudit, problemas de comunicação e troubleshooting de deploy."
   },
   {
@@ -68,7 +110,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "ADAudit Plus - Serviço/Infraestrutura",
     "anchor": "#section-ada-srv",
-    "tags": ["adaudit", "servico", "infraestrutura", "performance"],
+    "tags": [
+      "adaudit",
+      "servico",
+      "infraestrutura",
+      "performance"
+    ],
     "excerpt": "Problemas de performance do serviço ADAudit, consumo de memória, e configuração de infraestrutura."
   },
   {
@@ -76,7 +123,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "ADAudit Plus - Relatórios",
     "anchor": "#section-ada-rpt",
-    "tags": ["adaudit", "relatorios", "exportacao", "schedule"],
+    "tags": [
+      "adaudit",
+      "relatorios",
+      "exportacao",
+      "schedule"
+    ],
     "excerpt": "Falhas na geração de relatórios, problemas de agendamento e exportação de dados do ADAudit."
   },
   {
@@ -84,7 +136,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "ADAudit Plus - Permissões",
     "anchor": "#section-ada-prm",
-    "tags": ["adaudit", "permissoes", "acesso", "seguranca"],
+    "tags": [
+      "adaudit",
+      "permissoes",
+      "acesso",
+      "seguranca"
+    ],
     "excerpt": "Configuração de permissões de acesso no ADAudit, problemas de autenticação e gestão de usuários."
   },
   {
@@ -92,7 +149,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "ADAudit Plus - Integrações",
     "anchor": "#section-ada-int",
-    "tags": ["adaudit", "integracoes", "siem", "api"],
+    "tags": [
+      "adaudit",
+      "integracoes",
+      "siem",
+      "api"
+    ],
     "excerpt": "Problemas com integrações do ADAudit, configuração de APIs e envio de dados para sistemas externos."
   },
   {
@@ -100,7 +162,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "ADAudit Plus - Group Policy",
     "anchor": "#section-ada-gpo",
-    "tags": ["adaudit", "gpo", "group", "policy"],
+    "tags": [
+      "adaudit",
+      "gpo",
+      "group",
+      "policy"
+    ],
     "excerpt": "Análise de Group Policies via ADAudit, problemas de auditoria e configuração de políticas."
   },
   {
@@ -108,7 +175,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "ADAudit Plus - Alertas Críticos",
     "anchor": "#section-ada-sec",
-    "tags": ["adaudit", "alertas", "criticos", "seguranca"],
+    "tags": [
+      "adaudit",
+      "alertas",
+      "criticos",
+      "seguranca"
+    ],
     "excerpt": "Configuração e troubleshooting de alertas críticos de segurança no ADAudit Plus."
   },
   {
@@ -116,7 +188,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "ADManager Plus - Gestão de Usuários",
     "anchor": "#section-adm-usr",
-    "tags": ["admanager", "usuarios", "gestao", "bulk"],
+    "tags": [
+      "admanager",
+      "usuarios",
+      "gestao",
+      "bulk"
+    ],
     "excerpt": "Problemas na gestão de usuários em massa, criação de contas e sincronização com Active Directory."
   },
   {
@@ -124,7 +201,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "ADManager Plus - Gestão de Grupos",
     "anchor": "#admanager",
-    "tags": ["admanager", "grupos", "membership", "nested"],
+    "tags": [
+      "admanager",
+      "grupos",
+      "membership",
+      "nested"
+    ],
     "excerpt": "Troubleshooting de gestão de grupos, memberships aninhados e delegação de permissões."
   },
   {
@@ -132,7 +214,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "ADManager Plus - Importação/Exportação",
     "anchor": "#admanager",
-    "tags": ["admanager", "importacao", "exportacao", "csv"],
+    "tags": [
+      "admanager",
+      "importacao",
+      "exportacao",
+      "csv"
+    ],
     "excerpt": "Problemas com importação/exportação em massa, formatação de CSV e validação de dados."
   },
   {
@@ -140,7 +227,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "ADManager Plus - Schedulings",
     "anchor": "#admanager",
-    "tags": ["admanager", "scheduling", "automacao", "tasks"],
+    "tags": [
+      "admanager",
+      "scheduling",
+      "automacao",
+      "tasks"
+    ],
     "excerpt": "Configuração e troubleshooting de tarefas agendadas no ADManager Plus."
   },
   {
@@ -148,7 +240,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "ADManager Plus - Relatórios",
     "anchor": "#admanager",
-    "tags": ["admanager", "relatorios", "auditoria", "compliance"],
+    "tags": [
+      "admanager",
+      "relatorios",
+      "auditoria",
+      "compliance"
+    ],
     "excerpt": "Geração de relatórios de auditoria, problemas de formatação e exportação no ADManager."
   },
   {
@@ -156,7 +253,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "AD360 SelfService - Reset de Senha",
     "anchor": "#section-ads-pwd",
-    "tags": ["ad360", "senha", "reset", "selfservice"],
+    "tags": [
+      "ad360",
+      "senha",
+      "reset",
+      "selfservice"
+    ],
     "excerpt": "Problemas com reset de senha via SelfService, validação de identidade e notificações."
   },
   {
@@ -164,7 +266,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "AD360 SelfService - Unlock de Conta",
     "anchor": "#adselfservice",
-    "tags": ["ad360", "unlock", "conta", "bloqueio"],
+    "tags": [
+      "ad360",
+      "unlock",
+      "conta",
+      "bloqueio"
+    ],
     "excerpt": "Troubleshooting de unlock automático de contas, políticas de bloqueio e notificações."
   },
   {
@@ -172,7 +279,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "AD360 SelfService - Atualização de Perfil",
     "anchor": "#adselfservice",
-    "tags": ["ad360", "perfil", "atualizacao", "atributos"],
+    "tags": [
+      "ad360",
+      "perfil",
+      "atualizacao",
+      "atributos"
+    ],
     "excerpt": "Problemas na atualização de informações de perfil pelo usuário, validação de campos e sincronização."
   },
   {
@@ -180,7 +292,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "AD360 SelfService - Workflow",
     "anchor": "#adselfservice",
-    "tags": ["ad360", "workflow", "aprovacao", "processos"],
+    "tags": [
+      "ad360",
+      "workflow",
+      "aprovacao",
+      "processos"
+    ],
     "excerpt": "Configuração de workflows de aprovação, problemas de notificação e gestão de solicitações."
   },
   {
@@ -188,7 +305,12 @@
     "file": "ad360/ad360-runbook-main.html",
     "section": "AD360 SelfService - Mobile",
     "anchor": "#adselfservice",
-    "tags": ["ad360", "mobile", "app", "smartphone"],
+    "tags": [
+      "ad360",
+      "mobile",
+      "app",
+      "smartphone"
+    ],
     "excerpt": "Problemas com aplicativo mobile AD360, autenticação e sincronização de dados."
   },
   {
@@ -196,7 +318,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Readiness do Ambiente",
     "anchor": "#readiness",
-    "tags": ["readiness", "ambiente", "preparacao", "infraestrutura"],
+    "tags": [
+      "readiness",
+      "ambiente",
+      "preparacao",
+      "infraestrutura"
+    ],
     "excerpt": "Validação completa do ambiente Endpoint Central: serviços, portas, banco e configurações iniciais."
   },
   {
@@ -204,7 +331,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Saúde do Ambiente",
     "anchor": "#env-health",
-    "tags": ["saude", "ambiente", "monitoramento", "servicos"],
+    "tags": [
+      "saude",
+      "ambiente",
+      "monitoramento",
+      "servicos"
+    ],
     "excerpt": "Monitoramento da saúde do ambiente: status dos serviços, performance e diagnóstico geral."
   },
   {
@@ -212,7 +344,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Visão Geral",
     "anchor": "#overview",
-    "tags": ["overview", "visao", "geral", "arquitetura"],
+    "tags": [
+      "overview",
+      "visao",
+      "geral",
+      "arquitetura"
+    ],
     "excerpt": "Arquitetura completa do Endpoint Central: Central Server, Distribution Server, Gateway e componentes."
   },
   {
@@ -220,7 +357,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Agent Management",
     "anchor": "#agt",
-    "tags": ["agent", "management", "agentes", "deploy"],
+    "tags": [
+      "agent",
+      "management",
+      "agentes",
+      "deploy"
+    ],
     "excerpt": "Gestão completa de agentes: instalação, comunicação, manutenção e troubleshooting de conectividade."
   },
   {
@@ -228,7 +370,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Software Deployment",
     "anchor": "#swd",
-    "tags": ["software", "deployment", "deploy", "instalacao"],
+    "tags": [
+      "software",
+      "deployment",
+      "deploy",
+      "instalacao"
+    ],
     "excerpt": "Deploy de softwares: problemas com MSI/EXE, configuração de SMB e status de instalação."
   },
   {
@@ -236,7 +383,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Patch Management",
     "anchor": "#ptch",
-    "tags": ["patch", "management", "atualizacoes", "windows"],
+    "tags": [
+      "patch",
+      "management",
+      "atualizacoes",
+      "windows"
+    ],
     "excerpt": "Gestão de patches: problemas com Windows Updates, WSUS e configuração de políticas."
   },
   {
@@ -244,7 +396,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "MDM (Mobile Device Management)",
     "anchor": "#mdm",
-    "tags": ["mdm", "mobile", "ios", "android"],
+    "tags": [
+      "mdm",
+      "mobile",
+      "ios",
+      "android"
+    ],
     "excerpt": "Gestão de dispositivos móveis: Apple iOS/macOS, Android Enterprise e Windows Modern Management."
   },
   {
@@ -252,7 +409,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Remote Control",
     "anchor": "#rem",
-    "tags": ["remote", "control", "acesso", "remoto"],
+    "tags": [
+      "remote",
+      "control",
+      "acesso",
+      "remoto"
+    ],
     "excerpt": "Acesso remoto: configuração de Gateway, problemas de conectividade e performance."
   },
   {
@@ -260,7 +422,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Vulnerability Management",
     "anchor": "#sec-vuln",
-    "tags": ["vulnerability", "security", "scan", "cve"],
+    "tags": [
+      "vulnerability",
+      "security",
+      "scan",
+      "cve"
+    ],
     "excerpt": "Gestão de vulnerabilidades: scan de segurança, sincronização de CVE e configuração de políticas."
   },
   {
@@ -268,7 +435,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Agent Installation",
     "anchor": "#agt-install",
-    "tags": ["agent", "install", "deployment", "gpo"],
+    "tags": [
+      "agent",
+      "install",
+      "deployment",
+      "gpo"
+    ],
     "excerpt": "Problemas na instalação de agentes: Push, GPO, manual e troubleshooting de conectividade inicial."
   },
   {
@@ -276,7 +448,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Agent Communication",
     "anchor": "#agt-comm",
-    "tags": ["agent", "communication", "heartbeat", "firewall"],
+    "tags": [
+      "agent",
+      "communication",
+      "heartbeat",
+      "firewall"
+    ],
     "excerpt": "Problemas de comunicação entre agentes e servidor: heartbeat, firewall e resolução de nomes."
   },
   {
@@ -284,7 +461,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Agent Maintenance",
     "anchor": "#agt-maint",
-    "tags": ["agent", "maintenance", "reinstall", "upgrade"],
+    "tags": [
+      "agent",
+      "maintenance",
+      "reinstall",
+      "upgrade"
+    ],
     "excerpt": "Manutenção de agentes: reinstalação, upgrade, limpeza e troubleshooting de performance."
   },
   {
@@ -292,7 +474,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Software Deployment Failures",
     "anchor": "#swd-deploy",
-    "tags": ["software", "deployment", "msi", "exe"],
+    "tags": [
+      "software",
+      "deployment",
+      "msi",
+      "exe"
+    ],
     "excerpt": "Falhas no deploy de softwares: problemas com MSI/EXE, permissões e configuração de pacotes."
   },
   {
@@ -300,7 +487,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "SMB Deployment Issues",
     "anchor": "#swd-smb",
-    "tags": ["smb", "deployment", "share", "permissions"],
+    "tags": [
+      "smb",
+      "deployment",
+      "share",
+      "permissions"
+    ],
     "excerpt": "Problemas com deploy via SMB: compartilhamento de rede, permissões e configuração de acesso."
   },
   {
@@ -308,7 +500,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Deployment Status",
     "anchor": "#swd-status",
-    "tags": ["deployment", "status", "monitoring", "logs"],
+    "tags": [
+      "deployment",
+      "status",
+      "monitoring",
+      "logs"
+    ],
     "excerpt": "Monitoramento de status de deployment: análise de logs, troubleshooting e verificação de instalação."
   },
   {
@@ -316,7 +513,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Patch Configuration",
     "anchor": "#ptch-scan",
-    "tags": ["patch", "configuration", "wsus", "policies"],
+    "tags": [
+      "patch",
+      "configuration",
+      "wsus",
+      "policies"
+    ],
     "excerpt": "Configuração de patch management: WSUS, políticas de grupo e configuração de repositórios."
   },
   {
@@ -324,7 +526,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Patch Deployment",
     "anchor": "#ptch-inst",
-    "tags": ["patch", "deployment", "windows", "updates"],
+    "tags": [
+      "patch",
+      "deployment",
+      "windows",
+      "updates"
+    ],
     "excerpt": "Deploy de patches: problemas com Windows Updates, configuração e troubleshooting de instalação."
   },
   {
@@ -332,7 +539,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Patch Compliance",
     "anchor": "#ptch",
-    "tags": ["patch", "compliance", "reporting", "auditoria"],
+    "tags": [
+      "patch",
+      "compliance",
+      "reporting",
+      "auditoria"
+    ],
     "excerpt": "Compliance de patches: relatórios, auditoria e verificação de status de atualização."
   },
   {
@@ -340,7 +552,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Apple iOS/macOS Management",
     "anchor": "#mdm-apple",
-    "tags": ["apple", "ios", "macos", "apns"],
+    "tags": [
+      "apple",
+      "ios",
+      "macos",
+      "apns"
+    ],
     "excerpt": "Gestão de dispositivos Apple: APNS, certificados, ABM e configuração de políticas iOS/macOS."
   },
   {
@@ -348,7 +565,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Android Enterprise Management",
     "anchor": "#mdm-android",
-    "tags": ["android", "enterprise", "afw", "google"],
+    "tags": [
+      "android",
+      "enterprise",
+      "afw",
+      "google"
+    ],
     "excerpt": "Gestão de dispositivos Android: Android Enterprise, binding de conta e configuração de políticas."
   },
   {
@@ -356,7 +578,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Windows Modern Management",
     "anchor": "#mdm-windows",
-    "tags": ["windows", "mdm", "modern", "management"],
+    "tags": [
+      "windows",
+      "mdm",
+      "modern",
+      "management"
+    ],
     "excerpt": "Gestão moderna do Windows: MDM enrollment, configuração de políticas e troubleshooting."
   },
   {
@@ -364,7 +591,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Remote Control Gateway",
     "anchor": "#rem-ctrl",
-    "tags": ["remote", "gateway", "tunnel", "video"],
+    "tags": [
+      "remote",
+      "gateway",
+      "tunnel",
+      "video"
+    ],
     "excerpt": "Configuração do Gateway de acesso remoto: túnel de vídeo, performance e troubleshooting."
   },
   {
@@ -372,7 +604,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Remote Control Sessions",
     "anchor": "#rem-ctrl",
-    "tags": ["remote", "sessions", "rdp", "vnc"],
+    "tags": [
+      "remote",
+      "sessions",
+      "rdp",
+      "vnc"
+    ],
     "excerpt": "Gestão de sessões remotas: RDP, VNC, configuração e troubleshooting de conexões."
   },
   {
@@ -380,7 +617,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Vulnerability Scanning",
     "anchor": "#sec-vuln",
-    "tags": ["vulnerability", "scanning", "security", "assessment"],
+    "tags": [
+      "vulnerability",
+      "scanning",
+      "security",
+      "assessment"
+    ],
     "excerpt": "Scan de vulnerabilidades: configuração, agendamento e troubleshooting de varreduras de segurança."
   },
   {
@@ -388,7 +630,12 @@
     "file": "endpoint-central/ec-runbook-main.html",
     "section": "Vulnerability Remediation",
     "anchor": "#sec-vuln",
-    "tags": ["vulnerability", "remediation", "fix", "patch"],
+    "tags": [
+      "vulnerability",
+      "remediation",
+      "fix",
+      "patch"
+    ],
     "excerpt": "Remediação de vulnerabilidades: deploy de correções, verificação e gestão de CVEs."
   },
   {
@@ -396,7 +643,13 @@
     "file": "endpoint-central/ec-update-checklist.html",
     "section": "EC Update Checklist",
     "anchor": "#",
-    "tags": ["update", "checklist", "atualizacao", "ppm", "upgrade"],
+    "tags": [
+      "update",
+      "checklist",
+      "atualizacao",
+      "ppm",
+      "upgrade"
+    ],
     "excerpt": "Checklist interativo para atualização do Endpoint Central. Passos validados, comprovante PDF e acompanhamento em tempo real."
   },
   {
@@ -404,7 +657,12 @@
     "file": "endpoint-central/ec-update-checklist.html",
     "section": "Validar Snapshot",
     "anchor": "#step-1",
-    "tags": ["snapshot", "backup", "rollback", "vmware"],
+    "tags": [
+      "snapshot",
+      "backup",
+      "rollback",
+      "vmware"
+    ],
     "excerpt": "Validação de snapshot antes do update. Confirmar com cliente para garantir rollback em caso de falha."
   },
   {
@@ -412,7 +670,12 @@
     "file": "endpoint-central/ec-update-checklist.html",
     "section": "Monitorar Wrapper em Tempo Real",
     "anchor": "#step-2",
-    "tags": ["wrapper", "logs", "monitoramento", "powershell"],
+    "tags": [
+      "wrapper",
+      "logs",
+      "monitoramento",
+      "powershell"
+    ],
     "excerpt": "Monitoramento do wrapper.log em tempo real durante update. Comando Get-Content -Wait para acompanhamento."
   },
   {
@@ -420,7 +683,12 @@
     "file": "endpoint-central/ec-update-checklist.html",
     "section": "Stopar Serviço",
     "anchor": "#step-3",
-    "tags": ["servico", "stop", "shutdown", "manageengine"],
+    "tags": [
+      "servico",
+      "stop",
+      "shutdown",
+      "manageengine"
+    ],
     "excerpt": "Parada completa do serviço ManageEngine Endpoint Central antes de iniciar atualização."
   },
   {
@@ -428,7 +696,12 @@
     "file": "endpoint-central/ec-update-checklist.html",
     "section": "Baixar PPM da Versão",
     "anchor": "#step-4",
-    "tags": ["ppm", "download", "manageengine", "service-pack"],
+    "tags": [
+      "ppm",
+      "download",
+      "manageengine",
+      "service-pack"
+    ],
     "excerpt": "Download do arquivo PPM da versão do site oficial ManageEngine para atualização."
   },
   {
@@ -436,7 +709,12 @@
     "file": "endpoint-central/ec-update-checklist.html",
     "section": "Validar Arquivo Baixado",
     "anchor": "#step-5",
-    "tags": ["arquivo", "bloqueado", "unblock", "windows"],
+    "tags": [
+      "arquivo",
+      "bloqueado",
+      "unblock",
+      "windows"
+    ],
     "excerpt": "Verificação se arquivo PPM não está bloqueado pelo Windows. Desbloquear via propriedades se necessário."
   },
   {
@@ -444,7 +722,12 @@
     "file": "endpoint-central/ec-update-checklist.html",
     "section": "Executar initPgsql.bat",
     "anchor": "#step-6",
-    "tags": ["initpgsql", "database", "postgresql", "batch"],
+    "tags": [
+      "initpgsql",
+      "database",
+      "postgresql",
+      "batch"
+    ],
     "excerpt": "Execução do initPgsql.bat para preparação do banco PostgreSQL antes do update."
   },
   {
@@ -452,7 +735,12 @@
     "file": "endpoint-central/ec-update-checklist.html",
     "section": "Executar UpdateManager.bat",
     "anchor": "#step-7",
-    "tags": ["updatemanager", "interface", "atualizacao", "gui"],
+    "tags": [
+      "updatemanager",
+      "interface",
+      "atualizacao",
+      "gui"
+    ],
     "excerpt": "Execução do UpdateManager.bat para abrir interface de atualização do Endpoint Central."
   },
   {
@@ -460,7 +748,12 @@
     "file": "endpoint-central/ec-update-checklist.html",
     "section": "Adicionar Arquivo PPM",
     "anchor": "#step-8",
-    "tags": ["ppm", "browse", "selecionar", "atualizacao"],
+    "tags": [
+      "ppm",
+      "browse",
+      "selecionar",
+      "atualizacao"
+    ],
     "excerpt": "Seleção do arquivo PPM no UpdateManager para iniciar processo de atualização."
   },
   {
@@ -468,7 +761,12 @@
     "file": "endpoint-central/ec-update-checklist.html",
     "section": "Subir Serviços e Validar",
     "anchor": "#step-9",
-    "tags": ["validacao", "console", "agentes", "pos-update"],
+    "tags": [
+      "validacao",
+      "console",
+      "agentes",
+      "pos-update"
+    ],
     "excerpt": "Validação pós-update: console acessível, versão confirmada, agentes comunicando e cliente validado."
   },
   {
@@ -476,7 +774,12 @@
     "file": "endpoint-central/ec-update-checklist.html",
     "section": "Gerar Comprovante PDF",
     "anchor": "#comprovanteForm",
-    "tags": ["comprovante", "pdf", "assinatura", "documentacao"],
+    "tags": [
+      "comprovante",
+      "pdf",
+      "assinatura",
+      "documentacao"
+    ],
     "excerpt": "Geração de comprovante PDF com todos os passos executados, observações e assinatura do analista."
   },
   {
@@ -484,7 +787,12 @@
     "file": "pam360/pam360-runbook-main.html",
     "section": "Saúde do Cofre & Readiness",
     "anchor": "#env-health",
-    "tags": ["saude", "cofre", "readiness", "seguranca"],
+    "tags": [
+      "saude",
+      "cofre",
+      "readiness",
+      "seguranca"
+    ],
     "excerpt": "Validação da saúde do cofre PAM360: encryption key, JVM, database e cluster HA."
   },
   {
@@ -492,7 +800,12 @@
     "file": "pam360/pam360-runbook-main.html",
     "section": "Matriz de Comunicação",
     "anchor": "#infra",
-    "tags": ["comunicacao", "portas", "rede", "conectividade"],
+    "tags": [
+      "comunicacao",
+      "portas",
+      "rede",
+      "conectividade"
+    ],
     "excerpt": "Portas e protocolos essenciais do PAM360: HTTPS, Gateway 7272, database e conectividade externa."
   },
   {
@@ -500,7 +813,12 @@
     "file": "pam360/pam360-runbook-main.html",
     "section": "Cofre & Criptografia",
     "anchor": "#vault",
-    "tags": ["cofre", "criptografia", "keys", "encryption"],
+    "tags": [
+      "cofre",
+      "criptografia",
+      "keys",
+      "encryption"
+    ],
     "excerpt": "Gestão do cofre PAM360: encryption key, inicialização, backup e recuperação de dados."
   },
   {
@@ -508,7 +826,12 @@
     "file": "pam360/pam360-runbook-main.html",
     "section": "Rotação de Senhas",
     "anchor": "#rotation",
-    "tags": ["rotacao", "senhas", "password", "management"],
+    "tags": [
+      "rotacao",
+      "senhas",
+      "password",
+      "management"
+    ],
     "excerpt": "Rotação automática de senhas: configuração, troubleshooting e integração com Active Directory."
   },
   {
@@ -516,7 +839,12 @@
     "file": "pam360/pam360-runbook-main.html",
     "section": "Gateway de Sessão",
     "anchor": "#gateway",
-    "tags": ["gateway", "sessao", "rdp", "ssh"],
+    "tags": [
+      "gateway",
+      "sessao",
+      "rdp",
+      "ssh"
+    ],
     "excerpt": "Gateway de acesso remoto: RDP/SSH via browser, configuração de porta 7272 e troubleshooting."
   },
   {
@@ -524,7 +852,12 @@
     "file": "pam360/pam360-runbook-main.html",
     "section": "Central de Diagnóstico",
     "anchor": "#diag",
-    "tags": ["diagnostico", "logs", "troubleshooting", "suporte"],
+    "tags": [
+      "diagnostico",
+      "logs",
+      "troubleshooting",
+      "suporte"
+    ],
     "excerpt": "Suíte de diagnóstico PAM360: análise de logs, ferramentas de troubleshooting e validação de serviços."
   },
   {
@@ -532,7 +865,12 @@
     "file": "pam360/pam360-runbook-main.html",
     "section": "Console de Engenharia",
     "anchor": "#scripts",
-    "tags": ["console", "engenharia", "scripts", "n3"],
+    "tags": [
+      "console",
+      "engenharia",
+      "scripts",
+      "n3"
+    ],
     "excerpt": "Console avançado de engenharia PAM360: scripts de diagnóstico, ferramentas N3 e comandos especiais."
   },
   {
@@ -540,7 +878,15 @@
     "file": "sdp/sdp-runbook-main.html",
     "section": "Mail Fetching — Loop de E-mail",
     "anchor": "#SDP-MAIL-101",
-    "tags": ["mail", "email", "loop", "duplicado", "ticket", "spam", "inbound"],
+    "tags": [
+      "mail",
+      "email",
+      "loop",
+      "duplicado",
+      "ticket",
+      "spam",
+      "inbound"
+    ],
     "excerpt": "Tickets duplicados por loop de e-mail. Merge em massa e aplicação de filtro SPAM."
   },
   {
@@ -548,7 +894,15 @@
     "file": "sdp/sdp-playbook-operational.html",
     "section": "OAuth2 — Client Secret Expirado",
     "anchor": "#SDP-MAIL-102",
-    "tags": ["oauth", "oauth2", "m365", "microsoft", "secret", "expirado", "mail fetching"],
+    "tags": [
+      "oauth",
+      "oauth2",
+      "m365",
+      "microsoft",
+      "secret",
+      "expirado",
+      "mail fetching"
+    ],
     "excerpt": "Mail Fetching parou após expiração do Client Secret M365. Renovar no Azure e reautorizar no SDP."
   },
   {
@@ -556,7 +910,15 @@
     "file": "sdp/sdp-runbook-main.html",
     "section": "Field & Form Rules — Campos Dinâmicos",
     "anchor": "#SDP-LOGIC-001",
-    "tags": ["campo", "dinamico", "form", "rules", "logica", "template", "catalog"],
+    "tags": [
+      "campo",
+      "dinamico",
+      "form",
+      "rules",
+      "logica",
+      "template",
+      "catalog"
+    ],
     "excerpt": "Configurar campos condicionais no Service Catalog. Show/Hide field baseado em valor de outro campo."
   },
   {
@@ -564,7 +926,15 @@
     "file": "sdp/sdp-runbook-main.html",
     "section": "Lentidão — Tuning de Performance",
     "anchor": "#SDP-INFRA-202",
-    "tags": ["lentidao", "performance", "lento", "jvm", "memoria", "heap", "lucene"],
+    "tags": [
+      "lentidao",
+      "performance",
+      "lento",
+      "jvm",
+      "memoria",
+      "heap",
+      "lucene"
+    ],
     "excerpt": "Lentidão ao abrir chamados. Ajuste de heap JVM no wrapper.conf e reindexação do Lucene."
   },
   {
@@ -572,7 +942,13 @@
     "file": "sdp/sdp-runbook-main.html",
     "section": "Matriz de Portas",
     "anchor": "#ports",
-    "tags": ["portas", "porta", "rede", "firewall", "comunicacao"],
+    "tags": [
+      "portas",
+      "porta",
+      "rede",
+      "firewall",
+      "comunicacao"
+    ],
     "excerpt": "Portas essenciais do ServiceDesk Plus para comunicação com agentes e integrações externas."
   },
   {
@@ -580,7 +956,14 @@
     "file": "sdp/sdp-playbook-operational.html",
     "section": "Vincular Chamados em Massa",
     "anchor": "#SDP-MAIL-101",
-    "tags": ["merge", "chamado", "duplicado", "massa", "parent", "vincular"],
+    "tags": [
+      "merge",
+      "chamado",
+      "duplicado",
+      "massa",
+      "parent",
+      "vincular"
+    ],
     "excerpt": "Consolidar tickets duplicados via Merge. Definir chamado original como Parent."
   },
   {
@@ -588,7 +971,15 @@
     "file": "sdp/sdp-playbook-operational.html",
     "section": "Scan de Ativos — Filial Remota",
     "anchor": "#ports",
-    "tags": ["ativo", "asset", "scan", "filial", "remoto", "discovery", "agent"],
+    "tags": [
+      "ativo",
+      "asset",
+      "scan",
+      "filial",
+      "remoto",
+      "discovery",
+      "agent"
+    ],
     "excerpt": "Discovery Agent em filial remota. Porta 9000 obrigatória para comunicação com servidor central."
   },
   {
@@ -596,7 +987,15 @@
     "file": "sdp/sdp-playbook-operational.html",
     "section": "Troca de Secret OAuth2 M365",
     "anchor": "#SDP-MAIL-102",
-    "tags": ["oauth", "secret", "azure", "microsoft", "m365", "inbound", "mail"],
+    "tags": [
+      "oauth",
+      "secret",
+      "azure",
+      "microsoft",
+      "m365",
+      "inbound",
+      "mail"
+    ],
     "excerpt": "Renovar Client Secret expirado no Azure portal e reautorizar inbound mail no SDP."
   },
   {
@@ -604,7 +1003,15 @@
     "file": "dicionario/dicionario-arquivos.html",
     "section": "Dicionário de Arquivos & Configurações",
     "anchor": "#",
-    "tags": ["dicionario", "arquivos", "configuracao", "conf", "parametros", "referencia", "limite"],
+    "tags": [
+      "dicionario",
+      "arquivos",
+      "configuracao",
+      "conf",
+      "parametros",
+      "referencia",
+      "limite"
+    ],
     "excerpt": "Arquivos e parâmetros que a console não mostra: para que servem, o que pode alterar e até onde ir."
   },
   {
@@ -612,7 +1019,26 @@
     "file": "dicionario/dicionario-arquivos.html",
     "section": "wrapper-arch.conf — heap da JVM (Endpoint Central)",
     "anchor": "#DIC-EC-JVM-01",
-    "tags": ["heap", "jvm", "java", "memoria", "ram", "xmx", "maxmemory", "wrapper", "wrapper.conf", "lentidao", "lento", "lenta", "console", "travando", "outofmemory", "gc", "garbage collector", "endpoint central"],
+    "tags": [
+      "heap",
+      "jvm",
+      "java",
+      "memoria",
+      "ram",
+      "xmx",
+      "maxmemory",
+      "wrapper",
+      "wrapper.conf",
+      "lentidao",
+      "lento",
+      "lenta",
+      "console",
+      "travando",
+      "outofmemory",
+      "gc",
+      "garbage collector",
+      "endpoint central"
+    ],
     "excerpt": "Teto de memória heap da JVM do servidor EC. Padrão observado 4 GB; faixa segura 25–33% da RAM física."
   },
   {
@@ -620,7 +1046,20 @@
     "file": "dicionario/dicionario-arquivos.html",
     "section": "Limite de sessões paralelas — Remote Control (Endpoint Central)",
     "anchor": "#DIC-EC-RC-01",
-    "tags": ["remote control", "acesso remoto", "sessoes", "paralelas", "simultaneas", "tela preta", "sem imagem", "gateway", "dc_rds", "serverout", "pico", "endpoint central"],
+    "tags": [
+      "remote control",
+      "acesso remoto",
+      "sessoes",
+      "paralelas",
+      "simultaneas",
+      "tela preta",
+      "sem imagem",
+      "gateway",
+      "dc_rds",
+      "serverout",
+      "pico",
+      "endpoint central"
+    ],
     "excerpt": "Remote Control vem limitado a 50 sessões simultâneas. No pico, a sessão conecta ao gateway e a tela fica preta."
   },
   {
@@ -628,7 +1067,16 @@
     "file": "sdp/sdp-runbook-main.html",
     "section": "Chamado volta sozinho para o grupo errado",
     "anchor": "#SDP-RULE-301",
-    "tags": ["business rule", "regra de negocio", "grupo errado", "reatribuicao", "volta sozinho", "cascata", "override", "roteamento"],
+    "tags": [
+      "business rule",
+      "regra de negocio",
+      "grupo errado",
+      "reatribuicao",
+      "volta sozinho",
+      "cascata",
+      "override",
+      "roteamento"
+    ],
     "excerpt": "Técnico reatribui; na edição seguinte grupo/técnico voltam ao anterior. Em massa, em vários sites."
   },
   {
@@ -636,7 +1084,17 @@
     "file": "sdp/sdp-runbook-main.html",
     "section": "Botão de Resolver/Fechar não aparece",
     "anchor": "#SDP-RLC-401",
-    "tags": ["ciclo de vida", "life cycle", "rlc", "transicao", "resolver", "fechar", "botao", "api", "status"],
+    "tags": [
+      "ciclo de vida",
+      "life cycle",
+      "rlc",
+      "transicao",
+      "resolver",
+      "fechar",
+      "botao",
+      "api",
+      "status"
+    ],
     "excerpt": "Técnico não vê o status de destino; integração via API passa a falhar ao fechar chamados."
   },
   {
@@ -644,7 +1102,15 @@
     "file": "sdp/sdp-runbook-main.html",
     "section": "Chamado por e-mail chega sem categoria e cai no SLA padrão",
     "anchor": "#SDP-RLC-402",
-    "tags": ["ciclo de vida", "email", "e-mail", "sem categoria", "triagem", "sla padrao", "mail fetching"],
+    "tags": [
+      "ciclo de vida",
+      "email",
+      "e-mail",
+      "sem categoria",
+      "triagem",
+      "sla padrao",
+      "mail fetching"
+    ],
     "excerpt": "Chamados abertos por e-mail sem Categoria/Site; fila do grupo padrão inchada e SLA errado."
   },
   {
@@ -652,7 +1118,15 @@
     "file": "sdp/sdp-runbook-main.html",
     "section": "Aprovado, mas o chamado não anda",
     "anchor": "#SDP-WF-501",
-    "tags": ["workflow", "aprovacao", "aprovado", "approval status", "parado", "travado", "resume workflow"],
+    "tags": [
+      "workflow",
+      "aprovacao",
+      "aprovado",
+      "approval status",
+      "parado",
+      "travado",
+      "resume workflow"
+    ],
     "excerpt": "Nó de aprovação saiu como Approved, mas o Approval Status segue pendente e a etapa seguinte não libera."
   },
   {
@@ -660,7 +1134,15 @@
     "file": "sdp/sdp-runbook-main.html",
     "section": "Unidade nova com SLA violando em massa",
     "anchor": "#SDP-SLA-601",
-    "tags": ["sla", "site", "unidade nova", "violacao", "horario operacional", "feriado", "prazo"],
+    "tags": [
+      "sla",
+      "site",
+      "unidade nova",
+      "violacao",
+      "horario operacional",
+      "feriado",
+      "prazo"
+    ],
     "excerpt": "Chamados de uma unidade recém-criada nascem com SLA errado ou vencem fora do horário."
   },
   {
@@ -668,7 +1150,15 @@
     "file": "sdp/sdp-playbook-operational.html",
     "section": "Publicar alteração de Ciclo de Vida sem quebrar chamados",
     "anchor": "#SDP-PB-701",
-    "tags": ["ciclo de vida", "publicar", "alteracao", "draft", "mudanca", "producao", "janela"],
+    "tags": [
+      "ciclo de vida",
+      "publicar",
+      "alteracao",
+      "draft",
+      "mudanca",
+      "producao",
+      "janela"
+    ],
     "excerpt": "Mudança em ciclo de vida já publicado, com milhares de chamados em andamento. Atenção: desativar um ciclo publicado desassocia TODOS os cham"
   },
   {
@@ -676,7 +1166,15 @@
     "file": "sdp/sdp-playbook-operational.html",
     "section": "Onboarding de unidade nova (site)",
     "anchor": "#SDP-PB-702",
-    "tags": ["onboarding", "unidade nova", "site", "sla", "aprovador", "grupo", "checklist"],
+    "tags": [
+      "onboarding",
+      "unidade nova",
+      "site",
+      "sla",
+      "aprovador",
+      "grupo",
+      "checklist"
+    ],
     "excerpt": "Toda unidade nova precisa nascer com SLA, horário, grupos, regras e aprovadores próprios. Esquecer um item gera chamados no grupo e no SLA e"
   },
   {
@@ -684,7 +1182,16 @@
     "file": "sdp/sdp-runbook-main.html",
     "section": "Auto assign concentra chamados em poucos técnicos",
     "anchor": "#SDP-ASGN-701",
-    "tags": ["auto assign", "atribuicao automatica", "round robin", "load balancing", "fila", "desbalanceada", "concentra", "tecnico"],
+    "tags": [
+      "auto assign",
+      "atribuicao automatica",
+      "round robin",
+      "load balancing",
+      "fila",
+      "desbalanceada",
+      "concentra",
+      "tecnico"
+    ],
     "excerpt": "Alguns técnicos acumulam dezenas de chamados enquanto outros do mesmo grupo recebem poucos."
   },
   {
@@ -692,7 +1199,14 @@
     "file": "sdp/sdp-runbook-main.html",
     "section": "Técnico definido pela regra de negócio é trocado na criação",
     "anchor": "#SDP-ASGN-702",
-    "tags": ["auto assign", "atribuicao automatica", "tecnico trocado", "regra de negocio", "all requests", "unassigned"],
+    "tags": [
+      "auto assign",
+      "atribuicao automatica",
+      "tecnico trocado",
+      "regra de negocio",
+      "all requests",
+      "unassigned"
+    ],
     "excerpt": "A Business Rule atribui o técnico especialista, mas o chamado aparece com outro técnico logo após abrir."
   },
   {
@@ -700,7 +1214,16 @@
     "file": "sdp/sdp-runbook-main.html",
     "section": "Solicitante não consegue enviar o formulário no portal",
     "anchor": "#SDP-FORM-801",
-    "tags": ["field and form rules", "formulario", "portal", "campo obrigatorio", "nao envia", "catalogo", "template", "solicitante"],
+    "tags": [
+      "field and form rules",
+      "formulario",
+      "portal",
+      "campo obrigatorio",
+      "nao envia",
+      "catalogo",
+      "template",
+      "solicitante"
+    ],
     "excerpt": "Pelo portal o envio é bloqueado (campo obrigatório) sem campo visível para preencher; como técnico, o mesmo template funciona."
   },
   {
@@ -708,7 +1231,16 @@
     "file": "sdp/sdp-runbook-main.html",
     "section": "Uma das caixas de e-mail parou de abrir chamados, sem erro visível",
     "anchor": "#SDP-MAIL-104",
-    "tags": ["email", "e-mail", "caixa", "mailbox", "nao abre chamado", "spam filter", "email command", "oauth"],
+    "tags": [
+      "email",
+      "e-mail",
+      "caixa",
+      "mailbox",
+      "nao abre chamado",
+      "spam filter",
+      "email command",
+      "oauth"
+    ],
     "excerpt": "Usuários dizem que enviaram e-mail para a caixa de uma área, mas nenhum chamado foi criado; as outras caixas funcionam."
   },
   {
@@ -716,7 +1248,16 @@
     "file": "sdp/sdp-runbook-main.html",
     "section": "Lista de chamados e relatórios lentos com base muito grande",
     "anchor": "#SDP-DB-901",
-    "tags": ["banco", "lento", "lentidao", "performance", "arquivamento", "archiving", "relatorio", "base grande"],
+    "tags": [
+      "banco",
+      "lento",
+      "lentidao",
+      "performance",
+      "arquivamento",
+      "archiving",
+      "relatorio",
+      "base grande"
+    ],
     "excerpt": "Console e relatórios lentos mesmo com JVM ajustada; a base acumula anos de chamados fechados."
   },
   {
@@ -724,7 +1265,15 @@
     "file": "sdp/sdp-playbook-operational.html",
     "section": "Implantar arquivamento de chamados com segurança",
     "anchor": "#SDP-PB-703",
-    "tags": ["arquivamento", "archiving", "retencao", "compliance", "exclusao", "backup", "banco"],
+    "tags": [
+      "arquivamento",
+      "archiving",
+      "retencao",
+      "compliance",
+      "exclusao",
+      "backup",
+      "banco"
+    ],
     "excerpt": "Base com anos de chamados deixando a console lenta. Arquivar resolve, mas muda o comportamento: chamado arquivado vira somente leitura e res"
   },
   {
@@ -732,7 +1281,14 @@
     "file": "sdp/sdp-playbook-operational.html",
     "section": "Ativar atribuição automática em grupo grande",
     "anchor": "#SDP-PB-704",
-    "tags": ["auto assign", "atribuicao automatica", "round robin", "load balancing", "grupo", "piloto"],
+    "tags": [
+      "auto assign",
+      "atribuicao automatica",
+      "round robin",
+      "load balancing",
+      "grupo",
+      "piloto"
+    ],
     "excerpt": "Grupo com muitos técnicos e fila alta. A atribuição automática reduz chamado parado sem dono, mas configurada errada concentra a fila ou pas"
   },
   {
@@ -740,7 +1296,19 @@
     "file": "sdp/sdp-runbook-main.html",
     "section": "[Cloud] Integração via API v3 recusa toda chamada (401 / token inválido)",
     "anchor": "#SDP-CLD-1001",
-    "tags": ["cloud", "api", "v3", "401", "token", "oauth", "datacenter", "zoho", "integracao", "autenticacao", "escopo"],
+    "tags": [
+      "cloud",
+      "api",
+      "v3",
+      "401",
+      "token",
+      "oauth",
+      "datacenter",
+      "zoho",
+      "integracao",
+      "autenticacao",
+      "escopo"
+    ],
     "excerpt": "Integração nova (ou recém-migrada) nunca autentica; o mesmo token funciona no Postman de um analista, mas não na integração."
   },
   {
@@ -748,7 +1316,18 @@
     "file": "sdp/sdp-runbook-main.html",
     "section": "[Cloud] Integração funciona e para de responder depois de um tempo",
     "anchor": "#SDP-CLD-1002",
-    "tags": ["cloud", "api", "integracao", "para", "expira", "refresh token", "rate limit", "limite", "polling", "webhook"],
+    "tags": [
+      "cloud",
+      "api",
+      "integracao",
+      "para",
+      "expira",
+      "refresh token",
+      "rate limit",
+      "limite",
+      "polling",
+      "webhook"
+    ],
     "excerpt": "A integração roda normalmente e começa a falhar depois de algum tempo ou em horário de pico; volta sozinha ou só com token novo."
   },
   {
@@ -756,7 +1335,17 @@
     "file": "sdp/sdp-runbook-main.html",
     "section": "[Cloud] Usuário novo do Entra ID (Azure AD) não aparece no SDP",
     "anchor": "#SDP-CLD-1003",
-    "tags": ["cloud", "entra id", "azure ad", "sync", "sincronizacao", "usuario novo", "nao aparece", "admissao", "restart sync"],
+    "tags": [
+      "cloud",
+      "entra id",
+      "azure ad",
+      "sync",
+      "sincronizacao",
+      "usuario novo",
+      "nao aparece",
+      "admissao",
+      "restart sync"
+    ],
     "excerpt": "Colaborador admitido não consegue abrir chamado: não existe no SDP. Às vezes atinge todos os admitidos desde certa data."
   },
   {
@@ -764,7 +1353,17 @@
     "file": "sdp/sdp-runbook-main.html",
     "section": "[Cloud] Login por SSO (SAML) parou para todos os usuários",
     "anchor": "#SDP-CLD-1004",
-    "tags": ["cloud", "sso", "saml", "login", "certificado", "idp", "ninguem entra", "acesso", "portal"],
+    "tags": [
+      "cloud",
+      "sso",
+      "saml",
+      "login",
+      "certificado",
+      "idp",
+      "ninguem entra",
+      "acesso",
+      "portal"
+    ],
     "excerpt": "Todos os usuários recebem erro no retorno do provedor de identidade; ninguém entra pelo portal."
   },
   {
@@ -772,7 +1371,16 @@
     "file": "sdp/sdp-runbook-main.html",
     "section": "[Cloud] Custom function (Deluge) falha de forma intermitente",
     "anchor": "#SDP-CLD-1005",
-    "tags": ["cloud", "custom function", "deluge", "falha", "intermitente", "invokeurl", "automacao", "workflow"],
+    "tags": [
+      "cloud",
+      "custom function",
+      "deluge",
+      "falha",
+      "intermitente",
+      "invokeurl",
+      "automacao",
+      "workflow"
+    ],
     "excerpt": "Regra de negócio ou workflow com custom function funciona na maioria das vezes, mas parte dos chamados fica sem a ação (sem nota, sem campo atualizado, sem integração)."
   },
   {
@@ -780,7 +1388,16 @@
     "file": "sdp/sdp-runbook-main.html",
     "section": "[Cloud] Configuração validada no Sandbox se comporta diferente em produção",
     "anchor": "#SDP-CLD-1006",
-    "tags": ["cloud", "sandbox", "producao", "homologacao", "implantacao", "deploy", "regra", "workflow"],
+    "tags": [
+      "cloud",
+      "sandbox",
+      "producao",
+      "homologacao",
+      "implantacao",
+      "deploy",
+      "regra",
+      "workflow"
+    ],
     "excerpt": "Regra, workflow ou template funcionou nos testes do Sandbox; após publicar em produção, roteia para grupo errado ou não dispara."
   },
   {
@@ -788,7 +1405,16 @@
     "file": "sdp/sdp-playbook-operational.html",
     "section": "[Cloud] Criar integração com a API v3 do SDP Cloud do jeito certo",
     "anchor": "#SDP-PB-705",
-    "tags": ["cloud", "api", "integracao", "oauth", "conta de servico", "token", "boas praticas", "webhook"],
+    "tags": [
+      "cloud",
+      "api",
+      "integracao",
+      "oauth",
+      "conta de servico",
+      "token",
+      "boas praticas",
+      "webhook"
+    ],
     "excerpt": "Toda integração (RPA, monitoramento, ERP) que abre ou atualiza chamados no SDP Cloud. Feita às pressas, ela quebra por datacenter errado, to"
   },
   {
@@ -796,7 +1422,35 @@
     "file": "sdp/sdp-playbook-operational.html",
     "section": "[Cloud] Trocar o certificado do SSO (SAML) sem derrubar o login",
     "anchor": "#SDP-PB-706",
-    "tags": ["cloud", "sso", "saml", "certificado", "troca", "renovacao", "idp", "login"],
+    "tags": [
+      "cloud",
+      "sso",
+      "saml",
+      "certificado",
+      "troca",
+      "renovacao",
+      "idp",
+      "login"
+    ],
     "excerpt": "O certificado de assinatura do provedor de identidade tem validade. Se ele é renovado sem atualizar o SDP, ninguém entra (ver SDP-CLD-1004)."
+  },
+  {
+    "guide": "Endpoint Central",
+    "file": "endpoint-central/ec-playbook-operational.html",
+    "section": "Remote Control lento — coleta para o suporte ME",
+    "anchor": "#EC-PB-RC-COLETA",
+    "tags": [
+      "remote control",
+      "controle remoto",
+      "thread dump",
+      "threaddump",
+      "wrapper.log",
+      "lentidão",
+      "tela preta",
+      "coleta",
+      "suporte manageengine",
+      "monitor de recursos"
+    ],
+    "excerpt": "Thread dump, wrapper logs, Gerenciador de Tarefas e Monitor de Recursos coletados durante o problema, com mensagem pronta para o cliente."
   }
 ]
