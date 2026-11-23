@@ -488,7 +488,7 @@ body {
 /* ── TOOLBAR / FILTERS ── */
 .toolbar {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(255,255,255,.95); backdrop-filter: blur(12px);
+  background: color-mix(in srgb, var(--bg) 95%, transparent); backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
   padding: 10px 40px;
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
@@ -826,7 +826,7 @@ tr:hover td { background: var(--bg3); }
 </style>
 <link rel="stylesheet" href="../shared/chrome.css">
 </head>
-<body>
+<body data-mod="ad">
 
 <div class="progress-bar" id="progressBar"></div>
 <button class="back-to-top" id="backToTop">↑ Topo</button>
