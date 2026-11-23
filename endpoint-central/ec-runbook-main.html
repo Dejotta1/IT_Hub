@@ -232,7 +232,7 @@ body {
 /* ── TOOLBAR ──────────────────────────── */
 .toolbar {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(255,255,255,.94); backdrop-filter: blur(12px);
+  background: color-mix(in srgb, var(--bg) 94%, transparent); backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
   padding: 10px 40px;
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
@@ -1463,7 +1463,7 @@ body {
 </style>
 <link rel="stylesheet" href="../shared/chrome.css">
 </head>
-<body>
+<body data-mod="ec">
 
 <!-- BARRA DE PROGRESSO DE LEITURA -->
 <div class="progress-bar" id="progressBar"></div>

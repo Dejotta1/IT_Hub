@@ -481,7 +481,7 @@ body {
 
 .hero {
   padding: 48px 40px 36px;
-  background: linear-gradient(135deg, var(--bg2) 0%, #edf5f8 55%, #f4f8fa 100%);
+  background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
   border-bottom: 1px solid var(--border);
   position: relative; overflow: hidden;
 }
@@ -524,7 +524,7 @@ body {
 /* ── TOOLBAR ──────────────────────────── */
 .toolbar {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(255,255,255,.95); backdrop-filter: blur(12px);
+  background: color-mix(in srgb, var(--bg) 95%, transparent); backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
   padding: 10px 40px;
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
@@ -772,7 +772,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 60;
-  background: rgba(255,255,255,0.95);
+  background: color-mix(in srgb, var(--bg) 95%, transparent);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
   padding: 12px 40px;
@@ -1110,7 +1110,7 @@ body {
 </style>
 <link rel="stylesheet" href="../shared/chrome.css">
 </head>
-<body>
+<body data-mod="ec">
 
 <div class="sidebar">
   <div class="sidebar-logo">
