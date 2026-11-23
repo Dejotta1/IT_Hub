@@ -1,24 +1,26 @@
-/* IT Hub · tokens — tema "Documentação clara"
-   Fundo branco, texto grafite, cores de status escurecidas para contraste
+/* IT Hub · tokens — tema "Documentação clara" · base Ardósia
+   Fundo cinza-azulado, texto grafite, cores de status escurecidas para contraste
    AA sobre branco. Versão escura anterior: _backup/tokens-escuro-2026-11-19.css */
 :root {
   color-scheme: light;
 
   /* Backgrounds */
-  --bg:          #ffffff;
-  --bg2:         #f6f8fa;
-  --bg3:         #eff2f5;
-  --bg4:         #e6eaef;
+  --bg:          #eef1f4;
+  --bg2:         #e5e9ee;
+  --bg3:         #dbe1e8;
+  --bg4:         #d0d8e1;
+
+  --surface:     #f8fafc;   /* cards elevados sobre o fundo */
 
   /* Borders */
-  --border:      #d8dee4;
-  --border2:     #c9d1d9;
-  --border3:     #b1bac4;
+  --border:      #cfd7e0;
+  --border2:     #bfc9d4;
+  --border3:     #a3afbd;
 
   /* Text */
-  --text:        #1f2328;
-  --text2:       #59636e;
-  --text3:       #6e7781;
+  --text:        #1d2530;
+  --text2:       #4a5666;
+  --text3:       #5f6b7a;
 
   /* Semantic — Status */
   --green:       #1a7f37;
@@ -48,3 +50,12 @@
   --radius:      10px;
   --radius-lg:   14px;
 }
+
+/* ── MOLDURA DO MÓDULO ─────────────────────────────────────────────
+   <body data-mod="ec|sdp|ad|pam">: menu lateral e topo da página levam
+   a cor do produto; a área de leitura fica na base neutra.
+   Produto novo = uma linha nova aqui. */
+[data-mod="ec"]  { --mod: #0969da; --mod-dim: rgba(9,105,218,.10);  --mod-bg: #e1e9f4; --mod-bg2: #d5e0ee; --mod-line: #c4d3e5; }
+[data-mod="sdp"] { --mod: #1a7f37; --mod-dim: rgba(26,127,55,.10);  --mod-bg: #e1ede5; --mod-bg2: #d4e5d9; --mod-line: #c1d6c7; }
+[data-mod="ad"]  { --mod: #8250df; --mod-dim: rgba(130,80,223,.10); --mod-bg: #e7e3f2; --mod-bg2: #dcd6ec; --mod-line: #cbc2e0; }
+[data-mod="pam"] { --mod: #9a6700; --mod-dim: rgba(154,103,0,.10);  --mod-bg: #eee7d9; --mod-bg2: #e6decb; --mod-line: #d8cbb0; }
