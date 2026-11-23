@@ -194,6 +194,20 @@
    Desktop: fixo no rodapé do menu lateral, sempre visível e fora da área
    de leitura (antes flutuava por cima do texto). Mobile: canto inferior
    esquerdo. Vence os estilos antigos de cada página (left/right/opacity). */
+/* base comum: algumas páginas (ex.: AD360 Runbook) não tinham estilo nenhum
+   para o botão, que aparecia como link solto no fim da página */
+.home-fab {
+  position: fixed; bottom: 16px; left: 16px; right: auto; z-index: 300;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 18px; border-radius: 999px;
+  background: var(--surface, var(--bg)); border: 1px solid var(--mod-line, var(--border2));
+  color: var(--mod, var(--text)); box-shadow: var(--shadow-sm);
+  font-family: var(--sans); font-size: 12px; font-weight: 600; text-decoration: none;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity .2s, background .15s, border-color .15s;
+}
+.home-fab.visible { opacity: 1; visibility: visible; pointer-events: all; }
+.home-fab-icon { font-size: 14px; }
 @media (min-width: 901px) {
   body:has(.sidebar) .sidebar { padding-bottom: 72px; }
   body:has(.sidebar) .home-fab {
